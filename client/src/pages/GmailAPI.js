@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
+// import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 // import Avatar from '@material-ui/core/Avatar';
 // import List from '@material-ui/core/List';
@@ -10,18 +10,25 @@ import Button from '@material-ui/core/Button';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Dialog from '@material-ui/core/Dialog';
 import Typography from '@material-ui/core/Typography';
-import { blue } from '@material-ui/core/colors';
+// import { blue } from '@material-ui/core/colors';
 
 const emails = ['username@gmail.com', 'user02@gmail.com'];
-const useStyles = makeStyles({
-  avatar: {
-    backgroundColor: blue[100],
-    color: blue[600],
-  },
-});
+// const useStyles = makeStyles({
+//   avatar: {
+//     backgroundColor: blue[100],
+//     color: blue[600],
+//   },
+// });
 
 function GmailAPI(props) {
-  const classes = useStyles();
+  // const classes = useStyles();
+  useEffect(() => {
+    fetch('/google-login').then(response => 
+      response.json().then(data => {
+        console.log(data)
+      })
+    );
+  }, [])
   const { onClose, selectedValue, open } = props;
 
   const handleClose = () => {
