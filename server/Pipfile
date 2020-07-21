@@ -11,6 +11,7 @@ flask-sqlalchemy = "*"
 flask-restful = "*"
 flask-jwt-extended = "*"
 passlib = "*"
+marshmallow = "*"
 
 [requires]
 python_version = "3.7"
