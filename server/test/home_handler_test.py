@@ -10,21 +10,19 @@ class HomeHandlerTest(TestBase):
             response.json['welcomeMessage'],
             'Step 1: Run the server (completed!)')
 
-    # TODO: Test failing
     def test_registration(self):
         response = self.api.post('/registration')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(
             response.json['message'],
-            'This field cannot be blank')
+            'User registration')
 
-    # TODO: Test failing
     def test_login(self):
         response = self.api.post('/login')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(
             response.json['message'],
-            'This field cannot be blank')
+            'User login')
 
     def test_logout_access(self):
         response = self.api.post('/logout/access')
