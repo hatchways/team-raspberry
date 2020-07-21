@@ -1,30 +1,13 @@
 from flask_restful import Resource, reqparse
-from marshmallow import Schema, fields
-
-# NEED TO MOVE OVER TO MARSHMALLOW
-parser = reqparse.RequestParser()
-parser.add_argument('username', help = 'This field cannot be blank', required=True)
-parser.add_argument('password', help = 'This field cannot be blank', required=True)
-
-# # Marshmallow - Create schema for required user input
-# # TODO: Unsure what to do next with this to actually use the parser
-# class UserInputSchema(Schema):
-#     username = fields.Str(required=True)
-#     password = fields.Str(required=True)
-#
-# # Initialize the schema
-# user_input = UserInputSchema()
 
 
 class UserRegistration(Resource):
     def post(self):
-        data = parser.parse_args()
-        return data
+        return {'message': 'User registration'}
 
 class UserLogin(Resource):
     def post(self):
-        data = parser.parse_args()
-        return data
+        return {'message': 'User login'}
 
 class UserLogoutAccess(Resource):
     def post(self):
