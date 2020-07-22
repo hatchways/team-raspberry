@@ -1,4 +1,5 @@
 from app import db
+from passlib.hash import pbkdf2_sha256 as sha256
 
 class UserModel(db.Model):
     __tablename__ = 'users'
@@ -34,3 +35,12 @@ class UserModel(db.Model):
             return {'message': '{} rows deleted'.format(num_rows_deleted)}
         except:
             return {'message': 'Something went wrong'}
+
+    @staticmethod
+    def generate_hash(password):
+        return sha256.hash(password)
+
+    @staticmethod
+    def verify_hash(password, hash):
+        return sha256.verify(password, hash)
+
