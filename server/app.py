@@ -4,6 +4,7 @@ from flask import Flask
 from flask_restful import Api
 from flask_sqlalchemy import SQLAlchemy
 import config
+from flask_marshmallow import Marshmallow
 
 from api.ping_handler import ping_handler
 from api.home_handler import home_handler
@@ -23,6 +24,10 @@ flask_app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Initializes database connection
 db = SQLAlchemy(flask_app)
+
+# Initialize marshmallow
+ma = Marshmallow(flask_app)
+
 
 @flask_app.before_first_request
 def create_tables():
