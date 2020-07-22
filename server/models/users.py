@@ -1,10 +1,12 @@
-from app import db
+from app import db, ma
 from passlib.hash import pbkdf2_sha256 as sha256
+from marshmallow import Schema, fields, ValidationError, pre_load
 
 class UserModel(db.Model):
     __tablename__ = 'users'
 
-    # Should autoincrement (this is the implicit default with PK set to True; result is a bigserial column.
+    # Assign database fields
+    # Autoincrement is implicit default with PK set to True
     id = db.Column(db.BigInteger, primary_key=True)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(120), nullable=False)
@@ -44,3 +46,18 @@ class UserModel(db.Model):
     def verify_hash(password, hash):
         return sha256.verify(password, hash)
 
+
+# Custom validator
+def must_not_be_blank(data):
+    if not data:
+        raise ValidationError('This field cannot be blank')
+
+class UserSchema(ma.Schema):
+    id = fields.Int(dump_only=True)
+    email = fields.Email(required=True, validate=must_not_be_blank)
+    password = fields.Str(required=True, validate=must_not_be_blank)
+
+
+# Initialize schema
+user_schema = UserSchema()
+users_schema = UserSchema(many=True)

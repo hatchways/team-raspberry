@@ -1,14 +1,10 @@
-from flask_restful import Resource, reqparse
-from models.users import UserModel
-
-# TODO: Replace with Marshmallow
-parser = reqparse.RequestParser()
-parser.add_argument('email', help = 'This field cannot be blank', required=True)
-parser.add_argument('password', help = 'This field cannot be blank', required=True)
+from models.users import UserModel, user_schema, users_schema
+from flask_restful import Resource
+from flask import request
 
 class UserRegistration(Resource):
     def post(self):
-        data = parser.parse_args()
+        data = user_schema.load(request.json)
 
         # Check if email already exists
         if UserModel.find_by_email(data['email']):
@@ -28,7 +24,7 @@ class UserRegistration(Resource):
 
 class UserLogin(Resource):
     def post(self):
-        data = parser.parse_args()
+        data = user_schema.load(request.json)
         current_user = UserModel.find_by_email(data['email'])
         if not current_user:
             return {'message': 'User {} doesn\'t exist'.format(data['email'])}
