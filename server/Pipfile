@@ -13,6 +13,7 @@ flask-jwt-extended = "*"
 passlib = "*"
 marshmallow = "*"
 psycopg2-binary = "*"
+flask-marshmallow = "*"
 
 [requires]
 python_version = "3.7"
