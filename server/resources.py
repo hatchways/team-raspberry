@@ -1,25 +1,29 @@
 from flask_restful import Resource, reqparse
-from marshmallow import Schema, fields
+from models.users import UserModel
 
-# NEED TO MOVE OVER TO MARSHMALLOW
+# TODO: Replace with Marshmallow
 parser = reqparse.RequestParser()
 parser.add_argument('username', help = 'This field cannot be blank', required=True)
 parser.add_argument('password', help = 'This field cannot be blank', required=True)
 
-# # Marshmallow - Create schema for required user input
-# # TODO: Unsure what to do next with this to actually use the parser
-# class UserInputSchema(Schema):
-#     username = fields.Str(required=True)
-#     password = fields.Str(required=True)
-#
-# # Initialize the schema
-# user_input = UserInputSchema()
-
-
 class UserRegistration(Resource):
     def post(self):
         data = parser.parse_args()
-        return data
+        new_user = UserModel(
+            username = data['username'],
+            password = data['password']
+        )
+        try:
+            new_user.save_to_db()
+            return {
+                'message': 'User {} was created'.format(data['username'])
+            }
+        except Exception as e:
+            return {'message': 'Something went wrong'}, 500
+
+        # TODO: Need to raise 409 error if username already exists
+
+
 
 class UserLogin(Resource):
     def post(self):
