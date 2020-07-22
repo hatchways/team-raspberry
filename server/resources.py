@@ -3,24 +3,24 @@ from models.users import UserModel
 
 # TODO: Replace with Marshmallow
 parser = reqparse.RequestParser()
-parser.add_argument('username', help = 'This field cannot be blank', required=True)
+parser.add_argument('email', help = 'This field cannot be blank', required=True)
 parser.add_argument('password', help = 'This field cannot be blank', required=True)
 
 class UserRegistration(Resource):
     def post(self):
         data = parser.parse_args()
 
-        # Check if username already exists
-        if UserModel.find_by_username(data['username']):
-            return {'message': 'User {} already exists'.format(data['username'])}, 409
+        # Check if email already exists
+        if UserModel.find_by_email(data['email']):
+            return {'message': 'User {} already exists'.format(data['email'])}, 409
 
         new_user = UserModel(
-            username = data['username'],
+            email = data['email'],
             password = UserModel.generate_hash(data['password'])
         )
         try:
             new_user.save_to_db()
-            return {'message': 'User {} was created'.format(data['username'])}, 201
+            return {'message': 'User {} was created'.format(data['email'])}, 201
         except Exception as e:
             return {'message': 'Something went wrong'}, 500
 
@@ -29,12 +29,12 @@ class UserRegistration(Resource):
 class UserLogin(Resource):
     def post(self):
         data = parser.parse_args()
-        current_user = UserModel.find_by_username(data['username'])
+        current_user = UserModel.find_by_email(data['email'])
         if not current_user:
-            return {'message': 'User {} doesn\'t exist'.format(data['username'])}
+            return {'message': 'User {} doesn\'t exist'.format(data['email'])}
 
         if UserModel.verify_hash(data['password'], current_user.password):
-            return {'message': 'Logged in as {}'.format(current_user.username)}
+            return {'message': 'Logged in as {}'.format(current_user.email)}
         else:
             return {'message': 'Wrong credentials'}, 401
 
