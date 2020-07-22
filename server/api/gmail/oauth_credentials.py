@@ -66,7 +66,11 @@ def get_stored_credentials(user_id):
   #       To instantiate an OAuth2Credentials instance from a Json
   #       representation, use the oauth2client.client.Credentials.new_from_json
   #       class method.
+
+  # grab user object by user_id, check for credentials. If none, return nune. Else use oauth2client.client.Credentials.new_from_json to generate the credentials from the json
   raise NotImplementedError()
+
+
 
 
 def store_credentials(user_id, credentials):
@@ -84,6 +88,10 @@ def store_credentials(user_id, credentials):
   # TODO: Implement this function to work with your database.
   #       To retrieve a Json representation of the credentials instance, call the
   #       credentials.to_json() method.
+
+  # find user by user_id, set permission token and refresh token after turning credentials to json.
+
+  
   raise NotImplementedError()
 
 
