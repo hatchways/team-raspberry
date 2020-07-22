@@ -21,9 +21,6 @@ crm_api = Api(flask_app)
 flask_app.config['SQLALCHEMY_DATABASE_URI'] = config.SQLALCHEMY_DATABASE_URI
 flask_app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-# Flask Sessions key. See https://flask.palletsprojects.com/en/1.1.x/quickstart/#sessions
-flask_app.config['SECRET_KEY'] = 'some-secret-string'
-
 # Initializes database connection
 db = SQLAlchemy(flask_app)
 
