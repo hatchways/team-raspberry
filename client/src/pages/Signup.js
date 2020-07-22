@@ -19,7 +19,7 @@ class Signup extends Component {
             passwordError: "",
             repeatPasswordError: "",
         };
-        
+
         if (this.state.password.length < 6) {
             console.log('inside');
             errors.passwordError = "Required: Password length of 6";
@@ -66,7 +66,7 @@ class Signup extends Component {
                         <Button>
                             MAILSENDER
                         </Button>
-                        <Typography className={classes.title}>
+                        <Typography className={classes.navText} align="right">
                             Already have an account?
                         </Typography>
                         <Button className={classes.Button} component={Link} to="/login" variant="outlined">Login</Button>
@@ -127,7 +127,7 @@ class Signup extends Component {
                                         <TextField
                                             className={classes.TextFields}
                                             required
-                                            error={this.state.passwordError.length === 0 ?  false : true}
+                                            error={this.state.passwordError.length === 0 ? false : true}
                                             name="password"
                                             label="Password"
                                             type="password"
@@ -185,11 +185,12 @@ const signupPageStyles = theme => ({
     },
     Button: {
         marginRight: theme.spacing(2),
+        marginLeft: theme.spacing(2),
         borderColor: '#3eb485',
     },
-    title: {
-        textAlign: 'center',
+    navText: {
         color: 'black',
+        flexGrow: 1
     },
     FormTitle: {
         textAlign: 'center',

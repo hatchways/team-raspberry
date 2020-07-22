@@ -2,42 +2,6 @@ import React, { Component } from "react";
 import { Typography, AppBar, Toolbar, Button, Paper, TextField, withStyles, Snackbar, Grid } from "@material-ui/core";
 import { Link } from "react-router-dom";
 
-const loginPageStyles = theme => ({
-    text: {
-        color: 'black',
-        flexGrow: 1
-    },
-    gridRoot: {
-        height: '100vh'
-    },
-    Button: {
-        marginRight: theme.spacing(2),
-        borderColor: '#3eb485',
-    },
-    LoginButton: {
-        background: 'linear-gradient(90deg, #2DAA94 30%, #4CBC77 80%)',
-        fontSize: '18px',
-        height: '3rem',
-        width: '100%',
-        color: 'white',
-        textTransform: 'capitalize',
-        marginTop: '3rem'
-    },
-    FormTitle: {
-        textAlign: 'center',
-        color: 'black',
-        marginBottom: '3rem',
-        marginTop: '-1rem'
-    },
-    Paper: {
-        padding: '5rem',
-        width: '100%',
-    },
-    TextFields: {
-        width: '100%'
-    }
-});
-
 class Login extends Component {
     state = {
         email: '',
@@ -94,7 +58,7 @@ class Login extends Component {
                         <Button>
                             MAILSENDER
                         </Button>
-                        <Typography className={classes.text}>
+                        <Typography className={classes.navText} align="right">
                             Don't have an account?
                         </Typography>
                         <Button className={classes.Button} component={Link} to="/" variant="outlined">Create</Button>
@@ -170,6 +134,43 @@ class Login extends Component {
         );
     }
 }
+
+const loginPageStyles = theme => ({
+    navText: {
+        color: 'black',
+        flexGrow: 1
+    },
+    gridRoot: {
+        height: '100vh'
+    },
+    Button: {
+        marginRight: theme.spacing(2),
+        marginLeft: theme.spacing(2),
+        borderColor: '#3eb485',
+    },
+    LoginButton: {
+        background: 'linear-gradient(90deg, #2DAA94 30%, #4CBC77 80%)',
+        fontSize: '18px',
+        height: '3rem',
+        width: '100%',
+        color: 'white',
+        textTransform: 'capitalize',
+        marginTop: '3rem'
+    },
+    FormTitle: {
+        textAlign: 'center',
+        color: 'black',
+        marginBottom: '3rem',
+        marginTop: '-1rem'
+    },
+    Paper: {
+        padding: '5rem',
+        width: '100%',
+    },
+    TextFields: {
+        width: '100%'
+    }
+});
 
 export default withStyles(loginPageStyles)(Login);
 
