@@ -12,9 +12,9 @@ class UserRegistration(Resource):
 
         new_user = UserModel(
             email = data['email'],
-            first_name = data['first_name']
-            last_name = data['last_name']
-            password = UserModel.generate_hash(data['password'])
+            first_name = data['first_name'],
+            last_name = data['last_name'],
+            password = UserModel.generate_hash(data['password']),
             credentials = data['credentials']
         )
         try:

@@ -4,7 +4,7 @@ import { BrowserRouter, Route } from "react-router-dom";
 
 import { theme } from "./themes/theme";
 import LandingPage from "./pages/Landing";
-import SimpleDialogDemo from "./pages/GmailAPI";
+import GmailDialog from "./pages/GmailDialog";
 
 import "./App.css";
 
@@ -12,8 +12,8 @@ function App() {
   return (
     <MuiThemeProvider theme={theme}>
       <BrowserRouter>
-        <Route  exact path="/" component={LandingPage} />
-        <Route path="/gmail" component={SimpleDialogDemo} />
+        <Route exact path="/" component={LandingPage} />
+        <Route path="/gmail" component={GmailDialog} />
       </BrowserRouter>
     </MuiThemeProvider>
   );

@@ -52,7 +52,7 @@ class TestAPIRequest(Resource):
     #              credentials in a persistent database instead.
     flask.session['credentials'] = credentials_to_dict(credentials)
 
-    return flask.jsonify(**files)
+    return flask.jsonify(flask.session)
 
 class Authorize(Resource):
   # def authorize():
