@@ -1,152 +1,117 @@
-import React, { Component } from "react";
-import { Typography, AppBar, Toolbar, Button, Paper, TextField, withStyles, Snackbar, Grid } from "@material-ui/core";
-import { Link } from "react-router-dom";
+import React, { useState } from 'react'
+import Navbar from '../components/Navbar'
+import { makeStyles } from '@material-ui/core/styles'
+import { Grid, Paper, Typography, TextField, Button } from '@material-ui/core';
 
-class Login extends Component {
-    state = {
+function Login() {
+    const classes = useStyles();
+
+    const form = {
         email: '',
         password: '',
-        snackbarMsg: '',
-        snackbarOpen: false,
     }
 
-    snackbarClose = e => {
-        this.setState({ snackbarOpen: false });
+    const [formValues, setFormValues] = useState(form)
+    const { email, password } = formValues
+
+    const onSubmit = e => {
+        e.preventDefault();
+        // TODO
     }
 
-    validate = () => {
-        return true;
+    const handleChange = e => {
+        const target = e.target
+
+        setFormValues(prevState => ({
+            ...prevState,
+            [target.name]: target.value
+        }))
     }
 
-    onSubmit = e => {
-        const valid = this.validate();
-
-        if (valid) {
-            const requestOptions = {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                mode: 'cors',
-                body: JSON.stringify({ 
-                    email: this.state.email,
-                    password: this.state.email,
-                })
-            };
-
-            fetch('/login', requestOptions)
-                .then(response => response.text())
-                //.then(response => response.json())
-                .then(data => console.log(data));
-
-            this.setState({snackbarMsg: 'Welcome!', snackbarOpen: true});
-        } else {
-            this.setState({snackbarMsg: 'Incorrect Email or Password', snackbarOpen: true});
-        }
-    }
-
-    handleChange = e => {
-        this.setState({
-            [e.target.name]: e.target.value
-        });
-    }
-
-    render() {
-        const { classes } = this.props;
-        return (
-            <div className="Login">
-                <AppBar elevation={1} position="static" style={{ background: '#ffffff' }}>
-                    <Toolbar>
-                        <Button>
-                            MAILSENDER
-                        </Button>
-                        <Typography className={classes.navText} align="right">
-                            Don't have an account?
-                        </Typography>
-                        <Button className={classes.Button} component={Link} to="/" variant="outlined">Create</Button>
-                    </Toolbar>
-                </AppBar>
-                <Grid container className={classes.gridRoot} justify="center" alignItems="center">
-                    <Grid item xs={4}>
-                        <Paper className={classes.Paper}>
-                            <Typography className={classes.FormTitle}>Login</Typography>
-                            <form action="/login" method="POST" onSubmit={this.onSubmit}>
-                                <Grid item container spacing={1} justify="center" alignItems='center'>
-                        
-
-                                    <Grid item xs={2}></Grid>
-                                    <Grid item xs={8}>
-                                        <TextField
-                                            className={classes.TextFields}
-                                            required
-                                            name="email"
-                                            label="Your Email"
-                                            type="email"
-                                            variant="outlined"
-                                            value={this.state.email}
-                                            onChange={this.handleChange}
-                                        />
-                                    </Grid>
-                                    <Grid item xs={2}></Grid>
-
-                                    <Grid item xs={2}></Grid>
-                                    <Grid item xs={8}>
-                                        <TextField
-                                            className={classes.TextFields}
-                                            required
-                                            name="password"
-                                            label="Password"
-                                            type="password"
-                                            variant="outlined"
-                                            color="#75C9A8"
-                                            value={this.state.password}
-                                            helperText={this.state.passwordError}
-                                            onChange={this.handleChange}
-                                        />
-                                    </Grid>
-                                    <Grid item xs={2}></Grid>
-
-
-                                    <Grid item container>
-                                        <Grid item xs={4}></Grid>
-                                        <Grid item xs={4}>
-                                            <Button className={classes.LoginButton} type="submit">Login</Button>
-                                        </Grid>
-                                        <Grid item xs={4}></Grid>
-                                    </Grid>
-
+    return (
+        <div className={classes.root}>
+            <Navbar type="login">Don't have an account?</Navbar>
+            <Grid container spacing={0} className={classes.gridRoot} justify='center' alignItems='center'>
+                <Grid item xs={6}>
+                    <Paper className={classes.Paper}>
+                        <Typography className={classes.FormTitle}>Signup</Typography>
+                        <form action="/login" method="POST" onSubmit={onSubmit}>
+                            <Grid item container spacing={2} justify="center" alignItems='center'>
+                                <Grid item xs={10}>
+                                    <TextField
+                                        className={classes.TextFields}
+                                        required
+                                        name="email"
+                                        label="Your Email"
+                                        type="email"
+                                        variant="outlined"
+                                        value={email}
+                                        onChange={handleChange}
+                                    />
                                 </Grid>
-                            </form>
-                        </Paper>
-
-                    </Grid>
+                                <Grid item xs={10}>
+                                    <TextField
+                                        className={classes.TextFields}
+                                        required
+                                        name="password"
+                                        label="Password"
+                                        type="password"
+                                        variant="outlined"
+                                        value={password}
+                                        onChange={handleChange}
+                                    />
+                                </Grid>
+                                <Grid item xs={4}>
+                                    <Button className={classes.LoginButton} type="submit">Login</Button>
+                                </Grid>
+                            </Grid>
+                        </form>
+                    </Paper>
                 </Grid>
-                <Snackbar
-                    anchorOrigin={{
-                        vertical: 'bottom',
-                        horizontal: 'center',
-                    }}
-                    open={this.state.snackbarOpen}
-                    autoHideDuration={6000}
-                    onClose={this.snackbarClose}
-                    message={this.state.snackbarMsg}
-                >
-                </Snackbar>
-            </div>
-        );
-    }
+            </Grid>
+        </div>
+    );
 }
 
-const loginPageStyles = theme => ({
-    navText: {
-        color: 'black',
-        flexGrow: 1
+const useStyles = makeStyles(theme => ({
+    root: {
+        flexGrow: 1,
     },
     gridRoot: {
-        height: '100vh'
+        // 64px is default height of app bar
+        height: 'calc(100vh - 64px)',
+        background: '#F4F6FC'
+    },
+    AppBar: {
+        background: '#ffffff'
     },
     Button: {
         marginRight: theme.spacing(2),
         marginLeft: theme.spacing(2),
-        borderColor: '#3eb485',
+        borderColor: '#3eb485'
+    },
+    title: {
+        flexGrow: 1,
+        color: theme.primary,
+    },
+    question: {
+        flexGrow: 1,
+        textAlign: 'right',
+        color: theme.primary
+    },
+    FormTitle: {
+        textAlign: 'center',
+        color: '#000000',
+        marginBottom: '3rem',
+        marginTop: '-1rem'
+    },
+    Paper: {
+        padding: '4rem',
+        marginLeft: '20%',
+        marginRight: '20%'
+    },
+    TextFields: {
+        width: '100%',
     },
     LoginButton: {
         background: 'linear-gradient(90deg, #2DAA94 30%, #4CBC77 80%)',
@@ -157,20 +122,6 @@ const loginPageStyles = theme => ({
         textTransform: 'capitalize',
         marginTop: '3rem'
     },
-    FormTitle: {
-        textAlign: 'center',
-        color: 'black',
-        marginBottom: '3rem',
-        marginTop: '-1rem'
-    },
-    Paper: {
-        padding: '5rem',
-        width: '100%',
-    },
-    TextFields: {
-        width: '100%'
-    }
-});
+}));
 
-export default withStyles(loginPageStyles)(Login);
-
+export default Login;
