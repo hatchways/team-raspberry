@@ -1,7 +1,36 @@
-from models.users import UserModel, user_schema, users_schema, BlacklistToken
+from typing import List, Any
+from functools import wraps
+from models.users import UserModel, user_schema, users_schema
 from server.app import flask_bcrypt
 from flask_restful import Resource
 from flask import request
+
+def login_required(f):
+    @wraps(f)
+    def wrap(*args: List[Any], **kwargs):
+        auth_header = request.headers.get('Authorization')
+        if auth_header:
+            auth_token = auth_header.split(" ")[1]
+            if auth_token:
+                resp = UserModel.decode_auth_token(auth_token)
+                if not isinstance(resp, str):
+                    user_id = resp
+                    args = args + (user_id,)
+                    return f(*args, **kwargs)
+                else:
+                    responseObject = {
+                        'status': 'fail',
+                        'message': resp
+                    }
+                    return responseObject, 401
+
+        responseObject = {
+            'status': 'fail',
+            'message': 'Provide a valid auth token.'
+        }
+        return responseObject, 403
+
+    return wrap
 
 class UserRegistration(Resource):
     def post(self):
@@ -55,42 +84,18 @@ class UserLogin(Resource):
             return responseObject, 401
 
 class UserLogout(Resource):
-    def post(self):
-        auth_header = request.headers.get('Authorization')
-        if auth_header:
-            auth_token = auth_header.split(" ")[1]
-        else:
-            auth_token = ''
-        if auth_token:
-            resp = UserModel.decode_auth_token(auth_token)
-            if not isinstance(resp, str):
-                # mark the token as blacklisted
-                blacklist_token = BlacklistToken(token=auth_token)
-                try:
-                    blacklist_token.save_to_db()
-                    responseObject = {
-                        'status': 'success',
-                        'message': 'Successfully logged out.'
-                    }
-                    return responseObject, 200
-                except Exception as e:
-                    responseObject = {
-                        'status': 'fail',
-                        'message': e
-                    }
-                return responseObject, 200
-            else:
-                responseObject = {
-                    'status': 'fail',
-                    'message': resp
-                }
-                return responseObject, 401
-        else:
+
+    @login_required
+    def post(self, user_id):
+        user = UserModel.find_by_id(user_id)
+        if user:
             responseObject = {
-                'status': 'fail',
-                'message': 'Provide a valid auth token.'
+                'status': 'success',
+                'message': f'Logged out user {user_id}'
             }
-            return responseObject, 403
+            return responseObject, 200
+
+
 
 
 class AllUsers(Resource):
