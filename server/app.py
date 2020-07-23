@@ -12,8 +12,8 @@ db = SQLAlchemy()
 
 def create_app():
     flask_app = Flask(__name__)
-    CORS(flask_app, origins=["http://127.0.0.1:3000", "http://localhost:3000"], allow_headers=["Content-Type", "Authorization", "Access-Control-Allow-Credentials", "Access-Control-Allow-Origin"],
-    supports_credentials=True)
+    # CORS(flask_app, origins=["http://127.0.0.1:3000", "http://localhost:3000"], allow_headers=["Content-Type", "Authorization", "Access-Control-Allow-Credentials", "Access-Control-Allow-Origin"],supports_credentials=True)
+    CORS(flask_app)
     flask_app.secret_key = "This is a key for testing"
     # Add to database
     flask_app.config['SQLALCHEMY_DATABASE_URI'] = config.SQLALCHEMY_DATABASE_URI
