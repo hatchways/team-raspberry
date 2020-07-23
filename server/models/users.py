@@ -1,4 +1,4 @@
-from app import create_app, db
+from app import create_app, db, flask_bcrypt
 from passlib.hash import pbkdf2_sha256 as sha256
 from marshmallow import Schema, fields, ValidationError, pre_load
 import jwt
@@ -12,6 +12,13 @@ class UserModel(db.Model):
     id = db.Column(db.BigInteger, primary_key=True)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(120), nullable=False)
+
+    def __init__(self, email, password):
+        self.email = email
+        self.password = flask_bcrypt.generate_password_hash(
+            password, create_app().config.get('BCRYPT_LOG_ROUNDS')
+        ).decode()
+
 
     def save_to_db(self):
         db.session.add(self)
@@ -56,7 +63,7 @@ class UserModel(db.Model):
         """
         try:
             payload = {
-                'exp': datetime.datetime.utcnow() + datetime.timedelta(days=0, minutes=5, seconds=0),
+                'exp': datetime.datetime.utcnow() + datetime.timedelta(days=0, minutes=30, seconds=0),
                 'iat': datetime.datetime.utcnow(),
                 'sub': user_id
             }
@@ -77,7 +84,7 @@ class UserModel(db.Model):
         :return: integer|string
         """
         try:
-            payload = jwt.decode(auth_token, create_app().config.get('SECRET_KEY'))
+            payload = jwt.decode(auth_token, 'TEST_SECRET')
             return payload['sub']
         except jwt.ExpiredSignatureError:
             return 'Signature expired. Please log in again.'
