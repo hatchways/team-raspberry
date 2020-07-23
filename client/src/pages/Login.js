@@ -3,7 +3,7 @@ import Navbar from '../components/Navbar'
 import { makeStyles } from '@material-ui/core/styles'
 import { Grid, Paper, Typography, TextField, Button } from '@material-ui/core';
 
-function Login() {
+export default function Login() {
     const classes = useStyles();
 
     const form = {
@@ -34,7 +34,7 @@ function Login() {
             <Grid container spacing={0} className={classes.gridRoot} justify='center' alignItems='center'>
                 <Grid item xs={10} sm={7} md={6} lg={4}>
                     <Paper className={classes.Paper}>
-                        <Typography className={classes.FormTitle}>Login</Typography>
+                        <Typography variant="h5" className={classes.FormTitle}>Login</Typography>
                         <form action="/login" method="POST" onSubmit={onSubmit}>
                             <Grid item container spacing={2} justify="center" alignItems='center'>
                                 <Grid item xs={10}>
@@ -121,5 +121,3 @@ const useStyles = makeStyles(theme => ({
         marginTop: '3rem'
     },
 }));
-
-export default Login;

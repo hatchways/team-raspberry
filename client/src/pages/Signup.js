@@ -3,7 +3,7 @@ import Navbar from '../components/Navbar'
 import { makeStyles } from '@material-ui/core/styles'
 import { Grid, Paper, Typography, TextField, Button } from '@material-ui/core';
 
-function Signup() {
+export default function Signup() {
     const classes = useStyles();
 
     const form = {
@@ -67,10 +67,9 @@ function Signup() {
             <Grid container spacing={0} className={classes.gridRoot} justify='center' alignItems='center'>
                 <Grid item xs={10} sm={7} md={6} lg={4}>
                     <Paper className={classes.Paper}>
-                        <Typography className={classes.FormTitle}>Signup</Typography>
+                        <Typography variant="h5" className={classes.FormTitle}>Signup</Typography>
                         <form action="/signup" method="POST" onSubmit={onSubmit}>
                             <Grid item container spacing={2} justify="center" alignItems='center'>
-
                                 <Grid item xs={10}>
                                     <TextField
                                         className={classes.TextFields}
@@ -100,7 +99,7 @@ function Signup() {
                                 <Grid item xs={10}>
                                     <TextField
                                         className={classes.TextFields}
-                                        required
+                                        required                                        
                                         error={repeatPasswordError.length === 0 ? false : true}
                                         name="repeatPassword"
                                         label="Repeat Password"
@@ -153,7 +152,7 @@ const useStyles = makeStyles(theme => ({
         textAlign: 'center',
         color: '#000000',
         marginBottom: '3rem',
-        marginTop: '-1rem'
+        marginTop: '-1rem',
     },
     Paper: {
         padding: '4rem',
@@ -171,5 +170,3 @@ const useStyles = makeStyles(theme => ({
         marginTop: '3rem'
     },
 }));
-
-export default Signup;

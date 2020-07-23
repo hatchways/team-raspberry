@@ -6,32 +6,6 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 
-
-const useStyles = makeStyles((theme) => ({
-    root: {
-        flexGrow: 1
-    },
-    AppBar: {
-        background: '#ffffff',
-    },
-    Button: {
-        marginRight: theme.spacing(2),
-        marginLeft: theme.spacing(2),
-        borderColor: '#3eb485'
-    },
-    titleFirst: {
-        color: 'black'
-    },
-    titleSecond: {
-        color: theme.primary
-    },
-    question: {
-        flexGrow: 1,
-        textAlign: 'right',
-        color: 'black'
-    }
-}));
-
 export default function Navbar(props) {
     const classes = useStyles();
 
@@ -43,12 +17,13 @@ export default function Navbar(props) {
             <AppBar position="static">
                 <Toolbar className={classes.AppBar}>
                     <Button component={Link} to={'/'}>
-                    <Typography variant="h6" className={classes.titleFirst}>
-                        MAIL
-                    </Typography>
+                        <Typography variant="h6" className={classes.titleFirst}>
+                            Mail
+                        </Typography>
                         <Typography variant="h6" className={classes.titleSecond}>
-                            SENDER
-                    </Typography></Button>
+                            Sender
+                        </Typography>
+                    </Button>
 
                     <Typography variant="caption" className={classes.question}>
                         {props.children}
@@ -65,3 +40,30 @@ export default function Navbar(props) {
         </div>
     );
 }
+
+const useStyles = makeStyles((theme) => ({
+    root: {
+        flexGrow: 1
+    },
+    AppBar: {
+        background: '#ffffff',
+    },
+    Button: {
+        marginRight: theme.spacing(2),
+        marginLeft: theme.spacing(2),
+        borderColor: '#3eb485'
+    },
+    titleFirst: {
+        color: 'black',
+        textTransform: 'uppercase',
+    },
+    titleSecond: {
+        color: theme.primary,
+        textTransform: 'uppercase',
+    },
+    question: {
+        flexGrow: 1,
+        textAlign: 'right',
+        color: 'black'
+    }
+}));
