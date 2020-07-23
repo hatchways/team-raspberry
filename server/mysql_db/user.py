@@ -14,9 +14,3 @@ class User(db.Model):
 class UserSchema(ma.Schema):
   class Meta:
     fields = ('id', 'name', 'email', 'credentials')
-
-# Initialize Schema
-# user_schema = UserSchema(strict=True)
-user_schema = UserSchema()
-# users_schema = UserSchema(many=True, strict=True)
-users_schema = UserSchema(many=True)

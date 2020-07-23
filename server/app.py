@@ -139,6 +139,9 @@ def oauth2callback():
   # ACTION ITEM: In a production app, you likely want to save these
   #              credentials in a persistent database instead.
   credentials = flow.credentials
+  new_google_auth = GoogleAuth(credentials=credentials)
+  db.session.add(new_google_auth)
+  db.session.commit()
   flask.session['credentials'] = credentials_to_dict(credentials)
 
   return flask.redirect(flask.url_for('test_api_request'))
@@ -171,6 +174,12 @@ def clear_credentials():
   return ('Credentials have been cleared.<br><br>' +
           print_index_table())
 
+@app.route('/google_auth', methods=['GET'], endpoint='google_auth')
+def google_auth():
+  all_google_auth = GoogleAuth.query.all()
+  result = google_auths_schema.dump(all_google_auth)
+  return jsonify(result)
+
 
 def credentials_to_dict(credentials):
   return {'token': credentials.token,
@@ -200,6 +209,8 @@ def print_index_table():
           '    After clearing the token, if you <a href="/test">test the ' +
           '    API request</a> again, you should go back to the auth flow.' +
           '</td></tr></table>')
+
+
 
 
 # app.register_blueprint(home_handler)
