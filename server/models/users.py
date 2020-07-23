@@ -52,10 +52,14 @@ def must_not_be_blank(data):
     if not data:
         raise ValidationError('This field cannot be blank')
 
+def pw_length(password):
+    if len(password) < 6:
+        raise ValidationError('Password must be longer than 6 characters')
+
 class UserSchema(ma.Schema):
     id = fields.Int(dump_only=True)
     email = fields.Email(required=True, validate=must_not_be_blank)
-    password = fields.Str(required=True, validate=must_not_be_blank)
+    password = fields.Str(required=True, validate=pw_length)
 
 
 # Initialize schema
