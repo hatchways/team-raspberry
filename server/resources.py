@@ -1,6 +1,6 @@
 from models.users import UserModel, user_schema, users_schema
 from flask_restful import Resource
-from flask import request
+from flask import request, make_response, jsonify
 
 class UserRegistration(Resource):
     def post(self):
@@ -16,9 +16,19 @@ class UserRegistration(Resource):
         )
         try:
             new_user.save_to_db()
-            return {'message': 'User {} was created'.format(data['email'])}, 201
+            auth_token = UserModel.encode_auth_token(new_user.id)
+            responseObject = {
+                'status': 'success',
+                'message': 'User {} was created'.format(data['email']),
+                'auth_token': auth_token.decode()
+            }
+            return make_response(jsonify(responseObject)), 201
         except Exception as e:
-            return {'message': 'Something went wrong'}, 500
+            responseObject = {
+                'status': 'fail',
+                'message': 'Something went wrong. Please try again.'
+            }
+            return make_response(jsonify(responseObject)), 500
 
 
 
@@ -27,7 +37,7 @@ class UserLogin(Resource):
         data = user_schema.load(request.json)
         current_user = UserModel.find_by_email(data['email'])
         if not current_user:
-            return {'message': 'User {} doesn\'t exist'.format(data['email'])}
+            return {'message': 'Wrong credentials'}
 
         if UserModel.verify_hash(data['password'], current_user.password):
             return {'message': 'Logged in as {}'.format(current_user.email)}

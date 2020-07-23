@@ -1,6 +1,8 @@
 from app import create_app, db
 from passlib.hash import pbkdf2_sha256 as sha256
 from marshmallow import Schema, fields, ValidationError, pre_load
+import jwt
+import datetime
 
 class UserModel(db.Model):
     __tablename__ = 'users'
@@ -45,6 +47,42 @@ class UserModel(db.Model):
     @staticmethod
     def verify_hash(password, hash):
         return sha256.verify(password, hash)
+
+    @staticmethod
+    def encode_auth_token(user_id: int):
+        """
+        Generates the Auth Token
+        :return: string
+        """
+        try:
+            payload = {
+                'exp': datetime.datetime.utcnow() + datetime.timedelta(days=0, minutes=5, seconds=0),
+                'iat': datetime.datetime.utcnow(),
+                'sub': user_id
+            }
+            return jwt.encode(
+                payload,
+                # TODO
+                'TEST_SECRET',
+                algorithm='HS256'
+            )
+        except Exception as e:
+            return e
+
+    @staticmethod
+    def decode_auth_token(auth_token):
+        """
+        Validates the auth token
+        :param auth_token:
+        :return: integer|string
+        """
+        try:
+            payload = jwt.decode(auth_token, create_app().config.get('SECRET_KEY'))
+            return payload['sub']
+        except jwt.ExpiredSignatureError:
+            return 'Signature expired. Please log in again.'
+        except jwt.InvalidTokenError:
+            return 'Invalid token. Please log in again.'
 
 
 # Custom validator
