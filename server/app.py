@@ -1,11 +1,9 @@
 import json
 import os
-from flask import Flask
-from flask_restful import Api
+from flask import Flask, request, abort
+from flask_restful import Api #TODO Get rid of this and just use blueprints
 from flask_sqlalchemy import SQLAlchemy
 import config
-from flask_marshmallow import Marshmallow
-
 from api.ping_handler import ping_handler
 from api.home_handler import home_handler
 
@@ -15,36 +13,42 @@ GOOGLE_CLIENT_SECRET = os.environ.get("GOOGLE_CLIENT_SECRET", None)
 GOOGLE_DISCOVERY_URL = (
     "https://accounts.google.com/.well-known/openid-configuration"
 )
-flask_app = Flask(__name__)
-crm_api = Api(flask_app)
-
-# Add to database
-flask_app.config['SQLALCHEMY_DATABASE_URI'] = config.SQLALCHEMY_DATABASE_URI
-flask_app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Initializes database connection
-db = SQLAlchemy(flask_app)
+db = SQLAlchemy()
 
-# Initialize marshmallow
-ma = Marshmallow(flask_app)
+def create_app():
+    flask_app = Flask(__name__)
+    # Add to database
+    flask_app.config['SQLALCHEMY_DATABASE_URI'] = config.SQLALCHEMY_DATABASE_URI
+    flask_app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
+    flask_app.register_blueprint(home_handler)
+    flask_app.register_blueprint(ping_handler)
 
-@flask_app.before_first_request
+    crm_api = Api(flask_app)
+
+    import resources
+
+    crm_api.add_resource(resources.UserRegistration, '/registration')
+    crm_api.add_resource(resources.UserLogin, '/login')
+    crm_api.add_resource(resources.UserLogoutAccess, '/logout/access')
+    crm_api.add_resource(resources.UserLogoutRefresh, '/logout/refresh')
+    crm_api.add_resource(resources.TokenRefresh, '/token/refresh')
+    crm_api.add_resource(resources.AllUsers, '/users')
+    crm_api.add_resource(resources.SecretResource, '/secret')
+
+    db.init_app(flask_app)
+
+    return flask_app
+
 def create_tables():
     db.create_all()
+    db.session.commit()
 
-import views, models, resources
-
-flask_app.register_blueprint(home_handler)
-flask_app.register_blueprint(ping_handler)
-
-crm_api.add_resource(resources.UserRegistration, '/registration')
-crm_api.add_resource(resources.UserLogin, '/login')
-crm_api.add_resource(resources.UserLogoutAccess, '/logout/access')
-crm_api.add_resource(resources.UserLogoutRefresh, '/logout/refresh')
-crm_api.add_resource(resources.TokenRefresh, '/token/refresh')
-crm_api.add_resource(resources.AllUsers, '/users')
-crm_api.add_resource(resources.SecretResource, '/secret')
 
 if __name__ == '__main__':
-    flask_app.run()
+    flask_app = create_app()
+    with flask_app.app_context():
+        create_tables()
+        flask_app.run('0.0.0.0', port=5000)
