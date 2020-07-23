@@ -29,6 +29,7 @@ instance/
 # VSCode
 .vscode
 
+# Secrets
+client_secret.json
 
 #TODO add .env to your gitignore
-

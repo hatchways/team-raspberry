@@ -1,73 +1,29 @@
-from flask import Flask, request, jsonify
-from flask_sqlalchemy import SQLAlchemy
-from flask_marshmallow import Marshmallow
+# -*- coding: utf-8 -*-
+
+import os
+import flask
+import requests
+
 import google.oauth2.credentials
 import google_auth_oauthlib.flow
 import googleapiclient.discovery
-import requests
-import flask
-import os
 
+# This variable specifies the name of a file that contains the OAuth 2.0
+# information for this application, including its client_id and client_secret.
+CLIENT_SECRETS_FILE = "client_secret.json"
 
-# from api.ping_handler import ping_handler
-# from api.home_handler import home_handler
+# This OAuth 2.0 access scope allows for full read/write access to the
+# authenticated user's account and requires requests to use an SSL connection.
+SCOPES = ['https://www.googleapis.com/auth/drive.metadata.readonly']
+API_SERVICE_NAME = 'drive'
+API_VERSION = 'v2'
 
-# Configuration
-GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID", None)
-GOOGLE_CLIENT_SECRET = os.environ.get("GOOGLE_CLIENT_SECRET", None)
-GOOGLE_DISCOVERY_URL = (
-    "https://accounts.google.com/.well-known/openid-configuration"
-)
-SCOPES = [
-  'https://www.googleapis.com/auth/gmail.send',
-  # 'https://www.googleapis.com/auth/userinfo.email',
-  # 'https://www.googleapis.com/auth/userinfo.profile',
-]
-API_SERVICE_NAME = 'gmail'
-API_VERSION = 'v1'
-
-
-# Initialize App
-app = Flask(__name__)
+app = flask.Flask(__name__)
+# Note: A secret key is included in the sample so that it works.
+# If you use this code in your application, replace this with a truly secret
+# key. See https://flask.palletsprojects.com/quickstart/#sessions.
 app.secret_key = 'REPLACE ME - this value is here as a placeholder.'
-rootdir = os.path.abspath(os.path.dirname(__file__))
 
-# Database Setup
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(rootdir, 'db.sqlite')
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-# Initialize DB
-db = SQLAlchemy(app)
-
-# Initialize Marshmallow
-ma = Marshmallow(app)
-
-# User Model
-class GoogleAuth(db.Model):
-  id = db.Column(db.Integer, primary_key=True)
-  name = db.Column(db.String(100))
-  email = db.Column(db.String(100))
-  credentials = db.Column(db.String(500))
-
-  def __init__(self, name, email, credentials):
-    self.name = name
-    self.email = email
-    self.credentials = credentials
-
-# User Schema
-class GoogleAuthSchema(ma.Schema):
-  class Meta:
-    fields = ('id', 'name', 'email', 'credentials')
-
-# Initialize Schema
-# user_schema = UserSchema(strict=True)
-google_auth_schema = GoogleAuthSchema()
-# users_schema = UserSchema(many=True, strict=True)
-google_auths_schema = GoogleAuthSchema(many=True)
-
-@app.before_first_request
-def create_tables():
-    db.create_all()
 
 @app.route('/')
 def index():
@@ -201,9 +157,6 @@ def print_index_table():
           '    API request</a> again, you should go back to the auth flow.' +
           '</td></tr></table>')
 
-
-# app.register_blueprint(home_handler)
-# app.register_blueprint(ping_handler)
 
 if __name__ == '__main__':
   # When running locally, disable OAuthlib's HTTPs verification.

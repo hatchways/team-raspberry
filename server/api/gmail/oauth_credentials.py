@@ -1,5 +1,6 @@
 from flask import jsonify, Blueprint
-
+import json
+import os
 import logging
 from oauth2client.client import flow_from_clientsecrets
 from oauth2client.client import FlowExchangeError
@@ -17,7 +18,7 @@ from apiclient.discovery import build
 #       "token_uri": "https://accounts.google.com/o/oauth2/token"
 #     }
 #   }
-CLIENTSECRETS_LOCATION = './client_secret.json'
+CLIENTSECRETS_LOCATION = os.environ.get('GOOGLE_CLIENT_SECRET', None)
 REDIRECT_URI = 'https://127.0.0.1:5000'
 SCOPES = [
     # 'https://www.googleapis.com/auth/gmail.readonly',
@@ -68,7 +69,15 @@ def get_stored_credentials(user_id):
   #       class method.
 
   # grab user object by user_id, check for credentials. If none, return nune. Else use oauth2client.client.Credentials.new_from_json to generate the credentials from the json
-  raise NotImplementedError()
+  user = User.query.get(id)
+  creds = user.credentials
+  if len(creds) == 0:
+    return None
+  else:
+    creds = json.loads(creds)
+    # TODO: implement error checking functionality for below
+    return oauth2client.client.Credentials.new_from_json(creds)
+  # raise NotImplementedError()
 
 
 
@@ -86,13 +95,15 @@ def store_credentials(user_id, credentials):
     NotImplemented: This function has not been implemented.
   """
   # TODO: Implement this function to work with your database.
-  #       To retrieve a Json representation of the credentials instance, call the
-  #       credentials.to_json() method.
+  #       To retrieve a Json representation of the credentials instance, call
+  #       the credentials.to_json() method.
 
   # find user by user_id, set permission token and refresh token after turning credentials to json.
+  user = User.query.get(id)
+  user.credentials = credentials.to_json()
+  db.session.commit()
 
-  
-  raise NotImplementedError()
+  # raise NotImplementedError()
 
 
 def exchange_code(authorization_code):
@@ -111,7 +122,7 @@ def exchange_code(authorization_code):
   try:
     credentials = flow.step2_exchange(authorization_code)
     return credentials
-  except FlowExchangeError, error:
+  except FlowExchangeError as error:
     logging.error('An error occurred: %s', error)
     raise CodeExchangeException(None)
 
@@ -131,7 +142,7 @@ def get_user_info(credentials):
   user_info = None
   try:
     user_info = user_info_service.userinfo().get().execute()
-  except errors.HttpError, e:
+  except errors.HttpError as e:
     logging.error('An error occurred: %s', e)
   if user_info and user_info.get('id'):
     return user_info
