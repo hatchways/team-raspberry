@@ -7,21 +7,17 @@ verify_ssl = true
 
 [packages]
 flask = "*"
-flask-jwt-extended = "*"
-flask-marshmallow = "*"
-flask-restful = "*"
 flask-sqlalchemy = "*"
+flask-login = "*"
+requests = "*"
 google-api-python-client = "*"
-google-auth = "*"
+pyopenssl = "*"
+webtest = "*"
 google-auth-httplib2 = "*"
 google-auth-oauthlib = "*"
-marshmallow = "*"
+flask-marshmallow = "*"
 marshmallow-sqlalchemy = "*"
-passlib = "*"
-psycopg2-binary = "*"
-pyopenssl = "*"
-requests = "*"
-webtest = "*"
+google-auth = "*"
 
 [requires]
 python_version = "3.7"
