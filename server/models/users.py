@@ -8,12 +8,21 @@ class UserModel(db.Model):
     # Assign database fields
     # Autoincrement is implicit default with PK set to True
     id = db.Column(db.BigInteger, primary_key=True)
+    first_name = db.Column(db.String(50), nullable=False)
+    last_name = db.Column(db.String(50), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(120), nullable=False)
+    credentials = db.Column(db.String(500))
 
     def save_to_db(self):
         db.session.add(self)
         db.session.commit()
+
+    # Update Google OAuth credentials
+    def updateCredentials(self, credentials):
+        # Credentials may need to be parsed from json.
+        self.credentials = credentials
+        self.save_to_db()
 
     # return a user’s data if there is match by email
     @classmethod
