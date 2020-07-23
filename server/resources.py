@@ -1,6 +1,6 @@
 from models.users import UserModel, user_schema, users_schema
 from flask_restful import Resource
-from flask import request
+from flask import request, session
 
 class UserRegistration(Resource):
     def post(self):
@@ -12,15 +12,17 @@ class UserRegistration(Resource):
 
         new_user = UserModel(
             email = data['email'],
+            first_name = data['first_name']
+            last_name = data['last_name']
             password = UserModel.generate_hash(data['password'])
+            credentials = data['credentials']
         )
         try:
             new_user.save_to_db()
+            session['current_user'] = new_user
             return {'message': 'User {} was created'.format(data['email'])}, 201
         except Exception as e:
             return {'message': 'Something went wrong'}, 500
-
-
 
 class UserLogin(Resource):
     def post(self):
@@ -30,12 +32,14 @@ class UserLogin(Resource):
             return {'message': 'User {} doesn\'t exist'.format(data['email'])}
 
         if UserModel.verify_hash(data['password'], current_user.password):
+            session['current_user'] = current_user
             return {'message': 'Logged in as {}'.format(current_user.email)}
         else:
             return {'message': 'Wrong credentials'}, 401
 
 class UserLogoutAccess(Resource):
     def post(self):
+        
         return {'message': 'User logout'}
 
 class UserLogoutRefresh(Resource):
