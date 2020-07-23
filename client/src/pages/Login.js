@@ -32,9 +32,9 @@ function Login() {
         <div className={classes.root}>
             <Navbar type="login">Don't have an account?</Navbar>
             <Grid container spacing={0} className={classes.gridRoot} justify='center' alignItems='center'>
-                <Grid item xs={6}>
+                <Grid item xs={10} sm={7} md={6} lg={4}>
                     <Paper className={classes.Paper}>
-                        <Typography className={classes.FormTitle}>Signup</Typography>
+                        <Typography className={classes.FormTitle}>Login</Typography>
                         <form action="/login" method="POST" onSubmit={onSubmit}>
                             <Grid item container spacing={2} justify="center" alignItems='center'>
                                 <Grid item xs={10}>
@@ -107,8 +107,6 @@ const useStyles = makeStyles(theme => ({
     },
     Paper: {
         padding: '4rem',
-        marginLeft: '20%',
-        marginRight: '20%'
     },
     TextFields: {
         width: '100%',

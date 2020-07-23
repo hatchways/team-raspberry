@@ -65,7 +65,7 @@ function Signup() {
         <div className={classes.root}>
             <Navbar type="signup">Already have an account?</Navbar>
             <Grid container spacing={0} className={classes.gridRoot} justify='center' alignItems='center'>
-                <Grid item xs={6}>
+                <Grid item xs={10} sm={7} md={6} lg={4}>
                     <Paper className={classes.Paper}>
                         <Typography className={classes.FormTitle}>Signup</Typography>
                         <form action="/signup" method="POST" onSubmit={onSubmit}>
@@ -106,7 +106,6 @@ function Signup() {
                                         label="Repeat Password"
                                         type="password"
                                         variant="outlined"
-                                        color="#000000"
                                         value={repeatPassword}
                                         helperText={repeatPasswordError}
                                         onChange={handleChange}
@@ -158,8 +157,6 @@ const useStyles = makeStyles(theme => ({
     },
     Paper: {
         padding: '4rem',
-        marginLeft: '20%',
-        marginRight: '20%'
     },
     TextFields: {
         width: '100%',
