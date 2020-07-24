@@ -2,6 +2,7 @@ from app import create_app, db, flask_bcrypt
 from marshmallow import Schema, fields, ValidationError, pre_load
 import jwt
 import datetime
+import resources
 
 class UserModel(db.Model):
     __tablename__ = 'users'
@@ -9,13 +10,16 @@ class UserModel(db.Model):
     # Assign database fields
     # Autoincrement is implicit default with PK set to True
     id = db.Column(db.BigInteger, primary_key=True)
-    first_name = db.Column(db.String(50), nullable=False)
-    last_name = db.Column(db.String(50), nullable=False)
+    first_name = db.Column(db.String(50), nullable=False, server_default='anonymous')
+    last_name = db.Column(db.String(50), nullable=False, server_default='anonymous')
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(120), nullable=False)
-    created = db.Column(db.DateTime, nullable=False, default=datetime.datetime.utcnow)
+    created = db.Column(db.DateTime, nullable=False, default=datetime.datetime.utcnow, server_default=datetime.datetime.utcnow)
 
-    def __init__(self, email, password):
+
+    def __init__(self, first_name, last_name, email, password):
+        self.first_name = first_name
+        self.last_name = last_name
         self.email = email
         self.password = flask_bcrypt.generate_password_hash(
             password, create_app().config.get('BCRYPT_LOG_ROUNDS')
@@ -35,6 +39,10 @@ class UserModel(db.Model):
     @classmethod
     def find_by_id(cls, user_id):
         return cls.query.filter_by(id=user_id).first()
+
+    @classmethod
+    def verify_password(cls):
+        pass
 
     @classmethod
     def return_all(cls):
