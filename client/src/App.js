@@ -1,9 +1,10 @@
 import React from "react";
 import { MuiThemeProvider } from "@material-ui/core";
-import { BrowserRouter, Route } from "react-router-dom";
+import { BrowserRouter, Switch, Route } from "react-router-dom";
 
 import { theme } from "./themes/theme";
-import LandingPage from "./pages/Landing";
+import Signup from "./pages/Signup";
+import Login from "./pages/Login";
 import SimpleDialogDemo from "./pages/GmailAPI";
 
 import "./App.css";
@@ -12,8 +13,11 @@ function App() {
   return (
     <MuiThemeProvider theme={theme}>
       <BrowserRouter>
-        <Route  exact path="/" component={LandingPage} />
-        <Route path="/gmail" component={SimpleDialogDemo} />
+        <Switch>
+          <Route path="/" exact component={Signup} />
+          <Route path="/gmail" component={SimpleDialogDemo} />
+          <Route path="/login" component={Login} />
+        </Switch>
       </BrowserRouter>
     </MuiThemeProvider>
   );
