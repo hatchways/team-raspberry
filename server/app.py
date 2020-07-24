@@ -1,6 +1,7 @@
 import json
 import os
 from flask import Flask, request, abort
+from flask_migrate import Migrate
 from flask_bcrypt import Bcrypt
 from flask_restful import Api
 from flask_sqlalchemy import SQLAlchemy
@@ -17,6 +18,11 @@ GOOGLE_DISCOVERY_URL = (
 
 # Initializes database connection
 db = SQLAlchemy()
+
+# Initialize a migrate instance
+migrate = Migrate()
+
+# Initialize bcrypt
 flask_bcrypt = Bcrypt()
 
 def create_app():
@@ -39,8 +45,11 @@ def create_app():
     crm_api.add_resource(resources.SecretResource, '/secret')
 
     db.init_app(flask_app)
+    migrate.init_app(flask_app, db)
+
 
     return flask_app
+
 
 def create_tables():
     db.create_all()
