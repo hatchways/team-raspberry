@@ -11,13 +11,17 @@ class UserModel(db.Model):
     id = db.Column(db.BigInteger, primary_key=True)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(120), nullable=False)
+    firstName = db.Column(db.String(120), nullable=False)
+    lastName = db.Column(db.String(120), nullable=False)
     created = db.Column(db.DateTime, nullable=False, default=datetime.datetime.utcnow)
 
-    def __init__(self, email, password):
+    def __init__(self, email, password, firstName, lastName):
         self.email = email
         self.password = flask_bcrypt.generate_password_hash(
             password, create_app().config.get('BCRYPT_LOG_ROUNDS')
         ).decode()
+        self.firstName = firstName
+        self.lastName = lastName
 
 
     def save_to_db(self):
@@ -39,7 +43,9 @@ class UserModel(db.Model):
         def to_json(x):
             return {
                 'email': x.email,
-                'password': x.password
+                'password': x.password,
+                'firstName': x.firstName,
+                'lastName': x.lastName
             }
         return {'users': list(map(lambda x: to_json(x), UserModel.query.all()))}
 
@@ -103,6 +109,8 @@ class UserSchema(Schema):
     id = fields.Int(dump_only=True)
     email = fields.Email(required=True, validate=must_not_be_blank)
     password = fields.Str(required=True, validate=pw_length)
+    firstName = fields.Str(required=True)
+    lastName = fields.Str(required=True)
     created = fields.DateTime(required=True, dump_only=True)
 
 # Initialize schema

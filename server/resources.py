@@ -36,15 +36,18 @@ def login_required(f):
 class UserRegistration(Resource):
     def post(self):
         data = user_schema.load(request.json)
-
+        
         # Check if email already exists
         if UserModel.find_by_email(data['email']):
             return {'message': 'User {} already exists'.format(data['email'])}, 409
 
         new_user = UserModel(
             email = data['email'],
-            password = data['password']
+            password = data['password'],
+            firstName = data['firstName'],
+            lastName = data['lastName']
         )
+
         try:
             new_user.save_to_db()
             auth_token = UserModel.encode_auth_token(new_user.id)
@@ -65,8 +68,20 @@ class UserRegistration(Resource):
 
 class UserLogin(Resource):
     def post(self):
-        data = user_schema.load(request.json)
+        
+        data = request.json
+        #I believe we cannot do this because the login form
+        #does not include firstName or lastName
+        #data = user_schema.load(request.json)
         current_user = UserModel.find_by_email(data['email'])
+
+        if current_user == None:
+            responseObject = {
+                'status': 'fail',
+                'message': 'Wrong credentials.'
+            }
+            return responseObject, 401
+
         pw_is_valid = flask_bcrypt.check_password_hash(current_user.password, data.get('password'))
 
         if current_user and pw_is_valid :
@@ -95,9 +110,6 @@ class UserLogout(Resource):
                 'message': f'Logged out user {user_id}'
             }
             return responseObject, 200
-
-
-
 
 class AllUsers(Resource):
     def get(self):
