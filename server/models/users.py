@@ -11,6 +11,7 @@ class UserModel(db.Model):
     id = db.Column(db.BigInteger, primary_key=True)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(120), nullable=False)
+    created = db.Column(db.DateTime, nullable=False, default=datetime.datetime.utcnow)
 
     def __init__(self, email, password):
         self.email = email
@@ -102,6 +103,7 @@ class UserSchema(Schema):
     id = fields.Int(dump_only=True)
     email = fields.Email(required=True, validate=must_not_be_blank)
     password = fields.Str(required=True, validate=pw_length)
+    created = fields.DateTime(required=True, dump_only=True)
 
 # Initialize schema
 user_schema = UserSchema()
