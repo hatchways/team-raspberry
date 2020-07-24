@@ -1,14 +1,13 @@
 
 import unittest
-from app import app
-
+from app import flask_app
 
 class TestBase(unittest.TestCase):
 
     # executed prior to each test
     def setUp(self):
-        app.testing = True
-        self.api = app.test_client()
+        flask_app.testing = True
+        self.api = flask_app.test_client()
 
     # executed after each test
     def tearDown(self):
