@@ -1,7 +1,7 @@
 from typing import List, Any
 from functools import wraps
 from models.users import UserModel, user_schema, users_schema
-from server.app import flask_bcrypt
+from app import flask_bcrypt
 from flask_restful import Resource
 from flask import request
 
