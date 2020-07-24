@@ -10,11 +10,11 @@ class UserModel(db.Model):
     # Assign database fields
     # Autoincrement is implicit default with PK set to True
     id = db.Column(db.BigInteger, primary_key=True)
-    first_name = db.Column(db.String(50), nullable=False, server_default='anonymous')
-    last_name = db.Column(db.String(50), nullable=False, server_default='anonymous')
+    first_name = db.Column(db.String(50), nullable=False, server_default=None)
+    last_name = db.Column(db.String(50), nullable=False, server_default=None)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(120), nullable=False)
-    created = db.Column(db.DateTime, nullable=False, default=datetime.datetime.utcnow, server_default=datetime.datetime.utcnow)
+    created = db.Column(db.DateTime, nullable=False, default=datetime.datetime.utcnow, server_default=None)
 
 
     def __init__(self, first_name, last_name, email, password):
