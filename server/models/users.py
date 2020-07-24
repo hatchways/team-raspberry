@@ -2,7 +2,6 @@ from app import create_app, db, flask_bcrypt
 from marshmallow import Schema, fields, ValidationError, pre_load
 import jwt
 import datetime
-import resources
 
 class UserModel(db.Model):
     __tablename__ = 'users'
@@ -40,9 +39,8 @@ class UserModel(db.Model):
     def find_by_id(cls, user_id):
         return cls.query.filter_by(id=user_id).first()
 
-    @classmethod
-    def verify_password(cls):
-        pass
+    def verify_password(self, password):
+        return flask_bcrypt.check_password_hash(self.password, password)
 
     @classmethod
     def return_all(cls):

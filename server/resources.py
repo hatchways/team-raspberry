@@ -67,9 +67,9 @@ class UserRegistration(Resource):
 
 class UserLogin(Resource):
     def post(self):
-        data = user_schema.load(request.json)
+        data = request.json
         current_user = UserModel.find_by_email(data['email'])
-        pw_is_valid = flask_bcrypt.check_password_hash(current_user.password, data.get('password'))
+        pw_is_valid = current_user.verify_password(data['password'])
 
         if current_user and pw_is_valid :
             auth_token = current_user.encode_auth_token(current_user.id)
@@ -97,8 +97,6 @@ class UserLogout(Resource):
                 'message': f'Logged out user {user_id}'
             }
             return responseObject, 200
-
-
 
 
 class AllUsers(Resource):
