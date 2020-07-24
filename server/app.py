@@ -1,7 +1,8 @@
 import json
 import os
 from flask import Flask, request, abort
-from flask_restful import Api #TODO Get rid of this and just use blueprints
+from flask_bcrypt import Bcrypt
+from flask_restful import Api
 from flask_sqlalchemy import SQLAlchemy
 import config
 from api.ping_handler import ping_handler
@@ -16,6 +17,7 @@ GOOGLE_DISCOVERY_URL = (
 
 # Initializes database connection
 db = SQLAlchemy()
+flask_bcrypt = Bcrypt()
 
 def create_app():
     flask_app = Flask(__name__)
@@ -32,9 +34,7 @@ def create_app():
 
     crm_api.add_resource(resources.UserRegistration, '/registration')
     crm_api.add_resource(resources.UserLogin, '/login')
-    crm_api.add_resource(resources.UserLogoutAccess, '/logout/access')
-    crm_api.add_resource(resources.UserLogoutRefresh, '/logout/refresh')
-    crm_api.add_resource(resources.TokenRefresh, '/token/refresh')
+    crm_api.add_resource(resources.UserLogout, '/logout')
     crm_api.add_resource(resources.AllUsers, '/users')
     crm_api.add_resource(resources.SecretResource, '/secret')
 
