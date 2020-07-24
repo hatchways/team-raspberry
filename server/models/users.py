@@ -38,6 +38,9 @@ class UserModel(db.Model):
     def find_by_id(cls, user_id):
         return cls.query.filter_by(id=user_id).first()
 
+    def verify_password(self, password):
+        return flask_bcrypt.check_password_hash(self.password, password)
+
     @classmethod
     def return_all(cls):
         def to_json(x):
