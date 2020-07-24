@@ -47,17 +47,10 @@ def create_app():
     db.init_app(flask_app)
     migrate.init_app(flask_app, db)
 
-
     return flask_app
-
-
-def create_tables():
-    db.create_all()
-    db.session.commit()
 
 
 if __name__ == '__main__':
     flask_app = create_app()
     with flask_app.app_context():
-        create_tables()
         flask_app.run('0.0.0.0', port=5000)
