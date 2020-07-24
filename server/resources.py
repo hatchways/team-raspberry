@@ -7,12 +7,13 @@ from flask import request
 
 def login_required(f):
     @wraps(f)
-    def wrap(*args: List[Any], **kwargs):
+    def wrap(*args, **kwargs):
         auth_header = request.headers.get('Authorization')
         if auth_header:
             auth_token = auth_header.split(" ")[1]
             if auth_token:
                 resp = UserModel.decode_auth_token(auth_token)
+                # Strings are error messages, if it's an int, then it's the user_id.
                 if not isinstance(resp, str):
                     user_id = resp
                     args = args + (user_id,)

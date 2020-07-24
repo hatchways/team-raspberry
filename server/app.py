@@ -2,7 +2,7 @@ import json
 import os
 from flask import Flask, request, abort
 from flask_bcrypt import Bcrypt
-from flask_restful import Api #TODO Get rid of this and just use blueprints
+from flask_restful import Api
 from flask_sqlalchemy import SQLAlchemy
 import config
 from api.ping_handler import ping_handler
