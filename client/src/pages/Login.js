@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import Navbar from '../components/Navbar'
 import { makeStyles } from '@material-ui/core/styles'
-import { Grid, Paper, Typography, TextField, Button } from '@material-ui/core';
+import { Grid, Paper, Typography, TextField, Button, Snackbar } from '@material-ui/core';
 
 export default function Login() {
     const classes = useStyles();
@@ -11,12 +11,37 @@ export default function Login() {
         password: '',
     }
 
+    const snackbarObj = {
+        snackbarMsg: '',
+        snackbarOpen: false,
+    }
+
     const [formValues, setFormValues] = useState(form)
+    const [snackbar, setSnackBar] = useState(snackbarObj)
     const { email, password } = formValues
 
     const onSubmit = e => {
         e.preventDefault();
-        // TODO
+
+        fetch('/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formValues)
+        })
+        .then(res => {
+            res.json().then(data => {
+                setSnackBar({
+                    snackbarMsg: data.message,
+                    snackbarOpen: true
+                })
+
+                if (res.status < 300 && res.status >= 200) {
+                    // TODO REDIRECTION
+                }
+            })
+        })
     }
 
     const handleChange = e => {
@@ -26,6 +51,13 @@ export default function Login() {
             ...prevState,
             [target.name]: target.value
         }))
+    }
+
+    const snackbarClose = () => {
+        setSnackBar({
+            snackbarMsg: '',
+            snackbarOpen: false,
+        })
     }
 
     return (
@@ -38,6 +70,7 @@ export default function Login() {
                         <form action="/login" method="POST" onSubmit={onSubmit}>
                             <Grid item container spacing={2} justify="center" alignItems='center'>
                                 <Grid item xs={10}>
+
                                     <TextField
                                         className={classes.TextFields}
                                         required
@@ -48,6 +81,7 @@ export default function Login() {
                                         value={email}
                                         onChange={handleChange}
                                     />
+
                                 </Grid>
                                 <Grid item xs={10}>
                                     <TextField
@@ -69,6 +103,26 @@ export default function Login() {
                     </Paper>
                 </Grid>
             </Grid>
+            <Snackbar
+                anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'center',
+                }}
+                open={snackbar.snackbarOpen}
+                autoHideDuration={6000}
+                onClose={snackbarClose}
+                message={snackbar.snackbarMsg}
+                action={
+                    <Button 
+                        color="inherit" 
+                        size="small" 
+                        onClick={snackbarClose} 
+                        variant="outlined"
+                    >
+                        X
+                    </Button>
+                }
+            />
         </div>
     );
 }
@@ -110,6 +164,14 @@ const useStyles = makeStyles(theme => ({
     },
     TextFields: {
         width: '100%',
+        '& label.Mui-focused': {
+            color: theme.primary,
+        },
+        '& .MuiOutlinedInput-root': {
+            '&.Mui-focused fieldset': {
+                borderColor: theme.primary,
+            },
+        },
     },
     LoginButton: {
         background: 'linear-gradient(90deg, #2DAA94 30%, #4CBC77 80%)',

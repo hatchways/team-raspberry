@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import Navbar from '../components/Navbar'
 import { makeStyles } from '@material-ui/core/styles'
-import { Grid, Paper, Typography, TextField, Button } from '@material-ui/core';
+import { Grid, Paper, Typography, TextField, Button, Snackbar } from '@material-ui/core';
 
 export default function Signup() {
     const classes = useStyles();
@@ -9,19 +9,30 @@ export default function Signup() {
     const form = {
         email: '',
         password: '',
+        firstName: '',
+        lastName: '',
         repeatPassword: '',
         passwordError: '',
         repeatPasswordError: '',
+        emailError: '',
+    }
+
+    const snackbarObj = {
+        snackbarMsg: '',
+        snackbarOpen: false,
     }
 
     const [formValues, setFormValues] = useState(form)
-    const { email, password, repeatPassword, passwordError, repeatPasswordError } = formValues
+    const [snackbar, setSnackbar] = useState(snackbarObj)
+    const { email, password, firstName, lastName, repeatPassword, passwordError, repeatPasswordError, emailError } = formValues
 
     const validate = () => {
         let valid = true
+        let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
         let errors = {
             passwordError: '',
-            repeatPasswordError: ''
+            repeatPasswordError: '',
+            emailError: '',
         }
 
         if (password.length < 6) {
@@ -30,7 +41,12 @@ export default function Signup() {
         }
 
         if (password !== repeatPassword) {
-            errors.repeatPasswordError = "Required: Passwords must match";
+            errors.repeatPasswordError = 'Required: Passwords must match'
+            valid = false;
+        }
+
+        if (!re.test(email)) {
+            errors.emailError = 'Incorrect email format'
             valid = false;
         }
 
@@ -45,10 +61,33 @@ export default function Signup() {
     const onSubmit = e => {
         e.preventDefault();
         const valid = validate();
-        console.log(formValues);
 
         if (valid) {
-            this.props.history.push('/login');
+            console.log(formValues);
+            fetch('/registration', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    email: formValues.email,
+                    password: formValues.password,
+                    firstName: formValues.firstName,
+                    lastName: formValues.lastName
+                })
+            })
+                .then(res => {
+                    res.json().then(data => {
+                        setSnackbar({
+                            snackbarMsg: data.message,
+                            snackbarOpen: true,
+                        })
+
+                        if (res.status >= 200 && res.status < 300) {
+                            // TODO REDIRECTION
+                        }
+                    })
+                })
         }
     }
 
@@ -59,6 +98,13 @@ export default function Signup() {
             ...prevState,
             [target.name]: target.value
         }))
+    }
+
+    const snackbarClose = () => {
+        setSnackbar({
+            snackbarMsg: '',
+            snackbarOpen: false,
+        })
     }
 
     return (
@@ -74,11 +120,37 @@ export default function Signup() {
                                     <TextField
                                         className={classes.TextFields}
                                         required
+                                        name="firstName"
+                                        label="First Name"
+                                        type="text"
+                                        variant="outlined"
+                                        value={firstName}
+                                        onChange={handleChange}
+                                    />
+                                </Grid>
+                                <Grid item xs={10}>
+                                    <TextField
+                                        className={classes.TextFields}
+                                        required
+                                        name="lastName"
+                                        label="Last Name"
+                                        type="text"
+                                        variant="outlined"
+                                        value={lastName}
+                                        onChange={handleChange}
+                                    />
+                                </Grid>
+                                <Grid item xs={10}>
+                                    <TextField
+                                        className={classes.TextFields}
+                                        required
+                                        error={emailError.length === 0 ? false : true}
                                         name="email"
                                         label="Your Email"
                                         type="email"
                                         variant="outlined"
                                         value={email}
+                                        helperText={emailError}
                                         onChange={handleChange}
                                     />
                                 </Grid>
@@ -99,7 +171,7 @@ export default function Signup() {
                                 <Grid item xs={10}>
                                     <TextField
                                         className={classes.TextFields}
-                                        required                                        
+                                        required
                                         error={repeatPasswordError.length === 0 ? false : true}
                                         name="repeatPassword"
                                         label="Repeat Password"
@@ -118,6 +190,26 @@ export default function Signup() {
                     </Paper>
                 </Grid>
             </Grid>
+            <Snackbar
+                anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'center',
+                }}
+                open={snackbar.snackbarOpen}
+                autoHideDuration={6000}
+                onClose={snackbarClose}
+                message={snackbar.snackbarMsg}
+                action={
+                    <Button
+                        color="inherit"
+                        size="small"
+                        onClick={snackbarClose}
+                        variant="outlined"
+                    >
+                        X
+                    </Button>
+                }
+            />
         </div>
     );
 }
@@ -159,6 +251,14 @@ const useStyles = makeStyles(theme => ({
     },
     TextFields: {
         width: '100%',
+        '& label.Mui-focused': {
+            color: theme.primary,
+        },
+        '& .MuiOutlinedInput-root': {
+            '&.Mui-focused fieldset': {
+                borderColor: theme.primary,
+            },
+        },
     },
     SignupButton: {
         background: 'linear-gradient(90deg, #2DAA94 30%, #4CBC77 80%)',
