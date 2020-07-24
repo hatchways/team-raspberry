@@ -9,6 +9,8 @@ class UserModel(db.Model):
     # Assign database fields
     # Autoincrement is implicit default with PK set to True
     id = db.Column(db.BigInteger, primary_key=True)
+    first_name = db.Column(db.String(50), nullable=False)
+    last_name = db.Column(db.String(50), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(120), nullable=False)
     created = db.Column(db.DateTime, nullable=False, default=datetime.datetime.utcnow)
@@ -101,6 +103,8 @@ def pw_length(password):
 
 class UserSchema(Schema):
     id = fields.Int(dump_only=True)
+    first_name = fields.Str(required=True, validate=must_not_be_blank)
+    last_name = fields.Str(required=True, validate=must_not_be_blank)
     email = fields.Email(required=True, validate=must_not_be_blank)
     password = fields.Str(required=True, validate=pw_length)
     created = fields.DateTime(required=True, dump_only=True)
