@@ -10,6 +10,8 @@ import MenuItem from '@material-ui/core/MenuItem';
 import MenuIcon from '@material-ui/icons/Menu';
 import Avatar from '@material-ui/core/Avatar';
 
+// TODO: Fix Styling.
+
 export default function LoggedInNavbar(props) {
   const classes = useStyles();
 
