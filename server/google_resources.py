@@ -61,7 +61,7 @@ class GoToAuthorize(Resource):
 
 class Authorize(Resource):
   # def authorize():
-  def get(self):
+  def post(self):
     # Create flow instance to manage the OAuth 2.0 Authorization Grant Flow steps.
     flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
         CLIENT_SECRETS_FILE, scopes=SCOPES)
@@ -83,8 +83,8 @@ class Authorize(Resource):
     # Store the state so the callback can verify the auth server response.
     flask.session['state'] = state
 
-    return flask.redirect(authorization_url)
-    # return flask.json({"url": authorization_url})
+    # return flask.redirect(authorization_url)
+    return {"url": authorization_url}
 
 class OAuth2Callback(Resource):
   # def oauth2callback():

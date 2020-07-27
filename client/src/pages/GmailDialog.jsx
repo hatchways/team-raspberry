@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
 import Button from '@material-ui/core/Button';
 import DialogTitle from '@material-ui/core/DialogTitle';
@@ -6,6 +6,7 @@ import Dialog from '@material-ui/core/Dialog';
 
 function GmailDialog(props) {
   const { onClose, selectedValue, open } = props;
+  // const [url, setUrl] = useState()
 
   const handleClose = () => {
     onClose(selectedValue);
@@ -16,8 +17,8 @@ function GmailDialog(props) {
   // }, [url])
 
   const activateRequest = useCallback(async () => {
-    fetch('/gotoauthorize', { mode: 'cors', redirect: 'follow' }).then(response => response.json()
-      .then(() => handleClose()))
+    fetch('/authorize', {method: 'POST'}).then(response => response.json()
+      .then((data) => window.location.href = data.url))
   }, [])
 
   return (
