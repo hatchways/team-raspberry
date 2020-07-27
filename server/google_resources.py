@@ -13,7 +13,7 @@ import os
 # Configuration
 # GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID", None)
 # GOOGLE_CLIENT_SECRET = os.environ.get("GOOGLE_CLIENT_SECRET", None)
-CLIENT_SECRETS_FILE = "client_secret.json"
+CLIENT_SECRETS_FILE = '/Users/kevinkaminski/Downloads/client_secret.json'
 GOOGLE_DISCOVERY_URL = (
     "https://accounts.google.com/.well-known/openid-configuration"
 )
@@ -32,6 +32,16 @@ def credentials_to_dict(credentials):
           'client_id': credentials.client_id,
           'client_secret': credentials.client_secret,
           'scopes': credentials.scopes}
+
+def save_credentials(credentials):
+  #TODO: Grab current user's email
+  current_user = UserModel.find_by_email("someone@gmail.com")
+  if current_user:
+    credentials_dict = credentials_to_dict(credentials)
+    current_user.updateCredentials(credentials_dict)
+    return "Credentials Saved."
+  else:
+    return "Current user not found."
 
 class TestAPIRequest(Resource):
   # def test_api_request(): # TODO: Change from google drive request.
@@ -53,7 +63,7 @@ class TestAPIRequest(Resource):
     #              credentials in a persistent database instead.
     flask.session['credentials'] = credentials_to_dict(credentials)
 
-    return ("You did it!!!")
+    return credentials_to_dict(credentials)
 
 class GoToAuthorize(Resource):
   def get(self):
@@ -62,6 +72,8 @@ class GoToAuthorize(Resource):
 class Authorize(Resource):
   # def authorize():
   def post(self):
+    # TODO: check if current user already has credentials. If they do, pass refresh token - don't go through whole auth process again.
+    
     # Create flow instance to manage the OAuth 2.0 Authorization Grant Flow steps.
     flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
         CLIENT_SECRETS_FILE, scopes=SCOPES)
@@ -108,9 +120,11 @@ class OAuth2Callback(Resource):
     # new_google_auth = GoogleAuth(credentials=credentials)
     # db.session.add(new_google_auth)
     # db.session.commit()
-    flask.session['credentials'] = credentials_to_dict(credentials)
+    # flask.session['credentials'] = credentials_to_dict(credentials)
 
-    return flask.redirect(flask.url_for('testapirequest'))
+    # return flask.redirect(flask.url_for('testapirequest'))
+    save_credentials(credentials_to_dict(credentials))
+    return flask.redirect("http://localhost:3000/authorize")
 
 class Revoke(Resource):
   # def revoke():
