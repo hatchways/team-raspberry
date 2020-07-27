@@ -11,15 +11,19 @@ function GmailDialog(props) {
     onClose(selectedValue);
   };
 
-  const sendRequest = useCallback(async () => {
-    fetch('/authorize', { mode: 'cors', redirect: 'follow' }).then(response => console.log(response)
-    .then(data => { console.log(data) }))
+  // const sendRequest = useEffect(async () => {
+
+  // }, [url])
+
+  const activateRequest = useCallback(async () => {
+    fetch('/gotoauthorize', { mode: 'cors', redirect: 'follow' }).then(response => response.json()
+      .then(() => handleClose()))
   }, [])
 
   return (
     <Dialog onClose={handleClose} aria-labelledby="gmail-title" open={open}>
       <DialogTitle id="gmail-title">Connect a Gmail Account</DialogTitle>
-      <Button id="gmail-button" onClick={sendRequest}>
+      <Button id="gmail-button" onClick={activateRequest}>
         Connect
       </Button>
     </Dialog>

@@ -4,6 +4,7 @@ import google.oauth2.credentials
 import google_auth_oauthlib.flow
 import googleapiclient.discovery
 import models.google
+import webbrowser
 import requests
 import flask
 import json
@@ -18,8 +19,8 @@ GOOGLE_DISCOVERY_URL = (
 )
 SCOPES = [
   'https://www.googleapis.com/auth/gmail.send',
-  # 'https://www.googleapis.com/auth/userinfo.email',
-  # 'https://www.googleapis.com/auth/userinfo.profile',
+  'https://www.googleapis.com/auth/userinfo.email',
+  'https://www.googleapis.com/auth/userinfo.profile',
 ]
 API_SERVICE_NAME = 'gmail'
 API_VERSION = 'v1'
@@ -45,14 +46,18 @@ class TestAPIRequest(Resource):
     drive = googleapiclient.discovery.build(
         API_SERVICE_NAME, API_VERSION, credentials=credentials)
 
-    files = drive.files().list().execute()
+    # files = drive.files().list().execute()
 
     # Save credentials back to session in case access token was refreshed.
     # ACTION ITEM: In a production app, you likely want to save these
     #              credentials in a persistent database instead.
     flask.session['credentials'] = credentials_to_dict(credentials)
 
-    return flask.jsonify(flask.session)
+    return ("You did it!!!")
+
+class GoToAuthorize(Resource):
+  def get(self):
+    webbrowser.open_new_tab("http://localhost:5000/authorize")
 
 class Authorize(Resource):
   # def authorize():
@@ -72,12 +77,14 @@ class Authorize(Resource):
         # re-prompting the user for permission. Recommended for web server apps.
         access_type='offline',
         # Enable incremental authorization. Recommended as a best practice.
-        include_granted_scopes='true')
+        include_granted_scopes='true'
+        )
 
     # Store the state so the callback can verify the auth server response.
     flask.session['state'] = state
 
     return flask.redirect(authorization_url)
+    # return flask.json({"url": authorization_url})
 
 class OAuth2Callback(Resource):
   # def oauth2callback():
@@ -87,7 +94,7 @@ class OAuth2Callback(Resource):
     state = flask.session['state']
 
     flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
-        CLIENT_SECRETS_FILE, scopes=SCOPES, state=state)
+        CLIENT_SECRETS_FILE, scopes=None, state=state)
     flow.redirect_uri = flask.url_for('oauth2callback', _external=True)
 
     # Use the authorization server's response to fetch the OAuth 2.0 tokens.
@@ -103,7 +110,7 @@ class OAuth2Callback(Resource):
     # db.session.commit()
     flask.session['credentials'] = credentials_to_dict(credentials)
 
-    return flask.redirect(flask.url_for('test_api_request'))
+    return flask.redirect(flask.url_for('testapirequest'))
 
 class Revoke(Resource):
   # def revoke():
