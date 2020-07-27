@@ -20,7 +20,7 @@ function App() {
       <BrowserRouter>
         <Switch>
           <Route path="/" exact component={Signup} />
-          <Route oath="/" component={LoggedInNavBar} />
+          <Route path="/" component={LoggedInNavBar} />
           <Route path="/login" component={Login} />
           <Route path="/prospects" component={Prospects} />
           <Route path="/reporting" component={Reporting} />
