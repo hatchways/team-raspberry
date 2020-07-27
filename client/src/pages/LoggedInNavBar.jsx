@@ -8,6 +8,7 @@ import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import MenuIcon from '@material-ui/icons/Menu';
+import Avatar from '@material-ui/core/Avatar';
 
 export default function LoggedInNavbar(props) {
   const classes = useStyles();
@@ -17,6 +18,7 @@ export default function LoggedInNavbar(props) {
 
   const routeButton = useState(props.type === 'signup' ? 'Login' : 'Signup');
   const routeTo = useState(props.type === 'signup' ? '/login' : '/');
+  const username = "John Doe"
 
 
   const handleClick = (e) => {
@@ -63,7 +65,7 @@ export default function LoggedInNavbar(props) {
             Reporting
           </Button>
           <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
-            <MenuIcon/>
+            <Avatar alt="John Doe" src="demo_avatar.png" /> {username}
           </Button>
           <Menu
             id="simple-menu"
