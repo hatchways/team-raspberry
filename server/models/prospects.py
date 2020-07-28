@@ -23,6 +23,19 @@ class ProspectModel(db.Model):
         db.session.add(self)
         db.session.commit()
 
+    @classmethod
+    def return_all(cls):
+        def to_json(x):
+            return {
+                'id': x.id,
+                'email': x.email,
+                'firstName': x.firstName,
+                'lastName': x.lastName
+            }
+
+        return {'users': list(map(lambda x: to_json(x), ProspectModel.query.all()))}
+
+
 class ProspectSchema(Schema):
     id = fields.Int(dump_only=True)
     email = fields.Email(required=True, validate=utils.must_not_be_blank)

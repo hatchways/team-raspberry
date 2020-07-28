@@ -2,7 +2,6 @@ from typing import List, Any
 from functools import wraps
 from models.users import UserModel, user_schema, users_schema
 from models.prospects import ProspectModel, prospect_schema, prospects_schema
-from app import flask_bcrypt
 from flask_restful import Resource
 from flask import request
 
@@ -119,6 +118,7 @@ class SecretResource(Resource):
 
 
 class Prospects(Resource):
+    # TODO: Creating users is not in the spec, so just using this for testing purposes.
     def post(self):
         data = prospect_schema.load(request.json)
 
@@ -140,3 +140,6 @@ class Prospects(Resource):
                 'message': 'Something went wrong. Please try again.'
             }
             return response_object, 500
+
+    def get(self):
+        return ProspectModel.return_all()
