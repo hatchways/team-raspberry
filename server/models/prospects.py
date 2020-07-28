@@ -40,7 +40,7 @@ class ProspectModel(db.Model):
 
     @classmethod
     def return_user_prospects(cls, user):
-        return cls.query.filter_by(userId=user).first()
+        return cls.query.filter_by(userId=user).all()
     
     @classmethod
     def return_email_prospects(cls, email):
