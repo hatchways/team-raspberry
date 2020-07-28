@@ -12,7 +12,7 @@ function App() {
   return (
     <MuiThemeProvider theme={theme}>
       <BrowserRouter>
-        <Route path="/authorize" component={GmailDialog} />
+        <Route path="*/authorize" component={GmailDialog} />
         <Route path="*/redirect" component={GmailRedirect} />
       </BrowserRouter>
     </MuiThemeProvider>

@@ -1,4 +1,3 @@
-
 from models.users import UserModel, user_schema, users_schema
 from flask_restful import Resource
 import google.oauth2.credentials
@@ -42,7 +41,6 @@ def save_credentials(creds_dict):
     return "Current user not found."
 
 class Authorize(Resource):
-  # def authorize():
   def post(self):
     # TODO: check if current user already has credentials. If they do, pass refresh token - don't go through whole auth process again.
     
@@ -67,9 +65,7 @@ class Authorize(Resource):
     return {"url": authorization_url}, 200
 
 class OAuth2Callback(Resource):
-  # def oauth2callback():
   def post(self):
-    # print(flask.request.json)
     # Specify the state when creating the flow in the callback so that it can
     # verified in the authorization server response.
     state = flask.session['state']

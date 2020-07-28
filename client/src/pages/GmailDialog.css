@@ -1,7 +1,0 @@
-#gmail-button {
-  background-image: "/public/google_signin_buttons/web/1x/btn_google_signin_light_normal_web.png"
-}
-
-#gmail-button:focus {
-  background-image: "/public/google_signin_buttons/web/1x/btn_google_signin_light_focus_web.png"
-}
