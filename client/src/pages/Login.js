@@ -102,7 +102,7 @@ export default function Login() {
                     name="password"
                     label="Password"
                     type="password"
-                    value={email}
+                    value={password}
                     onChange={handleChange}
                   />
                 </Grid>
