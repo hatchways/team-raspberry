@@ -12,7 +12,7 @@ class UserModel(db.Model):
     last_name = db.Column(db.String(50), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(120), nullable=False)
-    credentials = db.Column(db.String(500))
+    credentials = db.Column(db.String(500), nullable=True)
 
     def save_to_db(self):
         db.session.add(self)

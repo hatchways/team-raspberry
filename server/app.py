@@ -6,13 +6,18 @@ from flask_sqlalchemy import SQLAlchemy
 import config
 from api.ping_handler import ping_handler
 from api.home_handler import home_handler
+import os
+
+# For testing
+# TODO: REMOVE BEFORE DEPLOYMENT
+os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 
 # Initializes database connection
 db = SQLAlchemy()
 
 def create_app():
     flask_app = Flask(__name__)
-    # CORS(flask_app, origins=["http://127.0.0.1:3000", "http://localhost:3000"], allow_headers=["Content-Type", "Authorization", "Access-Control-Allow-Credentials", "Access-Control-Allow-Origin"],supports_credentials=True)
+   
     CORS(flask_app)
     flask_app.secret_key = "This is a key for testing"
     # Add to database
@@ -35,8 +40,6 @@ def create_app():
     crm_api.add_resource(resources.AllUsers, '/users')
     crm_api.add_resource(resources.SecretResource, '/secret')
     crm_api.add_resource(google_resources.Authorize, '/authorize')
-    crm_api.add_resource(google_resources.Revoke, '/revoke')
-    crm_api.add_resource(google_resources.TestAPIRequest, '/testapirequest')
     crm_api.add_resource(google_resources.OAuth2Callback, '/oauth2callback')
 
     db.init_app(flask_app)
