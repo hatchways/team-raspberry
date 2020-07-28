@@ -73,6 +73,13 @@ class UserLogin(Resource):
         current_user = UserModel.find_by_email(data['email'])
         pw_is_valid = current_user.verify_password(data['password'])
 
+        if current_user is None:
+            responseObject = {
+                'status': 'fail',
+                'message': 'Wrong credentials.'
+            }
+            return responseObject, 401
+
         if current_user and pw_is_valid :
             auth_token = current_user.encode_auth_token(current_user.id)
             responseObject = {
