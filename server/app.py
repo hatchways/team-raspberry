@@ -22,7 +22,7 @@ def create_app():
     flask_app.register_blueprint(home_handler)
     flask_app.register_blueprint(ping_handler)
 
-    crm_api = Api(flask_app)
+    crm_api = Api(flask_app, prefix='/api')
 
     import resources
     import google_resources
@@ -34,7 +34,6 @@ def create_app():
     crm_api.add_resource(resources.TokenRefresh, '/token/refresh')
     crm_api.add_resource(resources.AllUsers, '/users')
     crm_api.add_resource(resources.SecretResource, '/secret')
-    crm_api.add_resource(google_resources.GoToAuthorize, '/gotoauthorize')
     crm_api.add_resource(google_resources.Authorize, '/authorize')
     crm_api.add_resource(google_resources.Revoke, '/revoke')
     crm_api.add_resource(google_resources.TestAPIRequest, '/testapirequest')

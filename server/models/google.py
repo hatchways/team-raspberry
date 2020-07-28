@@ -14,7 +14,7 @@
 #     self.email = email
 #     self.credentials = credentials
 
-# # User Schema
+# # Google Schema
 # class GoogleSchema(Schema):
 #   class Meta:
 #     fields = ('id', 'name', 'email', 'credentials')
