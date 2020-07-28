@@ -2,6 +2,7 @@ from app import create_app, db, flask_bcrypt
 from marshmallow import Schema, fields, ValidationError, pre_load
 import jwt
 import datetime
+from . import utils
 
 class UserModel(db.Model):
     __tablename__ = 'users'
@@ -98,20 +99,11 @@ class UserModel(db.Model):
         except jwt.InvalidTokenError:
             return 'Invalid token. Please log in again.'
 
-# Custom validator
-def must_not_be_blank(data):
-    if not data:
-        raise ValidationError('This field cannot be blank')
-
-# Custom validator to check password length
-def pw_length(password):
-    if len(password) < 6:
-        raise ValidationError('Password must be longer than 6 characters')
 
 class UserSchema(Schema):
     id = fields.Int(dump_only=True)
-    email = fields.Email(required=True, validate=must_not_be_blank)
-    password = fields.Str(required=True, validate=pw_length)
+    email = fields.Email(required=True, validate=utils.must_not_be_blank)
+    password = fields.Str(required=True, validate=utils.pw_length)
     firstName = fields.Str(required=True)
     lastName = fields.Str(required=True)
     created = fields.DateTime(required=True, dump_only=True)

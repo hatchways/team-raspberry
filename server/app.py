@@ -44,6 +44,10 @@ def create_app():
     crm_api.add_resource(resources.AllUsers, '/users')
     crm_api.add_resource(resources.SecretResource, '/secret')
 
+    crm_api.add_resource(resources.Prospects, '/prospects')
+
+
+
     db.init_app(flask_app)
     migrate.init_app(flask_app, db)
 
