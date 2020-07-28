@@ -7,7 +7,7 @@ import {
   Typography,
   Button,
   Snackbar,
-  SvgIcon,
+  IconButton,
 } from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
 import CustomTextField from "../components/CustomTextField";
@@ -216,14 +216,13 @@ export default function Signup() {
         onClose={snackbarClose}
         message={snackbar.snackbarMsg}
         action={
-          <Button
-            color="inherit"
-            size="small"
+          <IconButton
+            className={classes.snackBarButton}
+            aria-label="close"
             onClick={snackbarClose}
-            variant="outlined"
           >
-            <SvgIcon component={CloseIcon}></SvgIcon>
-          </Button>
+            <CloseIcon></CloseIcon>
+          </IconButton>
         }
       />
     </div>
@@ -273,5 +272,8 @@ const useStyles = makeStyles((theme) => ({
     color: "white",
     textTransform: "capitalize",
     marginTop: "3rem",
+  },
+  snackBarButton: {
+    color: "white",
   },
 }));
