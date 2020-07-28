@@ -19,7 +19,7 @@ https://www.postgresql.org/download/windows/
 
 ### Create an empty database and set a user
 In postgres cli: `\c hatchways_crm`
-c
+
 
 ## Initializing / Upgrading the DB schema:
 ```

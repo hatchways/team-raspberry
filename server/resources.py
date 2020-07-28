@@ -33,6 +33,7 @@ def login_required(f):
 
     return wrap
 
+
 class UserRegistration(Resource):
     def post(self):
         data = user_schema.load(request.json)
@@ -65,24 +66,19 @@ class UserRegistration(Resource):
             return responseObject, 500
 
 
-
 class UserLogin(Resource):
     def post(self):
-        
         data = request.json
-        #I believe we cannot do this because the login form
-        #does not include firstName or lastName
-        #data = user_schema.load(request.json)
         current_user = UserModel.find_by_email(data['email'])
 
-        if current_user == None:
+        if current_user is None:
             responseObject = {
                 'status': 'fail',
                 'message': 'Wrong credentials.'
             }
             return responseObject, 401
 
-        pw_is_valid = flask_bcrypt.check_password_hash(current_user.password, data.get('password'))
+        pw_is_valid = current_user.verify_password(data['password'])
 
         if current_user and pw_is_valid :
             auth_token = current_user.encode_auth_token(current_user.id)
@@ -99,6 +95,7 @@ class UserLogin(Resource):
             }
             return responseObject, 401
 
+
 class UserLogout(Resource):
 
     @login_required
@@ -111,12 +108,14 @@ class UserLogout(Resource):
             }
             return responseObject, 200
 
+
 class AllUsers(Resource):
     def get(self):
         return UserModel.return_all()
 
     def delete(self):
         return UserModel.delete_all()
+
 
 class SecretResource(Resource):
     def get(self):
