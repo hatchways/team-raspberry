@@ -1,5 +1,7 @@
+import json
+from flask import Flask, request, abort
+from flask_cors import CORS
 import os
-from flask import Flask
 from flask_migrate import Migrate
 from flask_bcrypt import Bcrypt
 from flask_restful import Api
@@ -7,13 +9,11 @@ from flask_sqlalchemy import SQLAlchemy
 import config
 from api.ping_handler import ping_handler
 from api.home_handler import home_handler
+import os
 
-# Configuration
-GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID", None)
-GOOGLE_CLIENT_SECRET = os.environ.get("GOOGLE_CLIENT_SECRET", None)
-GOOGLE_DISCOVERY_URL = (
-    "https://accounts.google.com/.well-known/openid-configuration"
-)
+# For testing
+# TODO: REMOVE BEFORE DEPLOYMENT
+os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 
 # Initializes database connection
 db = SQLAlchemy()
@@ -26,6 +26,9 @@ flask_bcrypt = Bcrypt()
 
 def create_app():
     flask_app = Flask(__name__)
+   
+    CORS(flask_app)
+    flask_app.secret_key = "This is a key for testing"
     # Add to database
     flask_app.config['SQLALCHEMY_DATABASE_URI'] = config.SQLALCHEMY_DATABASE_URI
     flask_app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -33,9 +36,10 @@ def create_app():
     flask_app.register_blueprint(home_handler)
     flask_app.register_blueprint(ping_handler)
 
-    crm_api = Api(flask_app)
+    crm_api = Api(flask_app, prefix='/api')
 
     import resources
+    import google_resources
 
     crm_api.add_resource(resources.UserRegistration, '/registration')
     crm_api.add_resource(resources.UserLogin, '/login')
@@ -44,6 +48,8 @@ def create_app():
     crm_api.add_resource(resources.SecretResource, '/secret')
     crm_api.add_resource(resources.AddProspectCsv, '/api/add/prospectsCsv')
     crm_api.add_resource(resources.ImportProspects, '/api/import/prospects')
+    crm_api.add_resource(google_resources.Authorize, '/authorize')
+    crm_api.add_resource(google_resources.OAuth2Callback, '/oauth2callback')
 
     db.init_app(flask_app)
     migrate.init_app(flask_app, db)
