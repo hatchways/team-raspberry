@@ -32,3 +32,4 @@ instance/
 client_secret.json
 #TODO add .env to your gitignore
 
+APIKeys.js
