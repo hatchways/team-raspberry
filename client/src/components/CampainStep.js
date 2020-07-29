@@ -9,9 +9,11 @@ import Button from "@material-ui/core/Button";
 
 export default function CampaignStep() {
   const classes = useStyles();
-  const [stepName, setStepName] = useState("Step 1")
+  const [stepName, setStepName] = useState("")
   const [templates, setTemplates] = useState([])
-  const [selectedTemplate, setSelectedTemplate] = useState()
+  const [selectedTemplate, setSelectedTemplate] = useState(
+    <MenuItem key="0">Select Template</MenuItem>
+  );
   const [saved, setSaved] = useState(false)
 
 
@@ -25,17 +27,16 @@ export default function CampaignStep() {
 
   // TODO: move to CampaignShow and pass in as props so only 1 http request needs to be made. As it is now, an HTTP request will be made each time a step is added.
   const fetchTemplateTitles = useEffect(() => {
-    fetch("/templates", {
-      method: "GET",
-    }).then((response) => response.json().then(data => {
-      titlesToMenuItems(data.titles)
-    }))
+    // fetch("/templates", {
+    //   method: "GET",
+    // }).then((response) => response.json().then(data => {
+    //   titlesToMenuItems(data.titles)
+    // }))
   }, [])
 
-  // NOTE: May need to switch from map to give each MenuItem a unique key.
   const titlesToMenuItems = (templates) => {
     templates.map((template) => {
-      return <MenuItem>{template}</MenuItem>
+      return <MenuItem key={template} value="template">{template}</MenuItem>
     })
     setTemplates(templates)
   }
@@ -53,11 +54,15 @@ export default function CampaignStep() {
         <InputLabel htmlFor="step-name">Step Name:</InputLabel>
         <Input id="step-name" value={stepName} onChange={handleText} className={classes.text}/>
       </FormControl>
-      <InputLabel id="template-select-label" >Choose Email Template</InputLabel>
-      <Select labelId="template-select-label" id="template-select" value={selectedTemplate} onChange={handleSelect} className={classes.select}>
-        {templates}
-      </Select>
-      <Button className={classes.button} label="Submit" type="submit"/>
+      <FormControl>
+        <InputLabel htmlFor="template-select-label" id="template-select-label" >Select Template</InputLabel>
+        <Select labelid="template-select-label" id="template-select" value={selectedTemplate} onChange={handleSelect} className={classes.select}>
+          <MenuItem key="1" value="Template 1">Template 1</MenuItem>
+          <MenuItem key="2" value="Template 2">Template 2</MenuItem>
+          {templates}
+        </Select>
+      </FormControl>
+      <Button className={classes.button} label="Submit" type="submit">Submit</Button>
     </form>
   )
 }
@@ -70,7 +75,7 @@ const useStyles = makeStyles((theme) => ({
 
   },
   select: {
-
+    width: "120px",
   },
   button: {
 

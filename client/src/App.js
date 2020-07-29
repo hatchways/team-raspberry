@@ -22,6 +22,7 @@ import Templates from './pages/Templates';
 import Prospects from './pages/Prospects';
 import Campaigns from './pages/Campaigns';
 import MyEditor from './components/TextEditor'
+import CampaignStep from "./components/CampainStep";
 
 
 import "./App.css";
