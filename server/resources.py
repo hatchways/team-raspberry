@@ -1,9 +1,11 @@
 from typing import List, Any
 from functools import wraps
 from models.users import UserModel, user_schema, users_schema
+from models.prospects import ProspectModel, prospect_schema, prospects_schema
 from app import flask_bcrypt
 from flask_restful import Resource
 from flask import request
+import io, csv
 
 def login_required(f):
     @wraps(f)
@@ -122,3 +124,69 @@ class SecretResource(Resource):
         return {
             'answer': 42
         }
+
+prospectsHolder = []
+class AddProspectCsv(Resource):
+    def post(self):
+        file = request.files["file"]
+        if file.filename.endswith('.csv') != True:
+            return {
+                "status": "fail",
+                "message": "File Upload Failed"
+            }, 401
+
+        stream = io.StringIO(file.stream.read().decode("utf-8-sig"), newline=None)
+        csv_input = csv.reader(stream)        
+        headers = next(csv_input)
+        
+        for row in csv_input:
+            prospectsHolder.append(row)
+
+        return {
+            "status": "success",
+            "message": "File Upload Successful",
+            "headers": headers 
+        }, 200
+
+
+class ImportProspects(Resource):
+    def post(self):
+        data = request.json
+        
+        if data['email'] == data['none']: 
+            responseObject = {
+                "status": "fail",
+                "message": "Email field cannot be None"
+            }
+            return responseObject, 401
+            
+        # Currently just associating the prospect with user number 1
+        current_user = UserModel.find_by_id(1)
+
+        if len(prospectsHolder) == 0:
+            return {
+                "status": "fail",
+                "message": "No prospects to add. Please check .csv file"
+            }, 400
+
+        for row in prospectsHolder:
+            current_prospect = ProspectModel.return_email_prospects(row[data['email']])
+            if current_prospect:
+                return {
+                    "status": "fail",
+                    "message": "Prospect with email {} already exists".format(row[data['email']])
+                }, 409
+    
+            new_prospect = ProspectModel(
+                email = row[data['email']],
+                status = row[data['status']],
+                firstName = row[data['firstName']],
+                lastName = row[data['lastName']],
+                userId = current_user.id,
+            )
+            new_prospect.save_to_db()
+
+        return { 
+            "status": "success",
+            "message": "Prospects have been added to the database"
+        }, 200

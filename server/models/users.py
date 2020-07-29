@@ -13,6 +13,7 @@ class UserModel(db.Model):
     password = db.Column(db.String(120), nullable=False)
     firstName = db.Column(db.String(120), nullable=False)
     lastName = db.Column(db.String(120), nullable=False)
+    prospects = db.relationship('ProspectModel', backref='user', lazy=True)
     created = db.Column(db.DateTime, nullable=False, default=datetime.datetime.utcnow)
 
     def __init__(self, email, password, firstName, lastName):
