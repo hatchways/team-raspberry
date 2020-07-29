@@ -15,6 +15,15 @@ import Prospects from "./pages/Prospects";
 import Campaigns from "./pages/Campaigns";
 import AddProspects from "./pages/AddProspects";
 import * as Auth from "./services/auth-services";
+import LoggedInNavBar from './pages/LoggedInNavBar';
+import Profile from './pages/ProfilePage';
+import Reporting from './pages/Reporting';
+import Templates from './pages/Templates';
+import Prospects from './pages/Prospects';
+import Campaigns from './pages/Campaigns';
+import MyEditor from './components/TextEditor'
+
+
 import "./App.css";
 
 function App() {
