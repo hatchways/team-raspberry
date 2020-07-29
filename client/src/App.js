@@ -14,7 +14,6 @@ import Templates from './pages/Templates';
 import Prospects from './pages/Prospects';
 import Campaigns from './pages/Campaigns';
 
-
 import "./App.css";
 
 function App() {
