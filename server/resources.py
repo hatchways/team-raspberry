@@ -3,7 +3,7 @@ from functools import wraps
 from models.users import UserModel, user_schema, users_schema
 from app import flask_bcrypt
 from flask_restful import Resource
-from flask import request
+from flask import request, session
 
 def login_required(f):
     @wraps(f)
@@ -33,18 +33,23 @@ def login_required(f):
 
     return wrap
 
+
 class UserRegistration(Resource):
     def post(self):
         data = user_schema.load(request.json)
-
+        
         # Check if email already exists
         if UserModel.find_by_email(data['email']):
             return {'message': 'User {} already exists'.format(data['email'])}, 409
 
         new_user = UserModel(
             email = data['email'],
-            password = data['password']
+            credentials = data['credentials']
+            password = data['password'],
+            firstName = data['firstName'],
+            lastName = data['lastName']
         )
+
         try:
             new_user.save_to_db()
             auth_token = UserModel.encode_auth_token(new_user.id)
@@ -61,13 +66,19 @@ class UserRegistration(Resource):
             }
             return responseObject, 500
 
-
-
 class UserLogin(Resource):
     def post(self):
-        data = user_schema.load(request.json)
+        data = request.json
         current_user = UserModel.find_by_email(data['email'])
-        pw_is_valid = flask_bcrypt.check_password_hash(current_user.password, data.get('password'))
+
+        if current_user is None:
+            responseObject = {
+                'status': 'fail',
+                'message': 'Wrong credentials.'
+            }
+            return responseObject, 401
+
+        pw_is_valid = current_user.verify_password(data['password'])
 
         if current_user and pw_is_valid :
             auth_token = current_user.encode_auth_token(current_user.id)
@@ -97,14 +108,13 @@ class UserLogout(Resource):
             return responseObject, 200
 
 
-
-
 class AllUsers(Resource):
     def get(self):
         return UserModel.return_all()
 
     def delete(self):
         return UserModel.delete_all()
+
 
 class SecretResource(Resource):
     def get(self):

@@ -3,6 +3,8 @@ import { MuiThemeProvider } from "@material-ui/core";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 
 import { theme } from "./themes/theme";
+import GmailDialog from "./pages/GmailDialog";
+import GmailRedirect from "./pages/GmailRedirect";
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
 import LoggedInNavBar from './pages/LoggedInNavBar';
@@ -12,13 +14,16 @@ import Templates from './pages/Templates';
 import Prospects from './pages/Prospects';
 import Campaigns from './pages/Campaigns';
 
+
 import "./App.css";
 
 function App() {
   return (
     <MuiThemeProvider theme={theme}>
       <BrowserRouter>
-          <LoggedInNavBar />
+        <LoggedInNavBar />
+        <Route path="*/authorize" component={GmailDialog} />
+        <Route path="*/redirect" component={GmailRedirect} />
         <Switch>
           <Route path="/" exact component={Signup} />
           <Route path="/login" component={Login} />
