@@ -7,6 +7,8 @@ import GmailDialog from "./pages/GmailDialog";
 import GmailRedirect from "./pages/GmailRedirect";
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
+import SimpleDialogDemo from "./pages/GmailAPI";
+import AddProspects from "./pages/AddProspects";
 import LoggedInNavBar from './pages/LoggedInNavBar';
 import Profile from './pages/ProfilePage';
 import Reporting from './pages/Reporting';
@@ -26,6 +28,7 @@ function App() {
         <Switch>
           <Route path="/" exact component={Signup} />
           <Route path="/login" component={Login} />
+          <Route path="/prospects/add" component={AddProspects}></Route>
           <Route path="/prospects" component={Prospects} />
           <Route path="/reporting" component={Reporting} />
           <Route path="/templates" component={Templates} />
