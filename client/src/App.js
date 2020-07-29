@@ -19,7 +19,6 @@ function App() {
         <Route path="*/redirect" component={GmailRedirect} />
         <Switch>
           <Route path="/" exact component={Signup} />
-          <Route path="/gmail" component={SimpleDialogDemo} />
           <Route path="/login" component={Login} />
         </Switch>
       </BrowserRouter>

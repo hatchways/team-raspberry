@@ -33,12 +33,13 @@ def credentials_to_dict(credentials):
 
 def save_credentials(creds_dict):
   #TODO: Grab current user
-  current_user = UserModel.find_by_id("someone@gmail.com")
-  if current_user:
-    current_user.updateCredentials(creds_dict)
-    return "Credentials Saved."
-  else:
-    return "Current user not found."
+  pass
+  # current_user = UserModel.find_by_id("someone@gmail.com")
+  # if current_user:
+  #   current_user.updateCredentials(creds_dict)
+  #   return "Credentials Saved."
+  # else:
+  #   return "Current user not found."
 
 class Authorize(Resource):
   def post(self):
@@ -75,7 +76,6 @@ class OAuth2Callback(Resource):
 
     # Use the authorization server's response to fetch the OAuth 2.0 tokens.
     authorization_response = flask.request.json["url"]
-    print(flask.request.json)
     flow.fetch_token(authorization_response=authorization_response)
 
     # Store credentials in the session.
