@@ -1,7 +1,10 @@
 import json
 from flask import Flask, request, abort
 from flask_cors import CORS
-from flask_restful import Api #TODO Get rid of this and just use blueprints
+import os
+from flask_migrate import Migrate
+from flask_bcrypt import Bcrypt
+from flask_restful import Api
 from flask_sqlalchemy import SQLAlchemy
 import config
 from api.ping_handler import ping_handler
@@ -14,6 +17,12 @@ os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 
 # Initializes database connection
 db = SQLAlchemy()
+
+# Initialize a migrate instance
+migrate = Migrate()
+
+# Initialize bcrypt
+flask_bcrypt = Bcrypt()
 
 def create_app():
     flask_app = Flask(__name__)
@@ -34,25 +43,19 @@ def create_app():
 
     crm_api.add_resource(resources.UserRegistration, '/registration')
     crm_api.add_resource(resources.UserLogin, '/login')
-    crm_api.add_resource(resources.UserLogoutAccess, '/logout/access')
-    crm_api.add_resource(resources.UserLogoutRefresh, '/logout/refresh')
-    crm_api.add_resource(resources.TokenRefresh, '/token/refresh')
+    crm_api.add_resource(resources.UserLogout, '/logout')
     crm_api.add_resource(resources.AllUsers, '/users')
     crm_api.add_resource(resources.SecretResource, '/secret')
     crm_api.add_resource(google_resources.Authorize, '/authorize')
     crm_api.add_resource(google_resources.OAuth2Callback, '/oauth2callback')
 
     db.init_app(flask_app)
+    migrate.init_app(flask_app, db)
 
     return flask_app
-
-def create_tables():
-    db.create_all()
-    db.session.commit()
 
 
 if __name__ == '__main__':
     flask_app = create_app()
     with flask_app.app_context():
-        create_tables()
         flask_app.run('0.0.0.0', port=5000)
