@@ -3,7 +3,7 @@ from functools import wraps
 from models.users import UserModel, user_schema, users_schema
 from app import flask_bcrypt
 from flask_restful import Resource
-from flask import request
+from flask import request, session
 
 def login_required(f):
     @wraps(f)
@@ -44,6 +44,7 @@ class UserRegistration(Resource):
 
         new_user = UserModel(
             email = data['email'],
+            credentials = data['credentials']
             password = data['password'],
             firstName = data['firstName'],
             lastName = data['lastName']
@@ -64,7 +65,6 @@ class UserRegistration(Resource):
                 'message': 'Something went wrong. Please try again.'
             }
             return responseObject, 500
-
 
 class UserLogin(Resource):
     def post(self):
@@ -94,7 +94,6 @@ class UserLogin(Resource):
                 'message': 'Wrong credentials.'
             }
             return responseObject, 401
-
 
 class UserLogout(Resource):
 

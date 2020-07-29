@@ -11,6 +11,7 @@ class UserModel(db.Model):
     id = db.Column(db.BigInteger, primary_key=True)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(120), nullable=False)
+    credentials = db.Column(db.String(500), nullable=True)
     firstName = db.Column(db.String(120), nullable=False)
     lastName = db.Column(db.String(120), nullable=False)
     created = db.Column(db.DateTime, nullable=False, default=datetime.datetime.utcnow)
@@ -23,10 +24,15 @@ class UserModel(db.Model):
         self.firstName = firstName
         self.lastName = lastName
 
-
     def save_to_db(self):
         db.session.add(self)
         db.session.commit()
+
+    # Update Google OAuth credentials
+    def updateCredentials(self, credentials):
+        # Credentials may need to be parsed from json.
+        self.credentials = credentials
+        self.save_to_db()
 
     # return a user’s data if there is match by email
     @classmethod
@@ -40,6 +46,10 @@ class UserModel(db.Model):
 
     def verify_password(self, password):
         return flask_bcrypt.check_password_hash(self.password, password)
+
+    @classmethod
+    def find_by_id(cls, user_id):
+        return cls.query.filter_by(id=user_id).first()
 
     @classmethod
     def return_all(cls):
