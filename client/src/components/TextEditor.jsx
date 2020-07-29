@@ -7,12 +7,16 @@ export default function MyEditor() {
     console.log("Content was updated:", content);
   };
   
+  const handleSave = (content) => {
+    
+  }
+
   return(
     <Editor
       initialValue="<p>Initial content</p>"
       apiKey={tinyMCEKey}
       init={{
-        height: 500,
+        height: 300,
         menubar: false,
         plugins: [
           "advlist autolink lists link image",
