@@ -33,12 +33,13 @@ def credentials_to_dict(credentials):
 
 def save_credentials(creds_dict):
   #TODO: Grab current user
-  current_user = UserModel.find_by_id("someone@gmail.com")
-  if current_user:
-    current_user.updateCredentials(creds_dict)
-    return "Credentials Saved."
-  else:
-    return "Current user not found."
+  # current_user = UserModel.find_by_id("someone@gmail.com")
+  # if current_user:
+  #   current_user.updateCredentials(creds_dict)
+  #   return "Credentials Saved."
+  # else:
+  #   return "Current user not found."
+  pass
 
 class Authorize(Resource):
   def post(self):
@@ -83,5 +84,6 @@ class OAuth2Callback(Resource):
     #              credentials in a persistent database instead.
     credentials = flow.credentials
     creds_dict = credentials_to_dict(credentials)
+    print(creds_dict)
     save_credentials(creds_dict)
     return creds_dict, 200
