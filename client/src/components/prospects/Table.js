@@ -18,16 +18,16 @@ const useStyles = makeStyles({
   },
 });
 
-function createData(name, email) {
-  return { name, email };
+function createData(id, name, email) {
+  return { id, name, email };
 }
 
 const rows = [
-  createData('Kim', 'kim@fakeemail.com'),
-  createData('Kim', 'kim@fakeemail.com'),
-  createData('Kim', 'kim@fakeemail.com'),
-  createData('Kim', 'kim@fakeemail.com'),
-  createData('Kim', 'kim@fakeemail.com'),
+  createData('1','Kim', 'kim@fakeemail.com'),
+  createData('2','Kim', 'kim@fakeemail.com'),
+  createData('3','Kim', 'kim@fakeemail.com'),
+  createData('4','Kim', 'kim@fakeemail.com'),
+  createData('5','Kim', 'kim@fakeemail.com')
 ];
 
 export default function ProspectsTable() {
@@ -44,7 +44,7 @@ export default function ProspectsTable() {
         </TableHead>
         <TableBody>
           {rows.map((row) => (
-            <TableRow key={row.email}>
+            <TableRow key={row.id}>
               <TableCell>{row.name}</TableCell>
               <TableCell>{row.email}</TableCell>
             </TableRow>
