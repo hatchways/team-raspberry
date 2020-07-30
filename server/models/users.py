@@ -26,8 +26,16 @@ class UserModel(db.Model):
         self.lastName = lastName
 
     def save_to_db(self):
+        # Session can get into a weird state where nothing else works?
+        # See https://stackoverflow.com/questions/8870217/why-do-i-get-sqlalchemy-nested-rollback-error
         db.session.add(self)
-        db.session.commit()
+        try:
+            db.session.commit()
+        except:
+            db.session.rollback()
+            raise
+        finally:
+            db.session.close()
 
     # Update Google OAuth credentials
     def updateCredentials(self, credentials):
