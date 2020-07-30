@@ -47,7 +47,7 @@ class UserRegistration(Resource):
 
         new_user = UserModel(
             email = data['email'],
-            credentials = data['credentials']
+            credentials = data['credentials'],
             password = data['password'],
             firstName = data['firstName'],
             lastName = data['lastName']
