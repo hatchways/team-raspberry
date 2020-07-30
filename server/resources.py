@@ -2,7 +2,6 @@ from typing import List, Any
 from functools import wraps
 from models.users import UserModel, user_schema, users_schema
 from models.prospects import ProspectModel, prospect_schema, prospects_schema
-from app import flask_bcrypt
 from flask_restful import Resource
 from flask import request, session
 import io, csv
@@ -46,11 +45,11 @@ class UserRegistration(Resource):
             return {'message': 'User {} already exists'.format(data['email'])}, 409
 
         new_user = UserModel(
-            email = data['email'],
-            credentials = data['credentials']
-            password = data['password'],
-            firstName = data['firstName'],
-            lastName = data['lastName']
+            email = data.get('email'),
+            credentials = data.get('credentials'),
+            password = data.get('password'),
+            firstName = data.get('firstName'),
+            lastName = data.get('lastName')
         )
 
         try:
@@ -127,6 +126,7 @@ class SecretResource(Resource):
 
 prospectsHolder = []
 class AddProspectCsv(Resource):
+
     def post(self):
         file = request.files["file"]
         if file.filename.endswith('.csv') != True:
@@ -190,3 +190,43 @@ class ImportProspects(Resource):
             "status": "success",
             "message": "Prospects have been added to the database"
         }, 200
+class Prospects(Resource):
+    # TODO: Creating users is not in the spec, so just using this for testing purposes.
+    @login_required
+    def post(self, user_id):
+        data = prospect_schema.load(request.json)
+
+        new_prospect = ProspectModel(
+            email=data.get('email'),
+            firstName=data.get('firstName'),
+            lastName=data.get('lastName'),
+            status=data.get('status'),
+            userId=user_id
+        )
+        try:
+            new_prospect.save_to_db()
+            response_object = {
+                'status': 'success',
+                'message': 'Prospect {} was created'.format(data['email'])
+            }
+            return response_object, 201
+        except Exception as e:
+            response_object = {
+                'status': 'fail',
+                'message': 'Something went wrong. Please try again.'
+            }
+            return response_object, 500
+
+    @login_required
+    def get(self, user_id):
+        def to_json(x):
+            return {
+                "id": x.id,
+                "email": x.email,
+                "status": x.status,
+                "firstName": x.firstName,
+                "lastName": x.lastName,
+            }
+
+        prospects = ProspectModel.return_user_prospects(user_id)
+        return {"prospects": list(map(lambda x: to_json(x), prospects))}

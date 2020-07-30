@@ -50,6 +50,7 @@ def create_app():
     crm_api.add_resource(resources.ImportProspects, '/api/import/prospects')
     crm_api.add_resource(google_resources.Authorize, '/authorize')
     crm_api.add_resource(google_resources.OAuth2Callback, '/oauth2callback')
+    crm_api.add_resource(resources.Prospects, '/prospects')
 
     db.init_app(flask_app)
     migrate.init_app(flask_app, db)

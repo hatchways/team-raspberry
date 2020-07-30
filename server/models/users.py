@@ -17,17 +17,26 @@ class UserModel(db.Model):
     prospects = db.relationship('ProspectModel', backref='user', lazy=True)
     created = db.Column(db.DateTime, nullable=False, default=datetime.datetime.utcnow)
 
-    def __init__(self, email, password, firstName, lastName):
+    def __init__(self, email, password, credentials, firstName, lastName):
         self.email = email
         self.password = flask_bcrypt.generate_password_hash(
             password, create_app().config.get('BCRYPT_LOG_ROUNDS')
         ).decode()
         self.firstName = firstName
         self.lastName = lastName
+        self.credentials = credentials
 
     def save_to_db(self):
+        # Session can get into a weird state where nothing else works?
+        # See https://stackoverflow.com/questions/8870217/why-do-i-get-sqlalchemy-nested-rollback-error
         db.session.add(self)
-        db.session.commit()
+        try:
+            db.session.commit()
+        except:
+            db.session.rollback()
+            raise
+        finally:
+            db.session.close()
 
     # Update Google OAuth credentials
     def updateCredentials(self, credentials):
@@ -47,10 +56,6 @@ class UserModel(db.Model):
 
     def verify_password(self, password):
         return flask_bcrypt.check_password_hash(self.password, password)
-
-    @classmethod
-    def find_by_id(cls, user_id):
-        return cls.query.filter_by(id=user_id).first()
 
     @classmethod
     def return_all(cls):
@@ -121,6 +126,7 @@ def pw_length(password):
 
 class UserSchema(Schema):
     id = fields.Int(dump_only=True)
+    credentials = fields.Str(required=True)
     email = fields.Email(required=True, validate=must_not_be_blank)
     password = fields.Str(required=True, validate=pw_length)
     firstName = fields.Str(required=True)
