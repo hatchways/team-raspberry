@@ -7,7 +7,6 @@ import GmailDialog from "./pages/GmailDialog";
 import GmailRedirect from "./pages/GmailRedirect";
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
-import SimpleDialogDemo from "./pages/GmailAPI";
 import AddProspects from "./pages/AddProspects";
 import LoggedInNavBar from './pages/LoggedInNavBar';
 import Profile from './pages/ProfilePage';
