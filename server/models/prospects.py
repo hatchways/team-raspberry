@@ -29,11 +29,11 @@ class ProspectModel(db.Model):
     def return_all(cls):
         def to_json(x):
             return {
+                "id": x.id,
                 "email": x.email,
                 "status": x.status,
                 "firstName": x.firstName,
                 "lastName": x.lastName,
-                "userId": x.userId,
             }
 
         return {"prospects": list(map(lambda x: to_json(x), ProspectModel.query.all()))}
