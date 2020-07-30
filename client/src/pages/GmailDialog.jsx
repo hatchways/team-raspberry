@@ -108,6 +108,6 @@ export default function GmailDialogDemo() {
    },
    button: {
      margin: "auto",
-     height: "20px",
+     transform: "scale(0.5)"
    },
  }));

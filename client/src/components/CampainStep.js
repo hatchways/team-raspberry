@@ -6,16 +6,23 @@ import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import Button from "@material-ui/core/Button";
+import Card from "@material-ui/core/Card";
+import CardActions from "@material-ui/core/CardActions";
+import CardContent from "@material-ui/core/CardContent";
+
 
 export default function CampaignStep() {
   const classes = useStyles();
   const [stepName, setStepName] = useState("")
   const [templates, setTemplates] = useState([])
+  const [saved, setSaved] = useState(false)
   const [selectedTemplate, setSelectedTemplate] = useState(
     <MenuItem key="0">Select Template</MenuItem>
   );
-  const [saved, setSaved] = useState(false)
 
+  const handleEdit = () => {
+    setSaved(false)
+  }
 
   const handleText = (e) => {
     setStepName(e.target.value)
@@ -49,6 +56,19 @@ export default function CampaignStep() {
 
   // NOTE: consider adding a ListItem wrapper to these, so it doesn't need to be added in CampaignShow.
   return (
+    saved ? 
+      <Card className={classes.card}>
+        <CardContent className={classes.cardContent}>
+          Step Name: {stepName}
+        </CardContent>
+        <CardContent className={classes.cardContent}>
+          Template: {selectedTemplate}
+        </CardContent>
+        <CardActions>
+          <Button onClick={handleEdit}>Edit</Button>
+        </CardActions>
+      </Card>
+    :
     <form className={classes.root} noValidate autoComplete="off" onSubmit={handleSubmit}>
       <FormControl>
         <InputLabel htmlFor="step-name">Step Name:</InputLabel>
@@ -62,7 +82,7 @@ export default function CampaignStep() {
           {templates}
         </Select>
       </FormControl>
-      <Button className={classes.button} label="Submit" type="submit">Submit</Button>
+      <Button className={classes.button} label="Submit" type="submit">Save</Button>
     </form>
   )
 }
@@ -78,6 +98,15 @@ const useStyles = makeStyles((theme) => ({
     width: "120px",
   },
   button: {
+
+  },
+  card: {
+
+  },
+  cardContent: {
+
+  },
+  cardActions: {
 
   },
 }))
