@@ -45,11 +45,11 @@ class UserRegistration(Resource):
             return {'message': 'User {} already exists'.format(data['email'])}, 409
 
         new_user = UserModel(
-            email = data['email'],
-            credentials = data['credentials'],
-            password = data['password'],
-            firstName = data['firstName'],
-            lastName = data['lastName']
+            email = data.get('email'),
+            credentials = data.get('credentials'),
+            password = data.get('password'),
+            firstName = data.get('firstName'),
+            lastName = data.get('lastName')
         )
 
         try:
