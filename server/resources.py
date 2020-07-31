@@ -64,7 +64,7 @@ class UserRegistration(Resource):
                     'lastName': new_user.lastName
                 }
             }
-            print('returning')
+            
             return responseObject, 201
         except Exception as e:
             responseObject = {
@@ -267,7 +267,7 @@ class GetUser(Resource):
         if (user_id > -1):
             user = UserModel.find_by_id(user_id)
 
-        print('about to return success')
+        
         return {
             'status': 'success',
             'user': {

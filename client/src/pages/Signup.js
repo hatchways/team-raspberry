@@ -85,7 +85,7 @@ export default function Signup() {
         email: formValues.email,
         password: formValues.password,
         firstName: formValues.firstName,
-        lastName: formValues.firstName,
+        lastName: formValues.lastName,
       };
       const response = Auth.registration(register);
 
