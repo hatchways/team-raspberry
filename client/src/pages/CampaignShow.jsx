@@ -73,19 +73,19 @@ const useStyles = makeStyles((theme) => ({
     background: "#F3F6FB",
   },
   title: {
-    marginLeft: "50px",
+    marginLeft: "66px",
     marginBottom: "10px",
     color: "linear-gradient(45deg, #2AA897 30%, #4FBE75 90%)",
   },
   button: {
     maxWidth: "100px",
-    marginLeft: "50px",
+    marginLeft: "66px",
   },
   listItem: {},
   tableContainer: {
     minWidth: 650,
     maxWidth: 800,
-    marginLeft: "50px",
+    marginLeft: "66px",
     marginRight: "50px",
     borderColor: "grey",
     borderWidth: "1px",

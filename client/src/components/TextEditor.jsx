@@ -4,6 +4,7 @@ import { tinyMCEKey } from "../APIKeys";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import DialogActions from "@material-ui/core/DialogActions";
 import TextField from "@material-ui/core/TextField";
 import { makeStyles } from "@material-ui/core/styles";
 import PropTypes from "prop-types";
@@ -13,15 +14,10 @@ import CardContent from "@material-ui/core/CardContent";
 
 export default function TextEditor(props) {
   const classes = useStyles()
+  const [openAlert, setOpenAlert] = useState(false);
   const [subject, handleSubject] = useState("")
   const [content, handleContent] = useState("")
   let { open, setOpenEditor ,setEditorSubject, setEditorContent } = props
-
-
-  // const handleEditorChange = (content, editor) => {
-  //   console.log("Content was updated:", content);
-  //   console.log("Editor: ", editor)
-  // };
 
   const handleEditorChange = (cont, _) => {
     handleContent(cont)
@@ -39,26 +35,28 @@ export default function TextEditor(props) {
     setOpenEditor(false)
   }
 
+  const handleAlertClose = () => {
+    setOpenAlert(false);
+  }
+
   const handleSave = () => {
     if (subject.length > 0 && content.length > 0) {
       setOpenEditor(false)
       setEditorSubject(subject)
       setEditorContent(content)
     } else {
-      alert("Either the email subject or body is empty.")
+      setOpenAlert(true)
     }
   }
 
   return(
     <Dialog open={open} className={classes.root}>
-      {/* <DialogTitle>New Email</DialogTitle> */}
         <Card>
           <CardContent>
             <TextField className={classes.subject} key="subject" label="Email Subject" value={subject} onChange={handleSubjectChange}></TextField>
           </CardContent>
           <CardContent>
             <Editor
-              // initialValue="<p>Initial content</p>"
               apiKey={tinyMCEKey}
               init={{
                 height: 300,
@@ -79,7 +77,6 @@ export default function TextEditor(props) {
               onEditorChange={handleEditorChange}
             />
           </CardContent>
-          {/* <Button label="Submit" type="submit">Save Template</Button> */}
           <CardActions>
             <Button onClick={handleSave} variant="contained" color="primary">Save Template</Button>
           </CardActions>
@@ -87,6 +84,18 @@ export default function TextEditor(props) {
             <Button onClick={handleClose} variant="contained" color="primary">Close</Button>
           </CardActions>
         </Card>
+        <Dialog
+        open={openAlert}
+        onClose={handleAlertClose}
+        aria-labelledby="alert-dialog-title"
+        >
+          <DialogTitle id="alert-dialog-title">{"The email subject and/or body are empty."}</DialogTitle>
+          <DialogActions>
+            <Button onClick={handleAlertClose} variant="contained" color="primary">
+              Close
+            </Button>
+          </DialogActions>
+        </Dialog>
     </Dialog>
   )
 }

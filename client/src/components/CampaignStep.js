@@ -7,6 +7,10 @@ import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import TextField from "@material-ui/core/TextField";
 import TextEditor from "./TextEditor";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogTitle from "@material-ui/core/DialogTitle";
 import { theme } from "../themes/theme";
 
 
@@ -15,6 +19,7 @@ export default function CampaignStep() {
   const [stepName, setStepName] = useState("")
   const [saved, setSaved] = useState(false)
   const [openEditor, setOpenEditor] = useState(false)
+  const [openAlert, setOpenAlert] = useState(false)
   const [editorSubject, setEditorSubject] = useState("")
   const [editorContent, setEditorContent] = useState("")
 
@@ -31,6 +36,10 @@ export default function CampaignStep() {
     setOpenEditor(false)
   }
 
+  const handleAlertClose = () => {
+    setOpenAlert(false)
+  }
+
   const handleEdit = () => {
     setSaved(false)
   }
@@ -40,9 +49,11 @@ export default function CampaignStep() {
   }
 
   const handleSave = () => {
-    // e.preventDefault()
-    setSaved(true)
-    // console.log(e)
+    if (stepName.length > 0 && editorSubject.length > 0) {
+      setSaved(true)
+    } else {
+      setOpenAlert(true)
+    }
   }
 
   // NOTE: consider adding a ListItem wrapper to these, so it doesn't need to be added in CampaignShow.
@@ -62,8 +73,7 @@ export default function CampaignStep() {
       </CardActions>
     </Card>
   ) : (
-    <Card>
-      {/* </Card> */}
+    <Card className={classes.card}>
         <CardContent>
           <TextField
             label="Step Name"
@@ -99,7 +109,18 @@ export default function CampaignStep() {
             Save
           </Button>
         </CardActions>
-      {/* </form> */}
+        <Dialog
+        open={openAlert}
+        onClose={handleAlertClose}
+        aria-labelledby="alert-dialog-title"
+        >
+        <DialogTitle id="alert-dialog-title">{"A step needs a title and email template."}</DialogTitle>
+        <DialogActions>
+          <Button onClick={handleAlertClose} variant="contained" color="primary">
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Card>
   );
 }
@@ -118,7 +139,13 @@ const useStyles = makeStyles((theme) => ({
 
   },
   card: {
-
+    minWidth: 650,
+    marginLeft: "50px",
+    marginRight: "50px",
+    borderColor: "grey",
+    borderWidth: "1px",
+    borderStyle: "solid",
+    borderRadius: "4px",
   },
   cardContent: {
 
