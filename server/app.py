@@ -46,7 +46,6 @@ def create_app():
     crm_api.add_resource(resources.UserLogout, '/logout')
     crm_api.add_resource(resources.AllUsers, '/users')
     crm_api.add_resource(resources.GetUser, '/user')
-    crm_api.add_resource(resources.SecretResource, '/secret')
     crm_api.add_resource(resources.AddProspectCsv, '/add/prospectsCsv')
     crm_api.add_resource(resources.ImportProspects, '/import/prospects')
     crm_api.add_resource(google_resources.Authorize, '/authorize')
