@@ -28,7 +28,6 @@ def create_app():
     flask_app = Flask(__name__)
    
     CORS(flask_app)
-    flask_app.secret_key = "This is a key for testing"
     # Add to database
     flask_app.config['SQLALCHEMY_DATABASE_URI'] = config.SQLALCHEMY_DATABASE_URI
     flask_app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
