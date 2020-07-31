@@ -1,7 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { UserContext } from "./contexts/UserContext";
 import { MuiThemeProvider } from "@material-ui/core";
+<<<<<<< HEAD
 import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom";
+=======
+import { BrowserRouter, Switch, Route } from "react-router-dom";
+import {ThemeProvider} from "@material-ui/core/styles"
+
+>>>>>>> 79c42d1... Working Campaign Show Page
 import { theme } from "./themes/theme";
 import { createBrowserHistory } from "history";
 import GmailDialog from "./pages/GmailDialog";
@@ -21,8 +27,6 @@ import Reporting from './pages/Reporting';
 import Templates from './pages/Templates';
 import Prospects from './pages/Prospects';
 import Campaigns from './pages/Campaigns';
-import MyEditor from './components/TextEditor'
-import CampaignStep from "./components/CampainStep";
 import CampaignShow from "./pages/CampaignShow";
 
 
@@ -45,7 +49,7 @@ function App() {
   }, []);
 
   return (
-    <MuiThemeProvider theme={theme}>
+    <ThemeProvider theme={theme}>
       <BrowserRouter>
         {user !== null ? <LoggedInNavBar /> : ""}
         <UserContext.Provider value={{ user, setUser }}>
@@ -80,7 +84,7 @@ function App() {
           </Switch>
         </UserContext.Provider>
       </BrowserRouter>
-    </MuiThemeProvider>
+    </ThemeProvider>
   );
 }
 
