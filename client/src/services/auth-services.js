@@ -21,4 +21,8 @@ async function registration(formValues) {
   return response;
 }
 
-export { getUser, login, registration };
+async function getProspects() {
+  return await axios.get("/api/prospects");
+}
+
+export { getUser, login, registration, getProspects};
