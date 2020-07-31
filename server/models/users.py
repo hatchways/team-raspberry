@@ -1,7 +1,10 @@
-from app import create_app, db, flask_bcrypt
-from marshmallow import Schema, fields, ValidationError, pre_load
-import jwt
 import datetime
+
+import jwt
+from marshmallow import Schema, fields, ValidationError
+
+from app import create_app, db, flask_bcrypt
+import config
 
 class UserModel(db.Model):
     __tablename__ = 'users'
@@ -85,8 +88,7 @@ class UserModel(db.Model):
             }
             return jwt.encode(
                 payload,
-                # TODO
-                'SECRET_KEY',
+                config.SECRET_KEY,
                 algorithm='HS256'
             )
         except Exception as e:
@@ -100,7 +102,7 @@ class UserModel(db.Model):
         :return: integer|string
         """
         try:
-            payload = jwt.decode(auth_token, 'SECRET_KEY')
+            payload = jwt.decode(auth_token, config.SECRET_KEY)
             return payload['sub']
         except jwt.ExpiredSignatureError:
             return 'Signature expired. Please log in again.'
