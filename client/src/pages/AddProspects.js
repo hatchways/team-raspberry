@@ -79,7 +79,6 @@ export default function AddProspects() {
 
   const importCsv = (e) => {
     e.preventDefault();
-    console.log(csvHeaders.length);
     fetch("/api/import/prospects", {
       method: "POST",
       headers: {

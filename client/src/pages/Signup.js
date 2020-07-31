@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import Navbar from "../components/Navbar";
+import React, { useState, useContext } from "react";
+import { useHistory } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import {
   Grid,
@@ -11,10 +11,14 @@ import {
 } from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
 import CustomTextField from "../components/CustomTextField";
+import Navbar from "../components/Navbar";
+import { UserContext } from "../contexts/UserContext";
+import * as Auth from "../services/auth-services";
 
 export default function Signup() {
+  const { user, setUser } = useContext(UserContext);
   const classes = useStyles();
-
+  const history = useHistory();
   const [formValues, setFormValues] = useState({
     email: "",
     password: "",
@@ -72,36 +76,30 @@ export default function Signup() {
     return valid;
   };
 
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
     const valid = validate();
 
-    console.log(formValues);
-
     if (valid) {
-      console.log(formValues);
-      fetch("/registration", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: formValues.email,
-          password: formValues.password,
-          firstName: formValues.firstName,
-          lastName: formValues.lastName,
-        }),
-      }).then((res) => {
-        res.json().then((data) => {
-          setSnackbar({
-            snackbarMsg: data.message,
-            snackbarOpen: true,
-          });
+      const register = {
+        email: formValues.email,
+        password: formValues.password,
+        firstName: formValues.firstName,
+        lastName: formValues.firstName,
+      };
+      const response = Auth.registration(register);
 
-          if (res.status >= 200 && res.status < 300) {
-            // TODO REDIRECTION
-          }
+      response.then((data) => {
+        setSnackbar({
+          snackbarMsg: data.data.message,
+          snackbarOpen: true,
         });
+
+        if (data.data.status === "success") {
+          localStorage.setItem("token", data.data.auth_token);
+          setUser(data.data.user);
+          history.push("/prospects");
+        }
       });
     }
   };
@@ -137,7 +135,7 @@ export default function Signup() {
             <Typography variant="h5" className={classes.FormTitle}>
               Signup
             </Typography>
-            <form action="/signup" method="POST" onSubmit={onSubmit}>
+            <form action="/api/registration" method="POST" onSubmit={onSubmit}>
               <Grid
                 item
                 container

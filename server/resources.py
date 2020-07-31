@@ -12,7 +12,7 @@ def login_required(f):
     def wrap(*args, **kwargs):
         auth_header = request.headers.get('Authorization')
         if auth_header:
-            auth_token = auth_header.split(" ")[1]
+            auth_token = auth_header.split()[1]
             if auth_token:
                 resp = UserModel.decode_auth_token(auth_token)
                 # Strings are error messages, if it's an int, then it's the user_id.
@@ -32,24 +32,21 @@ def login_required(f):
             'message': 'Provide a valid auth token.'
         }
         return responseObject, 403
-
     return wrap
 
 
 class UserRegistration(Resource):
     def post(self):
         data = user_schema.load(request.json)
-        
         # Check if email already exists
         if UserModel.find_by_email(data['email']):
             return {'message': 'User {} already exists'.format(data['email'])}, 409
 
         new_user = UserModel(
-            email = data.get('email'),
-            credentials = data.get('credentials'),
-            password = data.get('password'),
-            firstName = data.get('firstName'),
-            lastName = data.get('lastName')
+            email = data['email'],
+            password = data['password'],
+            firstName = data['firstName'],
+            lastName = data['lastName'],
         )
 
         try:
@@ -58,8 +55,16 @@ class UserRegistration(Resource):
             responseObject = {
                 'status': 'success',
                 'message': 'User {} was created'.format(data['email']),
-                'auth_token': auth_token.decode()
+                'auth_token': auth_token.decode(),
+                'user': {
+                    'userId': new_user.id,
+                    'email': new_user.email,
+                    'credentials': new_user.credentials,
+                    'firstName': new_user.firstName,
+                    'lastName': new_user.lastName
+                }
             }
+            print('returning')
             return responseObject, 201
         except Exception as e:
             responseObject = {
@@ -87,7 +92,14 @@ class UserLogin(Resource):
             responseObject = {
                 'status': 'success',
                 'message': 'Successfully logged in.',
-                'auth_token': auth_token.decode()
+                'auth_token': auth_token.decode(),
+                'user': {
+                    'userId': current_user.id,
+                    'email': current_user.email,
+                    'credentials': current_user.credentials,
+                    'firstName': current_user.firstName,
+                    'lastName': current_user.lastName
+                }   
             }
             return responseObject, 200
         else:
@@ -190,6 +202,7 @@ class ImportProspects(Resource):
             "status": "success",
             "message": "Prospects have been added to the database"
         }, 200
+
 class Prospects(Resource):
     # TODO: Creating users is not in the spec, so just using this for testing purposes.
     @login_required
@@ -230,3 +243,30 @@ class Prospects(Resource):
 
         prospects = ProspectModel.return_user_prospects(user_id)
         return {"prospects": list(map(lambda x: to_json(x), prospects))}
+
+class GetUser(Resource):
+    @login_required
+    def post(self, user_id):
+
+        if (user_id == -1):
+            return {
+                'status': 'fail',
+                'user': None,
+            }
+
+        user = None
+        if (user_id > -1):
+            user = UserModel.find_by_id(user_id)
+
+        print('about to return success')
+        return {
+            'status': 'success',
+            'user': {
+                'userId': user.id,
+                'email': user.email,
+                'credentials': user.credentials,
+                'firstName': user.firstName,
+                'lastName': user.lastName
+            },
+            'message': "Here's your user"
+            }, 200
