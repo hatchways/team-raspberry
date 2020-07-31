@@ -4,7 +4,7 @@ from models.users import UserModel, user_schema, users_schema
 from models.prospects import ProspectModel, prospect_schema, prospects_schema
 from flask_restful import Resource
 from flask import request, session
-import io, csv
+import io, csv, redis, json
 
 
 def login_required(f):
@@ -136,9 +136,10 @@ class SecretResource(Resource):
             'answer': 42
         }
 
-prospectsHolder = []
+# This class uses 'redis' to temporarily store data while remaining
+# stateless. You will have to install redis on ur localmachine to get
+# this to work.
 class AddProspectCsv(Resource):
-
     def post(self):
         file = request.files["file"]
         if file.filename.endswith('.csv') != True:
@@ -146,13 +147,14 @@ class AddProspectCsv(Resource):
                 "status": "fail",
                 "message": "File Upload Failed"
             }, 401
-
+        redisServer = redis.Redis(host='localhost')
+    
         stream = io.StringIO(file.stream.read().decode("utf-8-sig"), newline=None)
         csv_input = csv.reader(stream)        
         headers = next(csv_input)
         
         for row in csv_input:
-            prospectsHolder.append(row)
+            redisServer.lpush('prospects', json.dumps(row))
 
         return {
             "status": "success",
@@ -160,43 +162,50 @@ class AddProspectCsv(Resource):
             "headers": headers 
         }, 200
 
-
+# This class uses 'redis' to temporarily store data while remaining
+# stateless. You will have to install redis on ur localmachine to get
+# this to work.
 class ImportProspects(Resource):
     def post(self):
         data = request.json
-        
         if data['email'] == data['none']: 
             responseObject = {
                 "status": "fail",
                 "message": "Email field cannot be None"
             }
             return responseObject, 401
+
+        redisServer = redis.Redis(host='localhost')
             
         # Currently just associating the prospect with user number 1
         current_user = UserModel.find_by_id(1)
 
-        if len(prospectsHolder) == 0:
+        if redisServer.llen('prospects') == 0:
             return {
                 "status": "fail",
                 "message": "No prospects to add. Please check .csv file"
             }, 400
 
-        for row in prospectsHolder:
-            current_prospect = ProspectModel.return_email_prospects(row[data['email']])
-            if current_prospect:
-                return {
-                    "status": "fail",
-                    "message": "Prospect with email {} already exists".format(row[data['email']])
-                }, 409
-    
+        while (redisServer.llen('test') > 0):
+            redisProspect = json.loads(redisServer.rpop('prospects'))
             new_prospect = ProspectModel(
-                email = row[data['email']],
-                status = row[data['status']],
-                firstName = row[data['firstName']],
-                lastName = row[data['lastName']],
+                email = redisProspect[data['email']],
+                status = redisProspect[data['status']],
+                firstName = redisProspect[data['firstName']],
+                lastName = redisProspect[data['lastName']],
                 userId = current_user.id,
             )
             new_prospect.save_to_db()
+
+        ### Guessing since we allow duplicate emails here it's fine not to check this?
+        ### I'll remove these comments if I get the go 
+        #for row in prospectsHolder:
+        #    current_prospect = ProspectModel.return_email_prospects(row[data['email']])
+        #    if current_prospect:
+        #        return {
+        #            "status": "fail",
+        #            "message": "Prospect with email {} already exists".format(row[data['email']])
+        #        }, 409
 
         return { 
             "status": "success",
