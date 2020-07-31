@@ -5,7 +5,6 @@ import { MuiThemeProvider } from "@material-ui/core";
 import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom";
 =======
 import { BrowserRouter, Switch, Route } from "react-router-dom";
-import {ThemeProvider} from "@material-ui/core/styles"
 
 >>>>>>> 79c42d1... Working Campaign Show Page
 import { theme } from "./themes/theme";
@@ -49,7 +48,7 @@ function App() {
   }, []);
 
   return (
-    <ThemeProvider theme={theme}>
+    <MuiThemeProvider theme={theme}>
       <BrowserRouter>
         {user !== null ? <LoggedInNavBar /> : ""}
         <UserContext.Provider value={{ user, setUser }}>
@@ -84,7 +83,7 @@ function App() {
           </Switch>
         </UserContext.Provider>
       </BrowserRouter>
-    </ThemeProvider>
+    </MuiThemeProvider>
   );
 }
 
