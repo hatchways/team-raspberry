@@ -23,11 +23,6 @@ export default function CampaignStep() {
   const [editorSubject, setEditorSubject] = useState("")
   const [editorContent, setEditorContent] = useState("")
 
-  useEffect(() => {
-    console.log(editorSubject)
-    console.log(editorContent)
-  }, [editorSubject, editorContent])
-
   const handleEditorOpen = () => {
     setOpenEditor(true)
   }

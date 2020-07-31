@@ -1,5 +1,6 @@
 from models.users import UserModel, user_schema, users_schema
 from flask_restful import Resource
+from functools import wraps
 import google.oauth2.credentials
 import google_auth_oauthlib.flow
 import googleapiclient.discovery
@@ -23,6 +24,34 @@ SCOPES = [
 API_SERVICE_NAME = 'gmail'
 API_VERSION = 'v1'
 
+def login_required(f):
+    @wraps(f)
+    def wrap(*args, **kwargs):
+        auth_header = request.headers.get('Authorization')
+        if auth_header:
+            auth_token = auth_header.split(" ")[1]
+            if auth_token:
+                resp = UserModel.decode_auth_token(auth_token)
+                # Strings are error messages, if it's an int, then it's the user_id.
+                if not isinstance(resp, str):
+                    user_id = resp
+                    args = args + (user_id,)
+                    return f(*args, **kwargs)
+                else:
+                    responseObject = {
+                        'status': 'fail',
+                        'message': resp
+                    }
+                    return responseObject, 401
+
+        responseObject = {
+            'status': 'fail',
+            'message': 'Provide a valid auth token.'
+        }
+        return responseObject, 403
+
+    return wrap
+
 def credentials_to_dict(credentials):
   return {'token': credentials.token,
           'refresh_token': credentials.refresh_token,
@@ -31,15 +60,14 @@ def credentials_to_dict(credentials):
           'client_secret': credentials.client_secret,
           'scopes': credentials.scopes}
 
-def save_credentials(creds_dict):
+def save_credentials(creds_dict, user_id):
   #TODO: Grab current user
-  # current_user = UserModel.find_by_id("someone@gmail.com")
-  # if current_user:
-  #   current_user.updateCredentials(creds_dict)
-  #   return "Credentials Saved."
-  # else:
-  #   return "Current user not found."
-  pass
+  current_user = UserModel.find_by_id(user_id)
+  if current_user:
+    current_user.updateCredentials(creds_dict)
+    return "Credentials Saved."
+  else:
+    return "Current user not found."
 
 class Authorize(Resource):
   def post(self):
@@ -66,6 +94,7 @@ class Authorize(Resource):
     return {"url": authorization_url}, 200
 
 class OAuth2Callback(Resource):
+  @login_required
   def post(self):
     # Specify the state when creating the flow in the callback so that it can
     # verified in the authorization server response.
@@ -76,7 +105,6 @@ class OAuth2Callback(Resource):
 
     # Use the authorization server's response to fetch the OAuth 2.0 tokens.
     authorization_response = flask.request.json["url"]
-    print(flask.request.json)
     flow.fetch_token(authorization_response=authorization_response)
 
     # Store credentials in the session.
@@ -84,6 +112,5 @@ class OAuth2Callback(Resource):
     #              credentials in a persistent database instead.
     credentials = flow.credentials
     creds_dict = credentials_to_dict(credentials)
-    print(creds_dict)
-    save_credentials(creds_dict)
+    save_credentials(creds_dict, user_id)
     return creds_dict, 200

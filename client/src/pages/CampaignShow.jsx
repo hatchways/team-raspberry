@@ -20,12 +20,6 @@ export default function CampaignShow() {
   const [replied, setReplied] = useState(3)
   const classes = useStyles()
 
-  // const createData = (contacted, opened, replied) => {
-  //   return {contacted, opened, replied}
-  // }
-
-  // const row = createData(contacted, opened, replied)
-
   const handleAddStep = () => {
     let newItem = (
     <ListItem key={steps.length + 1} className={classes.listItem}>
