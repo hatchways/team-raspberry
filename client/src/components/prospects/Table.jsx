@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
+import * as Auth from "../../services/auth-services"
 
 import {
     TableContainer,
@@ -37,18 +38,9 @@ export default function ProspectsTable() {
   ]);
 
   function fetchProspects() {
-    fetch("/api/prospects", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        // TODO: This should be pulled from the local storage? or at least passed in.
-        "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1OTYxNTQ0NDYsImlhdCI6MTU5NjE1MDg0Niwic3ViIjoxfQ.lZpkVZluz2ZLr6eljlwUabt-_b5N4p5C7rjexd30RKo"
-      }
-    }).then((res) => {
-      res.json().then((data) => {
-        console.log(data);
-        setRows(data.prospects);
-      });
+    Auth.getProspects().then((res) => {
+      console.log(res.data);
+      setRows(res.data.prospects);
     });
   }
 
