@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import Navbar from "../components/Navbar";
+import React, { useState, useContext } from "react";
+import { useHistory } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import {
   Grid,
@@ -11,10 +11,14 @@ import {
 } from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
 import CustomTextField from "../components/CustomTextField";
+import Navbar from "../components/Navbar";
+import { UserContext } from "../contexts/UserContext";
+import * as Auth from "../services/auth-services";
 
 export default function Login() {
+  const { user, setUser } = useContext(UserContext);
   const classes = useStyles();
-
+  const history = useHistory();
   const [formValues, setFormValues] = useState({
     email: "",
     password: "",
@@ -28,24 +32,19 @@ export default function Login() {
 
   const onSubmit = (e) => {
     e.preventDefault();
+    const response = Auth.login(formValues);
 
-    fetch("/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(formValues),
-    }).then((res) => {
-      res.json().then((data) => {
-        setSnackBar({
-          snackbarMsg: data.message,
-          snackbarOpen: true,
-        });
-
-        if (res.status < 300 && res.status >= 200) {
-          // TODO REDIRECTION
-        }
+    response.then((data) => {
+      setSnackBar({
+        snackbarMsg: data.data.message,
+        snackbarOpen: true,
       });
+
+      if (data.data.status === "success") {
+        localStorage.setItem("token", data.data.auth_token);
+        setUser(data.data.user);
+        history.push("/prospects");
+      }
     });
   };
 
