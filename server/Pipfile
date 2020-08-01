@@ -25,6 +25,7 @@ psycopg2-binary = "==2.8.5"
 pyopenssl = "==19.1.0"
 requests = "==2.24.0"
 webtest = "==2.0.35"
+redis = "*"
 
 [requires]
 python_version = "3.7"
