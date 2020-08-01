@@ -28,7 +28,6 @@ def create_app():
     flask_app = Flask(__name__)
    
     CORS(flask_app)
-    flask_app.secret_key = "This is a key for testing"
     # Add to database
     flask_app.config['SQLALCHEMY_DATABASE_URI'] = config.SQLALCHEMY_DATABASE_URI
     flask_app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -46,7 +45,6 @@ def create_app():
     crm_api.add_resource(resources.UserLogout, '/logout')
     crm_api.add_resource(resources.AllUsers, '/users')
     crm_api.add_resource(resources.GetUser, '/user')
-    crm_api.add_resource(resources.SecretResource, '/secret')
     crm_api.add_resource(resources.AddProspectCsv, '/add/prospectsCsv')
     crm_api.add_resource(resources.ImportProspects, '/import/prospects')
     crm_api.add_resource(google_resources.Authorize, '/authorize')

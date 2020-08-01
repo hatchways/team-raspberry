@@ -129,13 +129,6 @@ class AllUsers(Resource):
     def delete(self):
         return UserModel.delete_all()
 
-
-class SecretResource(Resource):
-    def get(self):
-        return {
-            'answer': 42
-        }
-
 # This class uses 'redis' to temporarily store data while remaining
 # stateless. You will have to install redis on ur localmachine to get
 # this to work.
