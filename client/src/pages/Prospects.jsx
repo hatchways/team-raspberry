@@ -9,12 +9,14 @@ import SearchBar from '../components/prospects/SearchBar'
 export default function Prospects() {
   const classes = useStyles();
 
+   const [text, setText] = useState();
+
   return (
     <div className={classes.root}>
       <Grid container spacing={3}>
         <Grid item className={classes.sidebar} sm={2}>
           Sidebar
-          <SearchBar/>
+          <SearchBar setText={setText}/>
         </Grid>
         <Grid item sm={10}>
           <Container className={classes.contentContainer}>
@@ -22,7 +24,7 @@ export default function Prospects() {
               Content Header
             </Grid>
             <Grid item className={classes.content} sm={12}>
-              <ProspectsTable/>
+              <ProspectsTable text={text}/>
             </Grid>
           </Container>
         </Grid>
