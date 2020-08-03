@@ -15,6 +15,9 @@ import Prospects from "./pages/Prospects";
 import Campaigns from "./pages/Campaigns";
 import AddProspects from "./pages/AddProspects";
 import * as Auth from "./services/auth-services";
+import CampaignShow from "./pages/CampaignShow";
+
+
 import "./App.css";
 
 function App() {
@@ -56,6 +59,9 @@ function App() {
             </Route>
             <Route path="/campaigns">
               {user !== null ? <Campaigns /> : <Login />}
+            </Route>
+            <Route path="/campaign/:id">
+              {user !== null ? <CampaignShow /> : <Login />}
             </Route>
             <Route path="/add/prospects">
               {user !== null ? <AddProspects /> : <Login />}
