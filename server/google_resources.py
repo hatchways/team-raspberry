@@ -1,4 +1,5 @@
 from models.users import UserModel, user_schema, users_schema
+from resources import login_required
 from flask_restful import Resource
 from functools import wraps
 import google.oauth2.credentials
@@ -23,34 +24,6 @@ SCOPES = [
 ]
 API_SERVICE_NAME = 'gmail'
 API_VERSION = 'v1'
-
-def login_required(f):
-    @wraps(f)
-    def wrap(*args, **kwargs):
-        auth_header = request.headers.get('Authorization')
-        if auth_header:
-            auth_token = auth_header.split(" ")[1]
-            if auth_token:
-                resp = UserModel.decode_auth_token(auth_token)
-                # Strings are error messages, if it's an int, then it's the user_id.
-                if not isinstance(resp, str):
-                    user_id = resp
-                    args = args + (user_id,)
-                    return f(*args, **kwargs)
-                else:
-                    responseObject = {
-                        'status': 'fail',
-                        'message': resp
-                    }
-                    return responseObject, 401
-
-        responseObject = {
-            'status': 'fail',
-            'message': 'Provide a valid auth token.'
-        }
-        return responseObject, 403
-
-    return wrap
 
 def credentials_to_dict(credentials):
   return {'token': credentials.token,
@@ -95,7 +68,7 @@ class Authorize(Resource):
 
 class OAuth2Callback(Resource):
   @login_required
-  def post(self):
+  def post(self, client_id):
     # Specify the state when creating the flow in the callback so that it can
     # verified in the authorization server response.
     state = flask.session['state']
@@ -112,5 +85,5 @@ class OAuth2Callback(Resource):
     #              credentials in a persistent database instead.
     credentials = flow.credentials
     creds_dict = credentials_to_dict(credentials)
-    save_credentials(creds_dict, user_id)
+    save_credentials(creds_dict, client_id)
     return creds_dict, 200
