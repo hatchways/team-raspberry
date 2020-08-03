@@ -15,7 +15,6 @@ import Prospects from "./pages/Prospects";
 import Campaigns from "./pages/Campaigns";
 import AddProspects from "./pages/AddProspects";
 import * as Auth from "./services/auth-services";
-import Profile from './pages/ProfilePage';
 import CampaignShow from "./pages/CampaignShow";
 
 
