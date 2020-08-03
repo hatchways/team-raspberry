@@ -7,7 +7,7 @@ from app import create_app, db, flask_bcrypt
 import config
 
 class StepModel(db.Model):
-    __tablename__ = 'stepss'
+    __tablename__ = 'campaign_steps'
 
     # Assign database fields
     # Autoincrement is implicit default with PK set to True
@@ -16,6 +16,7 @@ class StepModel(db.Model):
     email_subject = db.Column(db.String(200), nullable=False)
     email_body = db.Column(db.String(10000), nullable=False)
     campaign_id = db.Column(db.BigInteger, db.ForeignKey("campaigns.id"), nullable=False)
+    step_prospect_join = db.relationship('ProspectStepModel', backref='step_prospect', lazy=True)
     created = db.Column(db.DateTime, nullable=False, default=datetime.datetime.utcnow)
 
     def __init__(self, step_name, email_subject, email_body):
@@ -68,6 +69,7 @@ class StepSchema(Schema):
     step_name = fields.Title(required=True, validate=must_not_be_blank)
     email_subject = fields.Str(required=True, validate=must_not_be_blank)
     email_body = fields.Str(required=True, validate=must_not_be_blank)
+    campaign_id = fields.Int(required=True, validate=must_not_be_blank)
     created = fields.DateTime(required=True, dump_only=True)
 
 # Initialize schema
