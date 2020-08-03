@@ -19,7 +19,7 @@ depends_on = None
 def upgrade():
     op.create_table('campaigns',
     sa.Column('id', sa.BigInteger(), nullable=False),
-    sa.Column('title', sa.String(length=120), nullable=False),
+    sa.Column('title', sa.String(length=200), nullable=False),
     sa.Column('user_id', sa.BigInteger(), nullable=True),
     sa.Column('created', sa.DateTime(), nullable=False)
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
