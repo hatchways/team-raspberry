@@ -1,12 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { UserContext } from "./contexts/UserContext";
 import { MuiThemeProvider } from "@material-ui/core";
-<<<<<<< HEAD
 import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom";
-=======
-import { BrowserRouter, Switch, Route } from "react-router-dom";
-
->>>>>>> 79c42d1... Working Campaign Show Page
 import { theme } from "./themes/theme";
 import { createBrowserHistory } from "history";
 import GmailDialog from "./pages/GmailDialog";
@@ -20,12 +15,7 @@ import Prospects from "./pages/Prospects";
 import Campaigns from "./pages/Campaigns";
 import AddProspects from "./pages/AddProspects";
 import * as Auth from "./services/auth-services";
-import LoggedInNavBar from './pages/LoggedInNavBar';
 import Profile from './pages/ProfilePage';
-import Reporting from './pages/Reporting';
-import Templates from './pages/Templates';
-import Prospects from './pages/Prospects';
-import Campaigns from './pages/Campaigns';
 import CampaignShow from "./pages/CampaignShow";
 
 
@@ -70,6 +60,9 @@ function App() {
             </Route>
             <Route path="/campaigns">
               {user !== null ? <Campaigns /> : <Login />}
+            </Route>
+            <Route path="/campaign/:id">
+              {user !== null ? <CampaignShow /> : <Login />}
             </Route>
             <Route path="/add/prospects">
               {user !== null ? <AddProspects /> : <Login />}
