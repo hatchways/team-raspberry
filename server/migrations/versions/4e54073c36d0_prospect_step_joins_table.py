@@ -17,8 +17,20 @@ depends_on = None
 
 
 def upgrade():
-    pass
+    op.create_table('prospect_step_joins',
+    sa.Column('id', sa.BigInteger(), nullable=False),
+    sa.Column('step_id', sa.BigInteger(), nullable=False),
+    sa.Column('prospect_id', sa.BigInteger(), nullable=False),
+    sa.Column('email_sent', sa.Boolean, nullable=False),
+    sa.Column('email_opened', sa.Boolean, nullable=False),
+    sa.Column('email_replied', sa.Boolean, nullable=False),
+    sa.Column('created', sa.DateTime(), nullable=False)
+    sa.ForeignKeyConstraint(['step_id'], ['campaign_steps.id'], ),
+    sa.ForeignKeyConstraint(['prospect_id'], ['prospectss.id'], ),
+    sa.PrimaryKeyConstraint('id'),
+    )
 
 
 def downgrade():
-    pass
+    op.drop_table('prospect_step_joins')
+
