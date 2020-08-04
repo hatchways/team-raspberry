@@ -14,9 +14,6 @@ import Templates from "./pages/Templates";
 import Prospects from "./pages/Prospects";
 import Campaigns from "./pages/Campaigns";
 import AddProspects from "./pages/AddProspects";
-import CharlieGoogle from "./pages/CharlieGoogle";
-import CharlieDirect from "./pages/CharlieRedirect";
-import SendEmailTest from "./pages/SendEmailTest";
 import * as Auth from "./services/auth-services";
 import "./App.css";
 
@@ -68,9 +65,6 @@ function App() {
             </Route>
             <Route path="/redirect">
               {user !== null ? <GmailRedirect /> : <Login />}
-            </Route>
-            <Route path="/email/prospect">
-              {user !== null ? <SendEmailTest /> : <Login />}
             </Route>
           </Switch>
         </UserContext.Provider>

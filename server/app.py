@@ -42,7 +42,6 @@ def create_app():
 
     import resources
     import google_resources
-    import charlie_google
 
     crm_api.add_resource(resources.UserRegistration, '/registration')
     crm_api.add_resource(resources.UserLogin, '/login')

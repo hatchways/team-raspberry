@@ -65,11 +65,12 @@ class OAuth2Callback(Resource):
         
         credentials = flow.credentials
         flask.session['credentials'] = credentials_to_dict(credentials)
-        save_credentials(json.dumps(flask.session['credentials'], separators=(',',':')), flask.request.json['userId'])
+        credentialsString = json.dumps(flask.session['credentials'], separators=(',',':'))
+        save_credentials(credentialsString, flask.request.json['userId'])
 
         return {
             'message': 'Permissions Granted',
-            'credentials': json.dumps(flask.session['credentials'], separators=(',',':')),
+            'credentials': credentialsString
         }, 200
 
 class EmailProspect(Resource):

@@ -1,10 +1,11 @@
 from redis import Redis
 from celery import Celery
 from googleapiclient.discovery import build
+from decouple import config
 import google.oauth2.credentials
 
-r = Redis(host="redis://localhost:6379")
-app = Celery('email_tasks', broker='redis://localhost')
+r = Redis(host=config('REDIS_HOST'))
+app = Celery('email_tasks', broker=config('CELERY_BROKER'))
 
 @app.task
 def send_message(data, user_id, message):

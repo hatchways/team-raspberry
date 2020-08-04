@@ -26,6 +26,8 @@ pyopenssl = "==19.1.0"
 requests = "==2.24.0"
 webtest = "==2.0.35"
 redis = "*"
+eventlet = "*"
+celery = "*"
 
 [requires]
 python_version = "3.7"
