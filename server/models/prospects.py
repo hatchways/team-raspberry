@@ -13,9 +13,8 @@ class ProspectModel(db.Model):
     lastName = db.Column(db.String(120), nullable=True)
     userId = db.Column(db.BigInteger, db.ForeignKey("users.id"), nullable=False)
 
-    def __init__(self, email, status, firstName, lastName, userId):
+    def __init__(self, email, firstName, lastName, userId):
         self.email = email
-        self.status = status
         self.firstName = firstName
         self.lastName = lastName
         self.userId = userId
@@ -30,7 +29,6 @@ class ProspectModel(db.Model):
             return {
                 "id": x.id,
                 "email": x.email,
-                "status": x.status,
                 "firstName": x.firstName,
                 "lastName": x.lastName,
             }
