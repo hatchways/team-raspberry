@@ -6,7 +6,6 @@ from flask_restful import Resource
 from flask import request, session
 import io, csv, redis, json
 
-
 def login_required(f):
     @wraps(f)
     def wrap(*args, **kwargs):
@@ -179,7 +178,8 @@ class ImportProspects(Resource):
                 "message": "No prospects to add. Please check .csv file"
             }, 400
 
-        while (redisServer.llen('test') > 0):
+        while (redisServer.llen('prospects') > 0):
+            print('in')
             redisProspect = json.loads(redisServer.rpop('prospects'))
             new_prospect = ProspectModel(
                 email = redisProspect[data['email']],
@@ -254,7 +254,7 @@ class GetUser(Resource):
             return {
                 'status': 'fail',
                 'user': None,
-            }
+            }, 400
 
         user = None
         if (user_id > -1):
@@ -272,3 +272,4 @@ class GetUser(Resource):
             },
             'message': "Here's your user"
             }, 200
+

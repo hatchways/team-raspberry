@@ -9,7 +9,6 @@ class ProspectModel(db.Model):
     # Autoincrement is implicit default with PK set to True
     id = db.Column(db.BigInteger, primary_key=True)
     email = db.Column(db.String(120), nullable=False)
-    status = db.Column(db.String(120), nullable=True)
     firstName = db.Column(db.String(120), nullable=True)
     lastName = db.Column(db.String(120), nullable=True)
     userId = db.Column(db.BigInteger, db.ForeignKey("users.id"), nullable=False)
@@ -56,7 +55,6 @@ def must_not_be_blank(data):
 class ProspectSchema(Schema):
     id = fields.Int(dump_only=True)
     email = fields.Email(required=True, validate=must_not_be_blank)
-    status = fields.Str(required=False)
     firstName = fields.Str(required=False)
     lastName = fields.Str(required=False)
     userId = fields.Int(required=False)

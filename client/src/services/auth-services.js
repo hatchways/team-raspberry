@@ -25,4 +25,24 @@ async function getProspects() {
   return await axios.get("/api/prospects");
 }
 
-export { getUser, login, registration, getProspects};
+async function authPost() {
+  return await axios.post("/api/authorize");
+}
+
+async function oauthPost(url) {
+  return await axios.post("/api/oauth2callback", url);
+}
+
+async function sendEmail(credentials) {
+  return await axios.post("/api/email", credentials);
+}
+
+export {
+  getUser,
+  login,
+  registration,
+  getProspects,
+  authPost,
+  oauthPost,
+  sendEmail,
+};

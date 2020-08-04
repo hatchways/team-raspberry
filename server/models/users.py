@@ -14,7 +14,7 @@ class UserModel(db.Model):
     id = db.Column(db.BigInteger, primary_key=True)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(120), nullable=False)
-    credentials = db.Column(db.String(500), nullable=True)
+    credentials = db.Column(db.String(1000), nullable=True)
     firstName = db.Column(db.String(120), nullable=False)
     lastName = db.Column(db.String(120), nullable=False)
     prospects = db.relationship('ProspectModel', backref='user', lazy=True)
