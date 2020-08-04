@@ -7,11 +7,8 @@ export default function Checkbox(props) {
   const handleChange = (event) => {
     setChecked(event.target.checked);
 
-    // Make sure the clickEvent prop was set first.
-    if (props['clickEvent']){
-      // Then call the callback, adding status of the checkbox instead of an event.
-      props.clickEvent(event.target.checked)
-    }
+    // Then call the callback, adding status of the checkbox instead of an event.
+    props.clickEvent(event.target.checked);
   };
 
   return (
