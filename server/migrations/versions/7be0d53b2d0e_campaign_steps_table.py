@@ -23,12 +23,12 @@ def upgrade():
     sa.Column('email_subject', sa.String(length=200), nullable=False),
     sa.Column('email_body', sa.String(length=10000), nullable=False),
     sa.Column('campaign_id', sa.BigInteger(), nullable=False),
-    sa.Column('created', sa.DateTime(), nullable=False)
+    sa.Column('created', sa.DateTime(), nullable=False),
     sa.ForeignKeyConstraint(['campaign_id'], ['campaigns.id'], ),
     sa.PrimaryKeyConstraint('id'),
     )
 
 
 def downgrade():
-        op.drop_table('campaign_steps')
-
+    op.drop_table('campaign_steps')
+    # pass

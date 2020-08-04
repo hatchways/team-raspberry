@@ -24,13 +24,14 @@ def upgrade():
     sa.Column('email_sent', sa.Boolean, nullable=False),
     sa.Column('email_opened', sa.Boolean, nullable=False),
     sa.Column('email_replied', sa.Boolean, nullable=False),
-    sa.Column('created', sa.DateTime(), nullable=False)
+    sa.Column('created', sa.DateTime(), nullable=False),
     sa.ForeignKeyConstraint(['step_id'], ['campaign_steps.id'], ),
-    sa.ForeignKeyConstraint(['prospect_id'], ['prospectss.id'], ),
+    sa.ForeignKeyConstraint(['prospect_id'], ['prospects.id'], ),
     sa.PrimaryKeyConstraint('id'),
     )
 
 
 def downgrade():
     op.drop_table('prospect_step_joins')
+    # pass
 
