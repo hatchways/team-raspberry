@@ -53,16 +53,12 @@ export default function ProspectsTable(props) {
         // 5. Set the state to our new copy
         setRows(items);
         if (isChecked) {
-          console.log("set to false");
           disabled = false;
           setButtonDisabled(disabled);
-          console.log(disabled);
         }
         else {
-          console.log("set to true");
           disabled = true;
           setButtonDisabled(disabled);
-          console.log(disabled);
         }
       }
     }
@@ -95,7 +91,7 @@ export default function ProspectsTable(props) {
       fetchProspects();
   }, []);
 
-  // //Helpful to debug rows state when it changes.
+  // //Helpful to debug rows state when it changes - will delete later.
   // useEffect(() => {
   //     console.log(rows);
   // }, [rows]);
