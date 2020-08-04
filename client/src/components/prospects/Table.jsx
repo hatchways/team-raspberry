@@ -4,13 +4,13 @@ import * as Auth from "../../services/auth-services"
 import Checkbox from "./Checkbox";
 
 import {
-    TableContainer,
-    Paper,
-    Table,
-    TableHead,
-    TableRow,
-    TableCell,
-    TableBody
+  TableContainer,
+  Paper,
+  Table,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableBody, Button
 } from "@material-ui/core"
 
 const useStyles = makeStyles({
@@ -24,20 +24,20 @@ export default function ProspectsTable(props) {
 
   const [rows, setRows] = useState([]);
   const [filteredRows, setFilteredRows] = useState([]);
+  const [buttonDisabled, setButtonDisabled] = React.useState(true);
 
   function fetchProspects() {
     Auth.getProspects().then((res) => {
       let pList = res.data.prospects;
-      for (let i=0; i < pList.length; i++) {
-        // Set the checkbox default value in the row state so it can be accessed easily by campaigns.
-        pList[i]['checked'] = false;
-      }
+      pList.map(p => {p['checked'] = false});
+
       setRows(pList);
       setFilteredRows(pList);
     });
   }
 
   function handleCheck(isChecked, id) {
+    let disabled = buttonDisabled;
     // 'rows' is read-only, so we need to copy everything and then change.
     // See https://stackoverflow.com/a/49502115
     for (let i=0; i < rows.length; i++) {
@@ -46,14 +46,28 @@ export default function ProspectsTable(props) {
         let items = [...rows];
         // 2. Make a shallow copy of the item you want to mutate
         let item = {...items[i]};
-        // 3. Replace the property you're intested in
+        // 3. Replace the property you're interested in
         item.checked = isChecked;
         // 4. Put it back into our array. N.B. we *are* mutating the array here, but that's why we made a copy first
         items[i] = item;
         // 5. Set the state to our new copy
         setRows(items);
+        if (isChecked) {
+          console.log("set to false");
+          disabled = false;
+          setButtonDisabled(disabled);
+          console.log(disabled);
+        }
+        else {
+          console.log("set to true");
+          disabled = true;
+          setButtonDisabled(disabled);
+          console.log(disabled);
+        }
       }
     }
+    // console.log(disabled);
+    // setButtonDisabled(disabled)
   }
 
   function filterProspects(query) {
@@ -108,6 +122,9 @@ export default function ProspectsTable(props) {
           ))}
         </TableBody>
       </Table>
+      <Button type="submit" variant="contained" disabled={buttonDisabled}>
+          Add to Campaign
+        </Button>
     </TableContainer>
   );
 }
