@@ -36,4 +36,11 @@ async function getCampaigns() {
   ]}};
 }
 
-export { getUser, login, registration, getProspects, getCampaigns};
+async function createCampaign(name) {
+  let body = {
+    name: name
+  };
+  return await axios.post("/api/campaigns", body);
+}
+
+export { getUser, login, registration, getProspects, getCampaigns, createCampaign};
