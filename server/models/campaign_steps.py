@@ -1,10 +1,6 @@
 import datetime
-
-import jwt
-from marshmallow import Schema, fields, ValidationError
-
-from app import create_app, db, flask_bcrypt
-import config
+from app import db
+from marshmallow import Schema, fields, ValidationError, pre_load
 
 class StepModel(db.Model):
     __tablename__ = 'campaign_steps'
@@ -66,7 +62,7 @@ def must_not_be_blank(data):
 
 class StepSchema(Schema):
     id = fields.Int(dump_only=True)
-    step_name = fields.Title(required=True, validate=must_not_be_blank)
+    step_name = fields.Str(required=True, validate=must_not_be_blank)
     email_subject = fields.Str(required=True, validate=must_not_be_blank)
     email_body = fields.Str(required=True, validate=must_not_be_blank)
     campaign_id = fields.Int(required=True, validate=must_not_be_blank)

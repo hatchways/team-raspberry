@@ -1,10 +1,6 @@
 import datetime
-
-import jwt
-from marshmallow import Schema, fields, ValidationError
-
-from app import create_app, db, flask_bcrypt
-import config
+from app import db
+from marshmallow import Schema, fields, ValidationError, pre_load
 
 class ProspectStepModel(db.Model):
     __tablename__ = 'prospect_step_joins'
