@@ -41,6 +41,10 @@ export default function CampaignStep() {
     setStepName(e.target.value)
   }
 
+  const handleEmail = (e) => {
+    // Make sure there are actually prospects to send an email to.
+  }
+
   const handleSave = () => {
     if (stepName.length > 0 && editorSubject.length > 0) {
       setSaved(true)
@@ -62,6 +66,7 @@ export default function CampaignStep() {
         Content: {editorContent}
       </CardContent>
       <CardActions>
+        <Button onClick={handleEmail} variant="contained" color="primary">Send to Prospects</Button>
         <Button onClick={handleEdit} variant="contained" color="primary">Edit</Button>
       </CardActions>
     </Card>
