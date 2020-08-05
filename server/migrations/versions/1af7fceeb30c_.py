@@ -1,4 +1,6 @@
-"""empty message
+"""
+U: drop prospects email key
+D: add prospects email key
 
 Revision ID: 1af7fceeb30c
 Revises: cf23b6c2d622

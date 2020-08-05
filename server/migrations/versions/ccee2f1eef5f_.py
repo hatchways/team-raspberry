@@ -1,4 +1,5 @@
-"""empty message
+"""
+users table
 
 Revision ID: ccee2f1eef5f
 Revises: 
