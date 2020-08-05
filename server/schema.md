@@ -94,5 +94,3 @@ Indexes:
 Referenced by:
     TABLE "campaigns" CONSTRAINT "campaigns_user_id_fkey" FOREIGN KEY (user_id) REFERENCES users(id)
     TABLE "prospects" CONSTRAINT "prospects_userId_fkey" FOREIGN KEY ("userId") REFERENCES users(id)
-
-crm_test=#

@@ -9,7 +9,6 @@ from flask_sqlalchemy import SQLAlchemy
 import config
 from api.ping_handler import ping_handler
 from api.home_handler import home_handler
-import os
 
 # For testing
 # TODO: REMOVE BEFORE DEPLOYMENT

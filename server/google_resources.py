@@ -1,5 +1,7 @@
 from models.users import UserModel, user_schema, users_schema
+from resources import login_required
 from flask_restful import Resource
+from functools import wraps
 import google.oauth2.credentials
 import google_auth_oauthlib.flow
 import googleapiclient.discovery
@@ -31,9 +33,9 @@ def credentials_to_dict(credentials):
           'client_secret': credentials.client_secret,
           'scopes': credentials.scopes}
 
-def save_credentials(creds_dict):
+def save_credentials(creds_dict, user_id):
   #TODO: Grab current user
-  current_user = UserModel.find_by_id("someone@gmail.com")
+  current_user = UserModel.find_by_id(user_id)
   if current_user:
     current_user.updateCredentials(creds_dict)
     return "Credentials Saved."
@@ -65,7 +67,8 @@ class Authorize(Resource):
     return {"url": authorization_url}, 200
 
 class OAuth2Callback(Resource):
-  def post(self):
+  @login_required
+  def post(self, client_id):
     # Specify the state when creating the flow in the callback so that it can
     # verified in the authorization server response.
     state = flask.session['state']
@@ -75,7 +78,6 @@ class OAuth2Callback(Resource):
 
     # Use the authorization server's response to fetch the OAuth 2.0 tokens.
     authorization_response = flask.request.json["url"]
-    print(flask.request.json)
     flow.fetch_token(authorization_response=authorization_response)
 
     # Store credentials in the session.
@@ -83,5 +85,5 @@ class OAuth2Callback(Resource):
     #              credentials in a persistent database instead.
     credentials = flow.credentials
     creds_dict = credentials_to_dict(credentials)
-    save_credentials(creds_dict)
+    save_credentials(creds_dict, client_id)
     return creds_dict, 200
