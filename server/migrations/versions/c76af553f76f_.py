@@ -1,4 +1,6 @@
-"""empty message
+"""
+U: add users created
+D: drop users created
 
 Revision ID: c76af553f76f
 Revises: ccee2f1eef5f

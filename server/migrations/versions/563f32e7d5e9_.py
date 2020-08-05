@@ -1,4 +1,6 @@
-"""empty message
+"""
+U: add users firstName, lastName
+D: drop users firstName, lastName
 
 Revision ID: 563f32e7d5e9
 Revises: c76af553f76f

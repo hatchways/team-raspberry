@@ -1,7 +1,7 @@
 import datetime
 
 import jwt
-from marshmallow import Schema, fields, ValidationError
+from marshmallow import Schema, fields, ValidationError, pre_load
 
 from app import create_app, db, flask_bcrypt
 import config

@@ -1,23 +1,25 @@
 import datetime
 
 import jwt
-from marshmallow import Schema, fields, ValidationError
+from marshmallow import Schema, fields, ValidationError, pre_load
 
 from app import create_app, db, flask_bcrypt
 import config
 
 class CampaignModel(db.Model):
-    __tablename__ = 'campaigns'
+    __tablename__ = "campaigns"
 
     # Assign database fields
     # Autoincrement is implicit default with PK set to True
     id = db.Column(db.BigInteger, primary_key=True)
+    # Figure out how to make a unique clause where the combination between user_id and campaign title must be unique
     title = db.Column(db.String(200), unique=True, nullable=False)
+    # steps = db.relationship("StepModel", backref="campaign", lazy=True)
     user_id = db.Column(db.BigInteger, db.ForeignKey("users.id"), nullable=False)
-    steps = db.relationship('StepModel', backref='campaign', lazy=True)
     created = db.Column(db.DateTime, nullable=False, default=datetime.datetime.utcnow)
 
     def __init__(self, title, user_id, steps):
+    # def __init__(self, title, steps):
         self.title = title
         self.user_id = user_id
         self.steps = steps
@@ -43,33 +45,37 @@ class CampaignModel(db.Model):
       return cls.query.filter_by(id=id).first()
 
     @classmethod
+    def return_user_campaigns(cls, user):
+        return cls.query.filter_by(user_id=user).all()
+
+    @classmethod
     def return_all(cls):
         def to_json(campaign):
             return {
-                'title': campaign.title,
-                'user_id': campaign.user_id,
-                'steps': campaign.steps,
+                "title": campaign.title,
+                "user_id": campaign.user_id,
+                "steps": campaign.steps,
             }
-        return {'campaigns': list(map(lambda campaign: to_json(campaign), CampaignModel.query.all()))}
+        return {"campaigns": list(map(lambda campaign: to_json(campaign), CampaignModel.query.all()))}
 
     @classmethod
     def delete_all(cls):
         try:
             num_rows_deleted = db.session.query(cls).delete()
             db.session.commit()
-            return {'message': '{} rows deleted'.format(num_rows_deleted)}
+            return {"message": "{} rows deleted".format(num_rows_deleted)}
         except:
-            return {'message': 'Something went wrong'}
+            return {"message": "Something went wrong"}
 
 # Custom validator
 def must_not_be_blank(data):
     if not data:
-        raise ValidationError('This field cannot be blank')
+        raise ValidationError("This field cannot be blank")
 
 class CampaignSchema(Schema):
     id = fields.Int(dump_only=True)
     title = fields.Title(required=True, validate=must_not_be_blank)
-    user_id = fields.Int(required=True, validate=must_not_be_blank)
+    user_id = fields.Int(required=True)
     created = fields.DateTime(required=True, dump_only=True)
 
 # Initialize schema

@@ -1,4 +1,5 @@
-"""empty message
+"""
+prospects table
 
 Revision ID: 45c64dc96de5
 Revises: 563f32e7d5e9
