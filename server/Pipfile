@@ -29,6 +29,7 @@ webtest = "==2.0.35"
 redis = "*"
 eventlet = "*"
 celery = "*"
+python-decouple = "*"
 
 [requires]
 python_version = "3.7"
