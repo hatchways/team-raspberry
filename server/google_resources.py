@@ -1,3 +1,5 @@
+# Have to make use of this later
+#from resources import login_required
 import google.oauth2.credentials
 import google_auth_oauthlib.flow
 import flask, json, base64, mimetypes
@@ -16,6 +18,7 @@ SCOPES = [
   'https://www.googleapis.com/auth/userinfo.email',
   'https://www.googleapis.com/auth/userinfo.profile',
 ]
+# Put this in .env file
 REDIRECT_URI = 'http://localhost:3000/redirect'
 
 def credentials_to_dict(credentials):

@@ -29,7 +29,10 @@ instance/
 # VSCode
 .vscode
 
+
+# Secret Keys/API Keys
 client_secret.json
+APIKeys.js
 #TODO add .env to your gitignore
 
 APIKeys.js

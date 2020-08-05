@@ -1,6 +1,8 @@
+
 import React, { useState, useEffect, useContext } from "react";
 //import { useHistory } from "react-router-dom";
 import PropTypes from "prop-types";
+import { makeStyles } from '@material-ui/core/styles';
 import { Button, DialogTitle, Dialog } from "@material-ui/core";
 import * as Auth from "../services/auth-services";
 //import { UserContext } from "../contexts/UserContext";
@@ -9,6 +11,7 @@ function GmailDialog(props) {
   // future
   // const history = useHistory();
   // const { user, setUser } = useContext(UserContext);
+  const classes = useStyles();
   const { onClose, selectedValue, open } = props;
   const [authorization, setAuthorization] = useState(null);
 
@@ -36,9 +39,9 @@ function GmailDialog(props) {
   }, [authorization]);
 
   return (
-    <Dialog onClose={handleClose} aria-labelledby="gmail-title" open={open}>
-      <DialogTitle id="gmail-title">Connect a Gmail Account</DialogTitle>
-      <Button id="gmail-button" onClick={authorize}>
+    <Dialog className={classes.root} onClose={handleClose} aria-labelledby="gmail-title" open={open}>
+      <DialogTitle className={classes.title} id="gmail-title">Connect a Gmail Account</DialogTitle>
+      <Button className={classes.button} id="gmail-button" onClick={authorize}>
         Connect
       </Button>
     </Dialog>
@@ -70,3 +73,24 @@ export default function GmailDialogDemo() {
     </div>
   );
 }
+
+
+ const useStyles = makeStyles((theme) => ({
+   root: {
+     display: "flex",
+     margin: "auto",
+     justifyContent: "center",
+     alignItems: "center",
+   },
+   title: {
+     margin: "auto",
+     color: "red",
+     "& h6": {
+       color: "red",
+     },
+   },
+   button: {
+     margin: "auto",
+     transform: "scale(0.5)"
+   },
+ }));
