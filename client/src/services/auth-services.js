@@ -25,4 +25,15 @@ async function getProspects() {
   return await axios.get("/api/prospects");
 }
 
-export { getUser, login, registration, getProspects};
+async function getCampaigns() {
+  // TODO: Use actual request once the backend endpoint is created.
+  // return await axios.get("/api/campaigns");
+  return {data: { campaigns: [
+    {id: 1, title: 'campaign1', created: 'August 4', prospects: 2, replies: 2, steps: 2  },
+    {id: 2, title: 'campaign1', created: 'August 4', prospects: 2, replies: 2, steps: 2  },
+    {id: 3, title: 'campaign2', created: 'August 4', prospects: 2, replies: 2, steps: 2  },
+    {id: 4, title: 'campaign1', created: 'August 4', prospects: 2, replies: 2, steps: 2  }
+  ]}};
+}
+
+export { getUser, login, registration, getProspects, getCampaigns};
