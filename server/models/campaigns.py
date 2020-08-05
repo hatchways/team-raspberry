@@ -1,10 +1,6 @@
 import datetime
-
-import jwt
+from app import db
 from marshmallow import Schema, fields, ValidationError, pre_load
-
-from app import create_app, db, flask_bcrypt
-import config
 
 class CampaignModel(db.Model):
     __tablename__ = "campaigns"
@@ -74,8 +70,8 @@ def must_not_be_blank(data):
 
 class CampaignSchema(Schema):
     id = fields.Int(dump_only=True)
-    title = fields.Title(required=True, validate=must_not_be_blank)
-    user_id = fields.Int(required=True)
+    title = fields.Str(required=True, validate=must_not_be_blank)
+    user_id = fields.Int(required=True, validate=must_not_be_blank)
     created = fields.DateTime(required=True, dump_only=True)
 
 # Initialize schema
