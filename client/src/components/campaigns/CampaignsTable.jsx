@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import * as Auth from "../../services/auth-services"
-
+import CampaignFormDialog from "./CampaignFormDialog";
 
 import {
-    TableContainer,
-    Paper,
-    Table,
-    TableHead,
-    TableRow,
-    TableCell,
-    TableBody,
-    Button
+  TableContainer,
+  Paper,
+  Table,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableBody,
+  Button, Grid
 } from "@material-ui/core"
 
 const useStyles = makeStyles({
@@ -60,9 +60,7 @@ export default function CampaignsTable(props) {
           ))}
         </TableBody>
       </Table>
-      <Button type="submit" variant="contained" onClick={() => { alert('TODO - Create Campaign Modal') }} >
-        Create a Campaign
-      </Button>
+        <CampaignFormDialog/>
     </TableContainer>
   );
 }
