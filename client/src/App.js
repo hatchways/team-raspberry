@@ -17,7 +17,6 @@ import AddProspects from "./pages/AddProspects";
 import * as Auth from "./services/auth-services";
 import CampaignShow from "./pages/CampaignShow";
 
-
 import "./App.css";
 
 function App() {
@@ -65,9 +64,6 @@ function App() {
             </Route>
             <Route path="/add/prospects">
               {user !== null ? <AddProspects /> : <Login />}
-            </Route>
-            <Route path="/authorize">
-              {user !== null ? <GmailDialog /> : <Login />}
             </Route>
             <Route path="/redirect">
               {user !== null ? <GmailRedirect /> : <Login />}

@@ -183,7 +183,6 @@ class ImportProspects(Resource):
             redisProspect = json.loads(redisServer.rpop('prospects'))
             new_prospect = ProspectModel(
                 email = redisProspect[data['email']],
-                status = redisProspect[data['status']],
                 firstName = redisProspect[data['firstName']],
                 lastName = redisProspect[data['lastName']],
                 userId = current_user.id,
@@ -215,7 +214,6 @@ class Prospects(Resource):
             email=data.get('email'),
             firstName=data.get('firstName'),
             lastName=data.get('lastName'),
-            status=data.get('status'),
             userId=user_id
         )
         try:
@@ -238,7 +236,6 @@ class Prospects(Resource):
             return {
                 "id": x.id,
                 "email": x.email,
-                "status": x.status,
                 "firstName": x.firstName,
                 "lastName": x.lastName,
             }
