@@ -16,7 +16,7 @@ import { UserContext } from "../contexts/UserContext";
 import * as Auth from "../services/auth-services";
 
 export default function Signup() {
-  const { user, setUser } = useContext(UserContext);
+  const { setUser } = useContext(UserContext);
   const classes = useStyles();
   const history = useHistory();
   const [formValues, setFormValues] = useState({

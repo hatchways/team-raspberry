@@ -1,27 +1,44 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useContext, useState } from "react";
 import QueryString from "query-string";
 import PropTypes from "prop-types";
-import Button from "@material-ui/core/Button";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import Dialog from "@material-ui/core/Dialog";
+import { Button, DialogTitle, Dialog } from "@material-ui/core";
+import * as Auth from "../services/auth-services";
+import { UserContext } from "../contexts/UserContext";
 
 function GmailRedirect(props) {
   const { onClose, selectedValue, open } = props;
+  const { user, setUser } = useContext(UserContext);
+  const [data, setData] = useState(null);
 
   const handleClose = () => {
     onClose(selectedValue);
   };
 
+  const sendEmail = async () => {
+    const requestBody = {
+      userEmail: user.email,
+      credentials: JSON.parse(user.credentials),
+    };
+    const data = await Auth.sendEmail(requestBody);
+    // Just so u can see if the email is sending
+    console.log(data);
+  };
+
   useEffect(() => {
-    const query = QueryString.parseUrl(window.location.href)
-    const data = JSON.stringify({ url: window.location.href, redirect_url: query.url })
-    fetch("/api/oauth2callback", {
-      method: "POST",
-      body: data,
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }).then(response => response.json().then((data) => console.log(query)));
+    if (user.credentials === null) {
+      const body = {
+        url: window.location.href,
+        userId: user.userId,
+      };
+
+      const response = Auth.oauthPost(body);
+      response.then((data) => {
+        setUser((prevState) => ({
+          ...prevState,
+          credentials: data.data.credentials,
+        }));
+      });
+    }
   }, []);
 
   return (
@@ -30,6 +47,7 @@ function GmailRedirect(props) {
       <Button variant="outlined" color="primary" onClick={handleClose}>
         Check Query
       </Button>
+      <Button onClick={sendEmail}>SEND AN EMAIL TEST!</Button>
     </Dialog>
   );
 }

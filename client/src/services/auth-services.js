@@ -25,6 +25,18 @@ async function getProspects() {
   return await axios.get("/api/prospects");
 }
 
+async function authPost() {
+  return await axios.post("/api/authorize");
+}
+
+async function oauthPost(url) {
+  return await axios.post("/api/oauth2callback", url);
+}
+
+async function sendEmail(credentials) {
+  return await axios.post("/api/email", credentials);
+}
+
 async function getCampaigns() {
   return await axios.get("/api/campaigns");
 }
@@ -36,4 +48,5 @@ async function createCampaign(name) {
   return await axios.post("/api/campaigns", body);
 }
 
-export { getUser, login, registration, getProspects, getCampaigns, createCampaign};
+export { getUser, login, registration, getProspects, authPost, oauthPost, sendEmail, getCampaigns, createCampaign};
+

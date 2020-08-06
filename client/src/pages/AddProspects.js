@@ -20,9 +20,8 @@ export default function AddProspects() {
   const [csvHeaders, setCsvHeaders] = useState([]);
   const [headersIndex, setHeadersIndex] = useState({
     email: 0,
-    status: 1,
-    firstName: 2,
-    lastName: 3,
+    firstName: 1,
+    lastName: 2,
   });
 
   const [snackbar, setSnackBar] = useState({
@@ -187,29 +186,8 @@ export default function AddProspects() {
                   </Grid>
                   <Grid item xs={10}>
                     <Typography className={classes.SelectTypography}>
-                      Please select your Email column (required)
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={2}>
-                    <Select
-                      className={classes.Select}
-                      name="status"
-                      value={headersIndex["status"]}
-                      onChange={handleChange}
-                      disabled={csvHeaders.length === 0 ? true : false}
-                    >
-                      {csvHeaders.map((value, index) => {
-                        return (
-                          <MenuItem key={index} value={index}>
-                            {value}
-                          </MenuItem>
-                        );
-                      })}
-                    </Select>
-                  </Grid>
-                  <Grid item xs={10}>
-                    <Typography className={classes.SelectTypography}>
-                      Please select your Status column (if applicable)
+                      Please select your <strong>Email</strong> column
+                      (required)
                     </Typography>
                   </Grid>
                   <Grid item xs={2}>
@@ -231,7 +209,8 @@ export default function AddProspects() {
                   </Grid>
                   <Grid item xs={10}>
                     <Typography className={classes.SelectTypography}>
-                      Please select your First Name column (if applicable)
+                      Please select your <strong>First Name</strong> column (if
+                      applicable)
                     </Typography>
                   </Grid>
                   <Grid item xs={2}>
@@ -253,7 +232,8 @@ export default function AddProspects() {
                   </Grid>
                   <Grid item xs={10}>
                     <Typography className={classes.SelectTypography}>
-                      Please select your Last Name column (if applicable)
+                      Please select your <strong>Last Name</strong> column (if
+                      applicable)
                     </Typography>
                   </Grid>
                   <Button
