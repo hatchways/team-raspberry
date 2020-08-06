@@ -41,6 +41,9 @@ def create_app():
 
     import resources
     import google_resources
+    import campaign_step_resources
+    import prospect_campaign_join_resources
+    import prospect_step_join_resources
 
     crm_api.add_resource(resources.UserRegistration, '/registration')
     crm_api.add_resource(resources.UserLogin, '/login')
@@ -52,6 +55,10 @@ def create_app():
     crm_api.add_resource(resources.ImportProspects, '/import/prospects')
     crm_api.add_resource(google_resources.Authorize, '/authorize')
     crm_api.add_resource(google_resources.OAuth2Callback, '/oauth2callback')
+    crm_api.add_resource(resources.Prospects, '/prospects')
+    crm_api.add_resource(campaign_step_resources.StepCreate, '/step_create')
+    crm_api.add_resource(campaign_step_resources.StepUpdate, '/step_update')
+    crm_api.add_resource(campaign_step_resources.GetCampaignSteps, '/get_campaign_steps')
     crm_api.add_resource(google_resources.EmailProspect, '/email')
     crm_api.add_resource(resources.Campaigns, '/campaigns')
 

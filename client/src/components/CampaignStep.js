@@ -10,6 +10,7 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import { theme } from "../themes/theme";
+import axios from "axios";
 
 
 export default function CampaignStep() {
@@ -20,6 +21,7 @@ export default function CampaignStep() {
   const [openAlert, setOpenAlert] = useState(false)
   const [editorSubject, setEditorSubject] = useState("")
   const [editorContent, setEditorContent] = useState("")
+  const [stepId, setStepId] = useState(null)
 
   const handleEditorOpen = () => {
     setOpenEditor(true)
@@ -41,12 +43,17 @@ export default function CampaignStep() {
     setStepName(e.target.value)
   }
 
+  const handleEmail = (e) => {
+    // Make sure there are actually prospects to send an email to.
+  }
+
   const handleSave = () => {
     if (stepName.length > 0 && editorSubject.length > 0) {
       setSaved(true)
     } else {
       setOpenAlert(true)
     }
+    
   }
 
   // NOTE: consider adding a ListItem wrapper to these, so it doesn't need to be added in CampaignShow.
@@ -62,6 +69,7 @@ export default function CampaignStep() {
         Content: {editorContent}
       </CardContent>
       <CardActions>
+        <Button onClick={handleEmail} variant="contained" color="primary">Send to Prospects</Button>
         <Button onClick={handleEdit} variant="contained" color="primary">Edit</Button>
       </CardActions>
     </Card>

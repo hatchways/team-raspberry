@@ -58,7 +58,7 @@ class ProspectStepModel(db.Model):
                 'user_id': step.user_id,
                 'steps': step.steps,
             }
-        return {'steps': list(map(lambda step: to_json(step), StepModel.query.all()))}
+        return {'steps': list(map(lambda step: to_json(step), ProspectStepModel.query.all()))}
 
     @classmethod
     def delete_all(cls):

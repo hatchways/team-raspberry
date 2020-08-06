@@ -10,8 +10,11 @@ class CampaignModel(db.Model):
     id = db.Column(db.BigInteger, primary_key=True)
     # Figure out how to make a unique clause where the combination between user_id and campaign title must be unique
     title = db.Column(db.String(200), unique=True, nullable=False)
-    # steps = db.relationship("StepModel", backref="campaign", lazy=True)
+    steps = db.relationship("StepModel", backref="campaign", lazy=True)
+    prospects = db.relationship("ProspectCampaignModel", backref="campaign", lazy=True)
     user_id = db.Column(db.BigInteger, db.ForeignKey("users.id"), nullable=False)
+    reply_count = db.Column(db.BigInteger, nullable=False, default=0)
+    prospect_count = db.Column(db.BigInteger, nullable=False, default=0)
     created = db.Column(db.DateTime, nullable=False, default=datetime.datetime.utcnow)
 
     def __init__(self, title, user_id, steps):
