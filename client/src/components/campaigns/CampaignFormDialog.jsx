@@ -8,14 +8,22 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
 
-export default function FormDialog() {
+export default function FormDialog(props) {
   const [open, setOpen] = React.useState(false);
+  const [title, setTitle] = React.useState(false);
 
   const handleClickOpen = () => {
     setOpen(true);
   };
 
+  const handleFormChange = (e) => {
+    setTitle(e.target.value);
+    setOpen(true);
+  };
+
+
   const handleClose = () => {
+    props.onSubmit(title);
     setOpen(false);
   };
 
@@ -37,6 +45,7 @@ export default function FormDialog() {
             label="Title"
             type="text"
             fullWidth
+            onChange={handleFormChange}
           />
         </DialogContent>
         <DialogActions>

@@ -1,14 +1,36 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import CampaignsTable  from '../components/campaigns/CampaignsTable';
 import {Container, Grid} from "@material-ui/core";
 import SearchBar from "../components/prospects/SearchBar";
 import {makeStyles} from "@material-ui/core/styles";
+import * as Auth from "../services/auth-services";
 
 
 export default function Campaigns(props) {
   const classes = useStyles();
 
-   const [text, setText] = useState();
+  const [text, setText] = useState();
+
+  const [campaigns, setCampaigns] = useState([]);
+
+  function fetchCampaigns() {
+    Auth.getCampaigns().then((res) => {
+      setCampaigns(res.data.campaigns);
+    });
+  }
+
+  function createCampaign(title) {
+    Auth.createCampaign(title).then(resp => {
+      // Make a copy of our list of campaigns and add newest one to the end.
+      let items = [...campaigns];
+      items.push(resp.data.campaign);
+      setCampaigns(items);
+    });
+  }
+
+  useEffect(() => {
+      fetchCampaigns();
+  }, []);
 
   return (
     <div className={classes.root}>
@@ -21,7 +43,7 @@ export default function Campaigns(props) {
             <Grid item className={classes.contentHeader} sm={12}>
             </Grid>
             <Grid item className={classes.content} sm={12}>
-              <CampaignsTable text={text}/>
+              <CampaignsTable text={text} rows={campaigns} onSubmitNew={createCampaign}/>
             </Grid>
           </Container>
         </Grid>

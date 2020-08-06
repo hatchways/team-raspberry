@@ -23,19 +23,6 @@ const useStyles = makeStyles({
 export default function CampaignsTable(props) {
   const classes = useStyles();
 
-  const [rows, setRows] = useState([]);
-
-  function fetchCampaigns() {
-    Auth.getCampaigns().then((res) => {
-      setRows(res.data.campaigns);
-    });
-
-  }
-
-  useEffect(() => {
-      fetchCampaigns();
-  }, []);
-
   return (
     <TableContainer component={Paper}>
       <Table className={"stuff"} aria-label="simple table">
@@ -49,7 +36,7 @@ export default function CampaignsTable(props) {
         </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
+          {props.rows.map((row) => (
             <TableRow key={row.id}>
               <TableCell>{row.title}</TableCell>
               <TableCell>{row.created}</TableCell>
@@ -60,7 +47,7 @@ export default function CampaignsTable(props) {
           ))}
         </TableBody>
       </Table>
-        <CampaignFormDialog/>
+        <CampaignFormDialog onSubmit={props.onSubmitNew}/>
     </TableContainer>
   );
 }

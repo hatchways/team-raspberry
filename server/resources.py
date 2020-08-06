@@ -291,13 +291,26 @@ class Campaigns(Resource):
         # )
         # try:
         #     new_campaign.save_to_db()
-            response_object = {
-                'status': 'success',
-                #'message': 'Campaign {} was created'.format(data['title']) TODO: Use this one once DB is ready.
-                'message': 'Campaign {} was created'.format(request.json.get('title'))
+        campaign_id = randint(1, 100000)
+        response_object = {
+            'status': 'success',
+            #'message': 'Campaign {} was created'.format(data['title']) TODO: Use this one once DB is ready.
+            'message': 'Campaign {} was created'.format(request.json.get('title')),
+            'campaign': {
+                'id': campaign_id,
+                'title': f'{request.json.get("title")}',
+                'user_id': randint(1, 100000),
+                'steps': randint(1, 10),
+                'replies': randint(1, 10),
+                'prospects': randint(1, 10),
+                'created': 'August 5, 2020'
             }
-            logger.error(response_object)
-            return response_object, 201
+        }
+        #TODO: Remove this once we connect the database.
+        logger.error(response_object)
+        return response_object, 201
+
+
         # except Exception as e:
         #     response_object = {
         #         'status': 'fail',

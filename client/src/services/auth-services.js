@@ -43,7 +43,7 @@ async function getCampaigns() {
 
 async function createCampaign(name) {
   let body = {
-    name: name
+    title: name
   };
   return await axios.post("/api/campaigns", body);
 }
