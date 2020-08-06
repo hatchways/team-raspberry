@@ -37,12 +37,16 @@ async function sendEmail(credentials) {
   return await axios.post("/api/email", credentials);
 }
 
-export {
-  getUser,
-  login,
-  registration,
-  getProspects,
-  authPost,
-  oauthPost,
-  sendEmail,
-};
+async function getCampaigns() {
+  return await axios.get("/api/campaigns");
+}
+
+async function createCampaign(name) {
+  let body = {
+    name: name
+  };
+  return await axios.post("/api/campaigns", body);
+}
+
+export { getUser, login, registration, getProspects, authPost, oauthPost, sendEmail, getCampaigns, createCampaign};
+

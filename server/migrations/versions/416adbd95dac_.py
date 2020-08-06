@@ -1,4 +1,6 @@
-"""empty message
+"""
+U: add users credentials
+D: drop users credentials
 
 Revision ID: 416adbd95dac
 Revises: edea41c24e99
