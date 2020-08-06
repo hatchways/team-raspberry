@@ -12,7 +12,7 @@ import LoggedInNavBar from "./pages/LoggedInNavBar";
 import Reporting from "./pages/Reporting";
 import Templates from "./pages/Templates";
 import Prospects from "./pages/Prospects";
-import Campaigns from "./pages/CampaignsIndex";
+import Campaigns from "./pages/Campaigns";
 import AddProspects from "./pages/AddProspects";
 import * as Auth from "./services/auth-services";
 import CampaignShow from "./pages/CampaignShow";
