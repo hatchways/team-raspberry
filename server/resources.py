@@ -1,7 +1,10 @@
 from typing import List, Any
 from functools import wraps
+import models.campaigns
+import models.campaign_steps
+import models.prospect_step_join
+from models.prospects import ProspectModel, prospect_schema
 from models.users import UserModel, user_schema, users_schema
-from models.prospects import ProspectModel, prospect_schema, prospects_schema
 from flask_restful import Resource
 from flask import request, session
 import io, csv, redis, json
