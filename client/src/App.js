@@ -4,7 +4,6 @@ import { MuiThemeProvider } from "@material-ui/core";
 import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom";
 import { theme } from "./themes/theme";
 import { createBrowserHistory } from "history";
-import GmailDialog from "./pages/GmailDialog";
 import GmailRedirect from "./pages/GmailRedirect";
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
