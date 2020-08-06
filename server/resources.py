@@ -5,6 +5,7 @@ import models.campaign_steps
 import models.prospect_step_join
 from models.prospects import ProspectModel, prospect_schema
 from models.users import UserModel, user_schema, users_schema
+from models.prospect_campaign_join import ProspectCampaignModel, prospect_campaign_schema, prospect_campaigns_schema
 from flask_restful import Resource
 from flask import request, session
 import io, csv, redis, json
