@@ -25,4 +25,15 @@ async function getProspects() {
   return await axios.get("/api/prospects");
 }
 
-export { getUser, login, registration, getProspects};
+async function getCampaigns() {
+  return await axios.get("/api/campaigns");
+}
+
+async function createCampaign(name) {
+  let body = {
+    name: name
+  };
+  return await axios.post("/api/campaigns", body);
+}
+
+export { getUser, login, registration, getProspects, getCampaigns, createCampaign};
