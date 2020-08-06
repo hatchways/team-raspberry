@@ -58,19 +58,12 @@ class StepUpdate(Resource):
                 'message': 'No such step'
             }
             return responseObject, 401
-
         else:
             responseObject = {
                 'status': 'success',
                 'message': 'Successfully updated step.',
             }
             return responseObject, 200
-        else:
-            responseObject = {
-                'status': 'fail',
-                'message': 'Something went wrong.'
-            }
-            return responseObject, 401
 
 
 class GetCampaignSteps(Resource):

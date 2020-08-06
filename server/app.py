@@ -55,7 +55,6 @@ def create_app():
     crm_api.add_resource(resources.ImportProspects, '/import/prospects')
     crm_api.add_resource(google_resources.Authorize, '/authorize')
     crm_api.add_resource(google_resources.OAuth2Callback, '/oauth2callback')
-    crm_api.add_resource(resources.Prospects, '/prospects')
     crm_api.add_resource(campaign_step_resources.StepCreate, '/step_create')
     crm_api.add_resource(campaign_step_resources.StepUpdate, '/step_update')
     crm_api.add_resource(campaign_step_resources.GetCampaignSteps, '/get_campaign_steps')
