@@ -9,16 +9,14 @@ class ProspectModel(db.Model):
     # Autoincrement is implicit default with PK set to True
     id = db.Column(db.BigInteger, primary_key=True)
     email = db.Column(db.String(120), nullable=False)
-    status = db.Column(db.String(120), nullable=True)
     firstName = db.Column(db.String(120), nullable=True)
     lastName = db.Column(db.String(120), nullable=True)
     userId = db.Column(db.BigInteger, db.ForeignKey("users.id"), nullable=False)
     prospect_step_join = db.relationship('ProspectStepModel', backref='prospect_step', lazy=True)
     prospect_campaign_join = db.relationship('ProspectCampaignModel', backref='prospect_campaign', lazy=True)
 
-    def __init__(self, email, status, firstName, lastName, userId):
+    def __init__(self, email, firstName, lastName, userId):
         self.email = email
-        self.status = status
         self.firstName = firstName
         self.lastName = lastName
         self.userId = userId
@@ -33,7 +31,6 @@ class ProspectModel(db.Model):
             return {
                 "id": x.id,
                 "email": x.email,
-                "status": x.status,
                 "firstName": x.firstName,
                 "lastName": x.lastName,
             }
@@ -58,7 +55,6 @@ def must_not_be_blank(data):
 class ProspectSchema(Schema):
     id = fields.Int(dump_only=True)
     email = fields.Email(required=True, validate=must_not_be_blank)
-    status = fields.Str(required=False)
     firstName = fields.Str(required=False)
     lastName = fields.Str(required=False)
     userId = fields.Int(required=False)

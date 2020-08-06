@@ -9,7 +9,11 @@ from models.prospect_campaign_join import ProspectCampaignModel, prospect_campai
 from flask_restful import Resource
 from flask import request, session
 import io, csv, redis, json
+import logging
+# TODO - remove later
+from random import randint
 
+logger = logging.Logger(__name__)
 
 def login_required(f):
     @wraps(f)
@@ -183,11 +187,11 @@ class ImportProspects(Resource):
                 "message": "No prospects to add. Please check .csv file"
             }, 400
 
-        while (redisServer.llen('test') > 0):
+        while (redisServer.llen('prospects') > 0):
+            print('in')
             redisProspect = json.loads(redisServer.rpop('prospects'))
             new_prospect = ProspectModel(
                 email = redisProspect[data['email']],
-                status = redisProspect[data['status']],
                 firstName = redisProspect[data['firstName']],
                 lastName = redisProspect[data['lastName']],
                 userId = current_user.id,
@@ -219,7 +223,6 @@ class Prospects(Resource):
             email=data.get('email'),
             firstName=data.get('firstName'),
             lastName=data.get('lastName'),
-            status=data.get('status'),
             userId=user_id
         )
         try:
@@ -242,7 +245,6 @@ class Prospects(Resource):
             return {
                 "id": x.id,
                 "email": x.email,
-                "status": x.status,
                 "firstName": x.firstName,
                 "lastName": x.lastName,
             }
@@ -258,7 +260,7 @@ class GetUser(Resource):
             return {
                 'status': 'fail',
                 'user': None,
-            }
+            }, 400
 
         user = None
         if (user_id > -1):
@@ -276,3 +278,55 @@ class GetUser(Resource):
             },
             'message': "Here's your user"
             }, 200
+
+class Campaigns(Resource):
+    @login_required
+    def post(self, user_id):
+        # TODO
+        # data = campaign_schema.load(request.json)
+        #
+        # new_campaign = CampaignModel(
+        #     title=data.get('title'),
+        #     userId=user_id
+        # )
+        # try:
+        #     new_campaign.save_to_db()
+            response_object = {
+                'status': 'success',
+                #'message': 'Campaign {} was created'.format(data['title']) TODO: Use this one once DB is ready.
+                'message': 'Campaign {} was created'.format(request.json.get('title'))
+            }
+            logger.error(response_object)
+            return response_object, 201
+        # except Exception as e:
+        #     response_object = {
+        #         'status': 'fail',
+        #         'message': 'Something went wrong. Please try again.'
+        #     }
+        #     return response_object, 500
+
+
+    @login_required
+    def get(self, user_id):
+        def to_json(x):
+            campaign_id = randint(1, 100000)
+            return {
+                # 'title': campaign.title,
+                # 'user_id': campaign.user_id,
+                # 'steps': campaign.steps,
+                # # TODO: Kevin needs to add these fields
+                # # 'replies': ,
+                # # 'prospects':
+                'id': campaign_id,
+                'title': f'Campaign {campaign_id}',
+                'user_id': randint(1, 100000),
+                'steps': randint(1, 10),
+                'replies': randint(1, 10),
+                'prospects': randint(1, 10),
+                'created': 'August 5, 2020'
+            }
+
+        #campaigns = CampaignModel.find_by_user(user_id) # TODO: is this the correct class method to use?
+        campaigns = ['something'] * 10
+        return {"campaigns": list(map(lambda x: to_json(x), campaigns))}
+

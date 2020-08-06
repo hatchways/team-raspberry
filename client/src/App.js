@@ -17,7 +17,6 @@ import AddProspects from "./pages/AddProspects";
 import * as Auth from "./services/auth-services";
 import CampaignShow from "./pages/CampaignShow";
 
-
 import "./App.css";
 
 function App() {
@@ -66,11 +65,8 @@ function App() {
             <Route path="/add/prospects">
               {user !== null ? <AddProspects /> : <Login />}
             </Route>
-            <Route path="*/authorize" component={GmailDialog}>
-              {user !== null ? <GmailDialog /> : <Redirect to="/login" />}
-            </Route>
-            <Route path="*/redirect" component={GmailRedirect}>
-              {user !== null ? <GmailRedirect /> : <Redirect to="/login" />}
+            <Route path="/redirect">
+              {user !== null ? <GmailRedirect /> : <Login />}
             </Route>
           </Switch>
         </UserContext.Provider>

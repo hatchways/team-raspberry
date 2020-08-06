@@ -13,6 +13,8 @@ from api.home_handler import home_handler
 # For testing
 # TODO: REMOVE BEFORE DEPLOYMENT
 os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
+# REMOVES THE NEED FOR THE SCOPE TO BE IN THE SAME ORDER
+os.environ['OAUTHLIB_RELAX_TOKEN_SCOPE'] = '1'
 
 # Initializes database connection
 db = SQLAlchemy()
@@ -25,6 +27,7 @@ flask_bcrypt = Bcrypt()
 
 def create_app():
     flask_app = Flask(__name__)
+    flask_app.secret_key = os.environ.get('SECRET_KEY')
    
     CORS(flask_app)
     # Add to database
@@ -47,6 +50,7 @@ def create_app():
     crm_api.add_resource(resources.UserLogout, '/logout')
     crm_api.add_resource(resources.AllUsers, '/users')
     crm_api.add_resource(resources.GetUser, '/user')
+    crm_api.add_resource(resources.Prospects, '/prospects')
     crm_api.add_resource(resources.AddProspectCsv, '/add/prospectsCsv')
     crm_api.add_resource(resources.ImportProspects, '/import/prospects')
     crm_api.add_resource(google_resources.Authorize, '/authorize')
@@ -55,6 +59,10 @@ def create_app():
     crm_api.add_resource(campaign_step_resources.StepCreate, '/step_create')
     crm_api.add_resource(campaign_step_resources.StepUpdate, '/step_update')
     crm_api.add_resource(campaign_step_resources.GetCampaignSteps, '/get_campaign_steps')
+    crm_api.add_resource(google_resources.EmailProspect, '/email')
+    crm_api.add_resource(resources.Campaigns, '/campaigns')
+
+
 
     db.init_app(flask_app)
     migrate.init_app(flask_app, db)
