@@ -10,6 +10,7 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import { theme } from "../themes/theme";
+import axios from "axios";
 
 
 export default function CampaignStep() {
@@ -20,6 +21,7 @@ export default function CampaignStep() {
   const [openAlert, setOpenAlert] = useState(false)
   const [editorSubject, setEditorSubject] = useState("")
   const [editorContent, setEditorContent] = useState("")
+  const [stepId, setStepId] = useState(null)
 
   const handleEditorOpen = () => {
     setOpenEditor(true)
@@ -51,6 +53,7 @@ export default function CampaignStep() {
     } else {
       setOpenAlert(true)
     }
+    
   }
 
   // NOTE: consider adding a ListItem wrapper to these, so it doesn't need to be added in CampaignShow.
