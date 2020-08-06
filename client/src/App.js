@@ -41,7 +41,6 @@ function App() {
       <BrowserRouter>
         {user !== null ? <LoggedInNavBar /> : ""}
         <UserContext.Provider value={{ user, setUser }}>
-          <Route path="/camp_show" component={CampaignShow}/>
           <Switch>
             <Route path="/" exact>
               {user !== null ? <Redirect to="/prospects" /> : <Signup />}

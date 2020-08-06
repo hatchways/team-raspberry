@@ -14,7 +14,7 @@ class ProspectModel(db.Model):
     lastName = db.Column(db.String(120), nullable=True)
     userId = db.Column(db.BigInteger, db.ForeignKey("users.id"), nullable=False)
     prospect_step_join = db.relationship('ProspectStepModel', backref='prospect_step', lazy=True)
-    prospect_step_join = db.relationship('ProspectCampaignModel', backref='prospect_campaign', lazy=True)
+    prospect_campaign_join = db.relationship('ProspectCampaignModel', backref='prospect_campaign', lazy=True)
 
     def __init__(self, email, status, firstName, lastName, userId):
         self.email = email

@@ -50,7 +50,7 @@ class StepUpdate(Resource):
     def post(self):
         data = request.json
         step = StepModel.find_by_campaign(data['campaign_id'])
-        StepModel.update_step(step)
+        StepModel.update_step(data)
 
         if step is None:
             responseObject = {
