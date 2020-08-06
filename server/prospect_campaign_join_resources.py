@@ -10,35 +10,6 @@ from flask_restful import Resource
 from flask import request, session
 import io, csv, redis, json
 
-
-def login_required(f):
-    @wraps(f)
-    def wrap(*args, **kwargs):
-        auth_header = request.headers.get('Authorization')
-        if auth_header:
-            auth_token = auth_header.split()[1]
-            if auth_token:
-                resp = UserModel.decode_auth_token(auth_token)
-                # Strings are error messages, if it's an int, then it's the user_id.
-                if not isinstance(resp, str):
-                    user_id = resp
-                    args = args + (user_id,)
-                    return f(*args, **kwargs)
-                else:
-                    responseObject = {
-                        'status': 'fail',
-                        'message': resp
-                    }
-                    return responseObject, 401
-
-        responseObject = {
-            'status': 'fail',
-            'message': 'Provide a valid auth token.'
-        }
-        return responseObject, 403
-    return wrap
-
-
 class UserRegistration(Resource):
     def post(self):
         data = user_schema.load(request.json)

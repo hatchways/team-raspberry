@@ -43,7 +43,6 @@ Foreign-key constraints:
 Referenced by:
     TABLE "prospect_step_joins" CONSTRAINT "prospect_step_joins_step_id_fkey" FOREIGN KEY (step_id) REFERENCES campaign_steps(id)
 
-
                   Table "public.prospect_step_joins"
     Column     |            Type             | Collation | Nullable |   
 ---------------+-----------------------------+-----------+----------|
