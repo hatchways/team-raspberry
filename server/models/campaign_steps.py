@@ -44,7 +44,7 @@ class StepModel(db.Model):
         step.step_name = update_step.step_name
         step.email_subject = update_step.email_subject
         step.email_body = update_step.email_body
-        step.save_to_db
+        step.save_to_db()
         # return {'step': to_json(step)}
 
     @classmethod

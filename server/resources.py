@@ -333,3 +333,21 @@ class Campaigns(Resource):
         campaigns = models.campaigns.CampaignModel.find_by_user(user_id)
         return {"campaigns": list(map(lambda x: to_json(x), campaigns))}
 
+
+class CampaignAssign(Resource):
+
+    @login_required
+    def post(self, user_id):
+        # TODO
+        data = request.json
+        campaign_id = data.get('campaignId')
+        for prospect_id in data.get('prospects', []):
+            added = models.prospect_campaign_join.ProspectCampaignModel(prospect_id=prospect_id, campaign_id=campaign_id)
+            try:
+                added.save_to_db()
+            except Exception as e:
+                return {
+                   "status": "fail",
+                   "message": f"{e}"
+                }, 400
+        return {}, 201

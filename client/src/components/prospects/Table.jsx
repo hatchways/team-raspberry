@@ -28,7 +28,7 @@ export default function ProspectsTable(props) {
   const [buttonDisabled, setButtonDisabled] = React.useState(true);
 
   function assignProspectsToCampaign(campaignId, prospectIds) {
-    console.log("assign to campaign", campaignId, prospectIds);
+    Auth.assignToCampaign(campaignId, prospectIds);
   }
 
   function fetchProspects() {
@@ -123,7 +123,8 @@ export default function ProspectsTable(props) {
           ))}
         </TableBody>
       </Table>
-      <AddProspectsFormDialog onSubmit = {campaign_id => assignProspectsToCampaign(campaign_id, rows.filter(p => p.checked))} />
+      <AddProspectsFormDialog onSubmit = {campaign_id =>
+        assignProspectsToCampaign(campaign_id, rows.filter(p => p.checked).map(p => p.id))} />
     </TableContainer>
   );
 }

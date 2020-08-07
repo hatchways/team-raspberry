@@ -30,7 +30,6 @@ export default function AddProspectsFormDialog(props) {
 
   const handleFormChange = (e) => {
     setCampaignId(e.target.value);
-    console.log("form change", e.target.value);
     setOpen(true);
   };
 
