@@ -34,8 +34,8 @@ export default function Prospects() {
       {user.credentials === null && open !== false ? (
         <GmailDialog open={open} onClose={handleClose} />
       ) : (
-        ""
-      )}
+          ""
+        )}
     </div>
   );
 }
