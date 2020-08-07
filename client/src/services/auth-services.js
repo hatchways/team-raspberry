@@ -12,7 +12,7 @@ async function login(formValues) {
 }
 
 async function logout() {
-  return await axios.post("/api/logout")
+  return await axios.post("/api/logout");
 }
 
 async function registration(formValues) {
@@ -32,8 +32,8 @@ async function oauthPost(url) {
   return await axios.post("/api/oauth2callback", url);
 }
 
-async function sendEmail(credentials) {
-  return await axios.post("/api/email", credentials);
+async function sendEmail(body) {
+  return await axios.post("/api/email", body);
 }
 
 async function getCampaigns() {
@@ -50,18 +50,22 @@ async function createCampaign(name) {
 async function assignToCampaign(campaignId, prospects) {
   let body = {
     campaignId: campaignId,
-    prospects: prospects
+    prospects: prospects,
   };
   return await axios.post("/api/campaigns/assign", body);
 }
 
 async function createStep(step) {
-  let body = { ...step }
-  return await axios.post("/api/step_create", body)
+  let body = { ...step };
+  return await axios.post("/api/step_create", body);
 }
 
 async function getCampaignSteps(campaignId) {
-  return await axios.get(`/api/get_campaign_steps?campaign_id=${campaignId}`)
+  return await axios.get(`/api/get_campaign_steps?campaign_id=${campaignId}`);
+}
+
+async function getCampaignProspects() {
+  return await axios.get("/api/campaigns/assign");
 }
 
 export {
@@ -78,4 +82,5 @@ export {
   assignToCampaign,
   createStep,
   getCampaignSteps,
+  getCampaignProspects,
 };

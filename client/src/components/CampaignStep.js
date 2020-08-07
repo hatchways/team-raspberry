@@ -12,7 +12,8 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import { theme } from "../themes/theme";
 import * as Auth from "../services/auth-services";
 import { CampaignContext } from "../contexts/CampaignContext";
-
+import { UserContext } from "../contexts/UserContext";
+import GmailDialog from "../pages/GmailDialog";
 
 export default function CampaignStep(props) {
   const classes = useStyles(theme);
@@ -23,21 +24,26 @@ export default function CampaignStep(props) {
   const [editorSubject, setEditorSubject] = useState("");
   const [editorContent, setEditorContent] = useState("");
   const [stepId, setStepId] = useState(null);
-  const url = window.location.href.split("/")
-  const campaignId = parseInt(url[url.length - 1])
+  const url = window.location.href.split("/");
+  const campaignId = parseInt(url[url.length - 1]);
 
-  console.log(props.stepData)
+  const [showGmail, setShowGmail] = useState(false);
+  const { user } = useContext(UserContext);
+  const handleGmailClose = () => {
+    setShowGmail(false);
+  };
+  console.log(props.stepData);
 
   useEffect(() => {
     if (props.stepData) {
-      console.log("props.stepData")
-      const stepData = props.stepData
-      setStepName(stepData.step_name)
-      setEditorSubject(stepData.email_subject)
-      setEditorContent(stepData.email_body)
-      setStepId(stepData.id)
+      console.log("props.stepData");
+      const stepData = props.stepData;
+      setStepName(stepData.step_name);
+      setEditorSubject(stepData.email_subject);
+      setEditorContent(stepData.email_body);
+      setStepId(stepData.id);
     }
-  }, [])
+  }, []);
 
   const handleEditorOpen = () => {
     setOpenEditor(true);
@@ -61,16 +67,32 @@ export default function CampaignStep(props) {
 
   const handleEmail = (e) => {
     // Make sure there are actually prospects to send an email to.
+    console.log(props.campaignProspects);
+    console.log(user.credentials);
+    if (user.credentials === null) {
+      setShowGmail(true);
+      return;
+    }
+    console.log("supposed to return");
+    if (props.campaignProspects.length > 0) {
+      const body = {
+        credentials: user.credentials,
+        prospects: props.campaignProspects,
+        email_subject: editorSubject,
+        email_body: editorContent,
+      };
+      Auth.sendEmail(body);
+    }
   };
 
   const handleSave = () => {
     if (stepName.length > 0 && editorSubject.length > 0) {
       Auth.createStep({
-        'step_name': stepName,
-        'email_subject': editorSubject,
-        'email_body': editorContent,
-        'campaign_id': campaignId
-      })
+        step_name: stepName,
+        email_subject: editorSubject,
+        email_body: editorContent,
+        campaign_id: campaignId,
+      });
       setSaved(true);
     } else {
       setOpenAlert(true);
@@ -79,25 +101,32 @@ export default function CampaignStep(props) {
 
   // NOTE: consider adding a ListItem wrapper to these, so it doesn't need to be added in CampaignShow.
   return saved ? (
-    <Card className={classes.card}>
-      <CardContent className={classes.cardContent}>
-        Step Name: {stepName}
-      </CardContent>
-      <CardContent className={classes.cardContent}>
-        Subject: {editorSubject}
-      </CardContent>
-      <CardContent className={classes.cardContent}>
-        Content: {editorContent}
-      </CardContent>
-      <CardActions>
-        <Button onClick={handleEmail} variant="contained" color="primary">
-          Send to Prospects
-        </Button>
-        <Button onClick={handleEdit} variant="contained" color="primary">
-          Edit
-        </Button>
-      </CardActions>
-    </Card>
+    <div>
+      <Card className={classes.card}>
+        <CardContent className={classes.cardContent}>
+          Step Name: {stepName}
+        </CardContent>
+        <CardContent className={classes.cardContent}>
+          Subject: {editorSubject}
+        </CardContent>
+        <CardContent className={classes.cardContent}>
+          Content: {editorContent}
+        </CardContent>
+        <CardActions>
+          <Button onClick={handleEmail} variant="contained" color="primary">
+            Send to Prospects
+          </Button>
+          <Button onClick={handleEdit} variant="contained" color="primary">
+            Edit
+          </Button>
+        </CardActions>
+      </Card>
+      {showGmail === true ? (
+        <GmailDialog open={showGmail} onClose={handleGmailClose} />
+      ) : (
+        ""
+      )}
+    </div>
   ) : (
     <Card className={classes.card}>
       <CardContent>
