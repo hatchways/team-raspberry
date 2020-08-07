@@ -121,7 +121,6 @@ class UserLogout(Resource):
 
     @login_required
     def post(self, user_id):
-        print(session)
         user = UserModel.find_by_id(user_id)
         if user:
             responseObject = {

@@ -32,6 +32,10 @@ class ProspectCampaignModel(db.Model):
     def find_by_campaign_id(cls, campaign_id):
         return cls.query.filter_by(campaign_id=campaign_id).first()
 
+    @classmethod
+    def count_prospects_in_campaign(cls, campaign_id):
+        return len(cls.query.filter_by(campaign_id=campaign_id).all())''
+
     # return a step’s data if there is match by id
     @classmethod
     def find_by_prospect_id(cls, prospect_id):
