@@ -11,6 +11,10 @@ async function login(formValues) {
   return response;
 }
 
+async function logout() {
+  return await axios.post("/api/logout")
+}
+
 async function registration(formValues) {
   const response = await axios.post("/api/registration", formValues);
   return response;
@@ -51,9 +55,19 @@ async function assignToCampaign(campaignId, prospects) {
   return await axios.post("/api/campaigns/assign", body);
 }
 
+async function createStep(step) {
+  let body = { ...step }
+  return await axios.post("/api/step_create", body)
+}
+
+async function getCampaignSteps(campaignId) {
+  return await axios.get(`/api/get_campaign_steps?campaign_id=${campaignId}`)
+}
+
 export {
   getUser,
   login,
+  logout,
   registration,
   getProspects,
   authPost,
@@ -62,4 +76,6 @@ export {
   getCampaigns,
   createCampaign,
   assignToCampaign,
+  createStep,
+  getCampaignSteps,
 };

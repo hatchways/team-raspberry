@@ -43,8 +43,8 @@ function App() {
   return (
     <MuiThemeProvider theme={theme}>
       <BrowserRouter>
-        {user !== null ? <LoggedInNavBar /> : ""}
         <UserContext.Provider value={{ user, setUser }}>
+        {user !== null ? <LoggedInNavBar user={user} setUser={setUser}/> : ""}
           <Switch>
             <Route path="/" exact>
               {user !== null ? <Redirect to="/prospects" /> : <Signup />}
