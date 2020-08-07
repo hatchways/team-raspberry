@@ -32,10 +32,7 @@ export default function CampaignShow() {
       </ListItem>
     );
     addStep(steps.concat(newItem));
-    console.log(steps);
   };
-
-  console.log(currentCampaign);
 
   return (
     <Paper className={classes.root}>
