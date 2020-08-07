@@ -44,10 +44,8 @@ class StepModel(db.Model):
     # return a campaign’s data if there is match by campaign_id
     @classmethod
     def find_by_campaign(cls, campaign_id):
-        print(campaign_id)
         steps = cls.query.filter_by(campaign_id=campaign_id).all()
         step_json = [step.to_dict() for step in steps]
-        print(steps[0].step_name)
         return step_json
 
     @classmethod
