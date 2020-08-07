@@ -15,19 +15,22 @@ import Typography from "@material-ui/core/Typography";
 import { useLocation } from "react-router-dom";
 import * as Auth from "../services/auth-services";
 
-
 export default function CampaignShow() {
   const url = window.location.href.split("/");
   const campaignId = parseInt(url[url.length - 1]);
   const [steps, addStep] = useState([]);
-  const [stepJson, setStepJson] = useState([])
+  const [stepJson, setStepJson] = useState([]);
   const [contacted, setContacted] = useState(0);
-  const [key, setKey] = useState(0)
+  const [key, setKey] = useState(0);
   const [opened, setOpened] = useState(0);
   const [replied, setReplied] = useState(0);
   const classes = useStyles();
   const location = useLocation();
 
+  const [campaignProspects, setCampaignProspects] = useState(null);
+  const [currentCampaign, setCurrentCampaign] = useState(
+    location.state.currentCampaign
+  );
   useEffect(() => {
     Auth.getCampaignSteps(campaignId)
       .then((response) => response.data)
@@ -35,8 +38,21 @@ export default function CampaignShow() {
         const newSteps = [...data.steps];
         setStepJson(newSteps);
       });
-  }, []);
 
+    Auth.getCampaignProspects()
+      .then((response) => response.data)
+      .then((data) => {
+        const responseData = [];
+        console.log("Getting Campaign Prospects");
+        data.CampaignProspects.forEach((element) => {
+          if (currentCampaign.id === element.campaign_id) {
+            responseData.push(element);
+          }
+        });
+        console.log(responseData);
+        setCampaignProspects(responseData);
+      });
+  }, []);
 
   const handleAddStep = () => {
     let newStep = (
@@ -71,16 +87,20 @@ export default function CampaignShow() {
         </Table>
       </TableContainer>
       <List>
-        {
-          stepJson.map((json, idx) => {
-            return (
-              <ListItem key={idx + 1} className={classes.listItem}>
-                <CampaignStep key={idx + 1} stepData={json} saved={true}/>
-                {json.id}
-              </ListItem>
-            );
-          })
-        }
+        {stepJson.map((json, idx) => {
+          return (
+            <ListItem key={idx + 1} className={classes.listItem}>
+              <CampaignStep
+                currentCampaign={currentCampaign}
+                campaignProspects={campaignProspects}
+                key={idx + 1}
+                stepData={json}
+                saved={true}
+              />
+              {json.id}
+            </ListItem>
+          );
+        })}
         {steps}
       </List>
       <Button

@@ -1,6 +1,7 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
+import { useHistory } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
-import * as Auth from "../../services/auth-services"
+import * as Auth from "../../services/auth-services";
 import Checkbox from "./Checkbox";
 import AddProspectsFormDialog from "./AddProspectsFormDialog";
 
@@ -11,8 +12,10 @@ import {
   TableHead,
   TableRow,
   TableCell,
-  TableBody, Button
-} from "@material-ui/core"
+  TableBody,
+  Button,
+  Grid,
+} from "@material-ui/core";
 
 const useStyles = makeStyles({
   table: {
@@ -27,14 +30,21 @@ export default function ProspectsTable(props) {
   const [filteredRows, setFilteredRows] = useState([]);
   const [buttonDisabled, setButtonDisabled] = React.useState(true);
 
+  const history = useHistory();
   function assignProspectsToCampaign(campaignId, prospectIds) {
     Auth.assignToCampaign(campaignId, prospectIds);
   }
 
+  const addProspects = () => {
+    history.push("/add/prospects");
+  };
+
   function fetchProspects() {
     Auth.getProspects().then((res) => {
       let pList = res.data.prospects;
-      pList.map(p => {p['checked'] = false});
+      pList.map((p) => {
+        p["checked"] = false;
+      });
 
       setRows(pList);
       setFilteredRows(pList);
@@ -45,12 +55,12 @@ export default function ProspectsTable(props) {
     let disabled = buttonDisabled;
     // 'rows' is read-only, so we need to copy everything and then change.
     // See https://stackoverflow.com/a/49502115
-    for (let i=0; i < rows.length; i++) {
-      if (rows[i]['id'] === id) {
+    for (let i = 0; i < rows.length; i++) {
+      if (rows[i]["id"] === id) {
         // 1. Make a shallow copy of the items
         let items = [...rows];
         // 2. Make a shallow copy of the item you want to mutate
-        let item = {...items[i]};
+        let item = { ...items[i] };
         // 3. Replace the property you're interested in
         item.checked = isChecked;
         // 4. Put it back into our array. N.B. we *are* mutating the array here, but that's why we made a copy first
@@ -60,8 +70,7 @@ export default function ProspectsTable(props) {
         if (isChecked) {
           disabled = false;
           setButtonDisabled(disabled);
-        }
-        else {
+        } else {
           disabled = true;
           setButtonDisabled(disabled);
         }
@@ -72,12 +81,14 @@ export default function ProspectsTable(props) {
   }
 
   function filterProspects(query) {
-    if (query === '') {
+    if (query === "") {
       return rows;
     }
     let filtered = [];
-    for(let i=0; i < rows.length; i++) {
-      let inFirst = rows[i].firstName.toLowerCase().includes(query.toLowerCase());
+    for (let i = 0; i < rows.length; i++) {
+      let inFirst = rows[i].firstName
+        .toLowerCase()
+        .includes(query.toLowerCase());
       let inLast = rows[i].lastName.toLowerCase().includes(query.toLowerCase());
       let inEmail = rows[i].email.toLowerCase().includes(query.toLowerCase());
       if (inFirst || inLast || inEmail) {
@@ -93,7 +104,7 @@ export default function ProspectsTable(props) {
   }, [props.text]);
 
   useEffect(() => {
-      fetchProspects();
+    fetchProspects();
   }, []);
 
   // //Helpful to debug rows state when it changes - will delete later.
@@ -115,7 +126,12 @@ export default function ProspectsTable(props) {
         <TableBody>
           {filteredRows.map((row) => (
             <TableRow key={row.id}>
-              <TableCell><Checkbox checked={row.checked}  clickEvent={(isChecked) => handleCheck(isChecked, row.id)}/></TableCell>
+              <TableCell>
+                <Checkbox
+                  checked={row.checked}
+                  clickEvent={(isChecked) => handleCheck(isChecked, row.id)}
+                />
+              </TableCell>
               <TableCell>{row.firstName}</TableCell>
               <TableCell>{row.lastName}</TableCell>
               <TableCell>{row.email}</TableCell>
@@ -123,8 +139,21 @@ export default function ProspectsTable(props) {
           ))}
         </TableBody>
       </Table>
-      <AddProspectsFormDialog onSubmit = {campaign_id =>
-        assignProspectsToCampaign(campaign_id, rows.filter(p => p.checked).map(p => p.id))} />
+      <Grid container>
+        <Grid item>
+          <AddProspectsFormDialog
+            onSubmit={(campaign_id) =>
+              assignProspectsToCampaign(
+                campaign_id,
+                rows.filter((p) => p.checked).map((p) => p.id)
+              )
+            }
+          />
+        </Grid>
+        <Grid item>
+          <Button onClick={addProspects}>Add Prospects</Button>
+        </Grid>
+      </Grid>
     </TableContainer>
   );
 }

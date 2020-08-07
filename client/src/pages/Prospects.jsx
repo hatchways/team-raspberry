@@ -8,28 +8,34 @@ import GmailDialog from "./GmailDialog";
 
 export default function Prospects() {
   const classes = useStyles();
-
   const [text, setText] = useState();
+  const [open, setOpen] = useState(true);
   const { user } = useContext(UserContext);
 
+  const handleClose = () => {
+    setOpen(false);
+  };
   return (
     <div className={classes.root}>
       <Grid container spacing={3}>
         <Grid item className={classes.sidebar} sm={2}>
           Sidebar
-          <SearchBar setText={setText}/>
+          <SearchBar setText={setText} />
         </Grid>
         <Grid item sm={10}>
           <Container className={classes.contentContainer}>
-            <Grid item className={classes.contentHeader} sm={12}>
-            </Grid>
+            <Grid item className={classes.contentHeader} sm={12}></Grid>
             <Grid item className={classes.content} sm={12}>
               <ProspectsTable text={text} />
             </Grid>
           </Container>
         </Grid>
       </Grid>
-      {user.credentials === null ? <GmailDialog open={true} /> : ""}
+      {user.credentials === null && open !== false ? (
+        <GmailDialog open={open} onClose={handleClose} />
+      ) : (
+        ""
+      )}
     </div>
   );
 }
@@ -47,7 +53,7 @@ const useStyles = makeStyles((theme) => ({
     // width: "100%",
     color: "white",
     textTransform: "capitalize",
-    marginTop: "3rem"
+    marginTop: "3rem",
   },
   sidebar: {},
   content: {},

@@ -11,10 +11,11 @@ export default function GmailDialog(props) {
   // const { user, setUser } = useContext(UserContext);
   const classes = useStyles();
   const [open, setOpen] = useState(props.open);
+  const onClose = props.onClose;
   const [authorization, setAuthorization] = useState(null);
 
   const handleClose = () => {
-    setOpen(false);
+    onClose();
   };
 
   const authorize = async () => {
