@@ -31,7 +31,7 @@ export default function Prospects() {
           </Container>
         </Grid>
       </Grid>
-      {user.credentials === null ? (
+      {user.credentials === null && open !== false ? (
         <GmailDialog open={open} onClose={handleClose} />
       ) : (
         ""
