@@ -70,7 +70,7 @@ function App() {
             <Route path="/add/prospects">
               {user !== null ? <AddProspects /> : <Login />}
             </Route>
-            <Route path="/redirect">
+            <Route path="*/redirect">
               {user !== null ? <GmailRedirect /> : <Login />}
             </Route>
           </Switch>

@@ -99,7 +99,6 @@ export default function CampaignShow() {
                 stepData={json}
                 saved={true}
               />
-              {json.id}
             </ListItem>
           );
         })}

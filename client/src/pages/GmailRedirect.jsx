@@ -44,9 +44,6 @@ function GmailRedirect(props) {
   return (
     <Dialog onClose={handleClose} aria-labelledby="gmail-title" open={open}>
       <DialogTitle id="gmail-title">Gmail Connected Successfully</DialogTitle>
-      <Button variant="outlined" color="primary" onClick={handleClose}>
-        Check Query
-      </Button>
       <Button onClick={sendEmail}>SEND AN EMAIL TEST!</Button>
     </Dialog>
   );
