@@ -52,7 +52,7 @@ export default function CampaignsTable(props) {
           )})}
         </TableBody>
       </Table>
-      <CampaignFormDialog onSubmit={props.onSubmitNew} />
+      <CampaignFormDialog campaigns={campaigns} onSubmit={props.onSubmitNew} />
     </TableContainer>
   );
 }

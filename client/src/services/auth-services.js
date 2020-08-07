@@ -43,6 +43,14 @@ async function createCampaign(name) {
   return await axios.post("/api/campaigns", body);
 }
 
+async function assignToCampaign(campaignId, prospects) {
+  let body = {
+    campaignId: campaignId,
+    prospects: prospects
+  };
+  return await axios.post("/api/campaigns/assign", body);
+}
+
 export {
   getUser,
   login,
@@ -53,4 +61,5 @@ export {
   sendEmail,
   getCampaigns,
   createCampaign,
+  assignToCampaign,
 };

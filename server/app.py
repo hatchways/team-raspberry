@@ -60,8 +60,7 @@ def create_app():
     crm_api.add_resource(campaign_step_resources.GetCampaignSteps, '/get_campaign_steps')
     crm_api.add_resource(google_resources.EmailProspect, '/email')
     crm_api.add_resource(resources.Campaigns, '/campaigns')
-
-
+    crm_api.add_resource(resources.CampaignAssign, '/campaigns/assign')
 
     db.init_app(flask_app)
     migrate.init_app(flask_app, db)

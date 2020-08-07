@@ -11,7 +11,6 @@ export default function Prospects() {
 
   const [text, setText] = useState();
   const { user } = useContext(UserContext);
-  console.log(user);
 
   return (
     <div className={classes.root}>
