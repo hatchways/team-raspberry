@@ -4,7 +4,6 @@ import { MuiThemeProvider } from "@material-ui/core";
 import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom";
 import { theme } from "./themes/theme";
 import { createBrowserHistory } from "history";
-import GmailDialog from "./pages/GmailDialog";
 import GmailRedirect from "./pages/GmailRedirect";
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
@@ -16,10 +15,16 @@ import Campaigns from "./pages/CampaignsIndex";
 import AddProspects from "./pages/AddProspects";
 import * as Auth from "./services/auth-services";
 import CampaignShow from "./pages/CampaignShow";
-
+import axios from "axios";
 import "./App.css";
 
 function App() {
+  // Set up headers right away.
+  axios.defaults.headers.common[
+    "Authorization"
+  ] = `Bearer ${localStorage.getItem("token")}`;
+  axios.defaults.headers.common["Content-Type"] = "application/json";
+
   const history = createBrowserHistory();
   const [user, setUser] = useState(null);
 

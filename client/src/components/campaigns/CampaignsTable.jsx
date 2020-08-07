@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useContext } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import * as Auth from "../../services/auth-services"
 import CampaignFormDialog from "./CampaignFormDialog";
-
+import { CampaignContext } from "../../contexts/CampaignContext";
 import {
   TableContainer,
   Paper,
@@ -11,30 +10,14 @@ import {
   TableRow,
   TableCell,
   TableBody,
-  Button, Grid
-} from "@material-ui/core"
-
-const useStyles = makeStyles({
-  table: {
-    minWidth: 650,
-  },
-});
+  Button,
+  Grid,
+} from "@material-ui/core";
+import CampaignViewButton from "./CampaignViewButton";
 
 export default function CampaignsTable(props) {
+  const { campaigns } = useContext(CampaignContext);
   const classes = useStyles();
-
-  const [rows, setRows] = useState([]);
-
-  function fetchCampaigns() {
-    Auth.getCampaigns().then((res) => {
-      setRows(res.data.campaigns);
-    });
-
-  }
-
-  useEffect(() => {
-      fetchCampaigns();
-  }, []);
 
   return (
     <TableContainer component={Paper}>
@@ -46,21 +29,36 @@ export default function CampaignsTable(props) {
             <TableCell>Prospects</TableCell>
             <TableCell>Replies</TableCell>
             <TableCell>Steps</TableCell>
-        </TableRow>
+            <TableCell></TableCell>
+          </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
+          {campaigns.map((row) => {
+
+            return (
             <TableRow key={row.id}>
               <TableCell>{row.title}</TableCell>
-              <TableCell>{row.created}</TableCell>
+              <TableCell>{new Date(row.created).toDateString()}</TableCell>
               <TableCell>{row.prospects}</TableCell>
               <TableCell>{row.replies}</TableCell>
               <TableCell>{row.steps}</TableCell>
+              <TableCell>
+                <CampaignViewButton
+                  currentCampaignId={row.id}
+                  currentCampaignState={row}
+                />
+              </TableCell>
             </TableRow>
-          ))}
+          )})}
         </TableBody>
       </Table>
-        <CampaignFormDialog/>
+      <CampaignFormDialog campaigns={campaigns} onSubmit={props.onSubmitNew} />
     </TableContainer>
   );
 }
+
+const useStyles = makeStyles({
+  table: {
+    minWidth: 650,
+  },
+});

@@ -58,7 +58,6 @@ class StepUpdate(Resource):
                 'message': 'No such step'
             }
             return responseObject, 401
-
         else:
             responseObject = {
                 'status': 'success',

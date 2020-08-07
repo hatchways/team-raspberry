@@ -15,10 +15,11 @@ class StepModel(db.Model):
     step_prospect_join = db.relationship('ProspectStepModel', backref='step_prospect', lazy=True)
     created = db.Column(db.DateTime, nullable=False, default=datetime.datetime.utcnow)
 
-    def __init__(self, step_name, email_subject, email_body):
+    def __init__(self, step_name, email_subject, email_body, campaign_id):
         self.step_name = step_name
         self.email_subject = email_subject
         self.email_body = email_body
+        self.campaign_id = campaign_id
 
     def save_to_db(self):
         # Session can get into a weird state where nothing else works?
@@ -43,7 +44,7 @@ class StepModel(db.Model):
         step.step_name = update_step.step_name
         step.email_subject = update_step.email_subject
         step.email_body = update_step.email_body
-        step.save_to_db
+        step.save_to_db()
         # return {'step': to_json(step)}
 
     @classmethod

@@ -66,7 +66,7 @@ export default function LoggedInNavbar(props) {
             Reporting
           </Button>
           <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
-            <Avatar alt="John Doe" src="demo_avatar.png" /> {username}
+            <Avatar alt="John Doe" src="/demo_avatar.png" /> {username}
           </Button>
           <Menu
             id="simple-menu"

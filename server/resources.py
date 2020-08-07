@@ -280,53 +280,74 @@ class GetUser(Resource):
             }, 200
 
 class Campaigns(Resource):
+
     @login_required
     def post(self, user_id):
         # TODO
-        # data = campaign_schema.load(request.json)
-        #
-        # new_campaign = CampaignModel(
-        #     title=data.get('title'),
-        #     userId=user_id
-        # )
-        # try:
-        #     new_campaign.save_to_db()
-            response_object = {
-                'status': 'success',
-                #'message': 'Campaign {} was created'.format(data['title']) TODO: Use this one once DB is ready.
-                'message': 'Campaign {} was created'.format(request.json.get('title'))
+        data = request.json
+        data['user_id'] = user_id
+        data = models.campaigns.campaign_schema.load(data)
+
+        new_campaign = models.campaigns.CampaignModel(
+            title=data.get('title'),
+            user_id=user_id,
+        )
+        try:
+            new_campaign.save_to_db()
+
+        except Exception as e:
+            return {
+               "status": "fail",
+               "message": f"{e}"
+            }, 400
+
+        response_object = {
+            'status': 'success',
+            'message': 'Campaign {} was created'.format(new_campaign.title),
+            'campaign': {
+                'id': new_campaign.id,
+                'title': new_campaign.title,
+                'user_id': new_campaign.user_id,
+                'steps': len(new_campaign.steps),
+                'replies': new_campaign.reply_count,
+                'prospects': new_campaign.prospect_count,
+                'created': new_campaign.created.isoformat()
             }
-            logger.error(response_object)
-            return response_object, 201
-        # except Exception as e:
-        #     response_object = {
-        #         'status': 'fail',
-        #         'message': 'Something went wrong. Please try again.'
-        #     }
-        #     return response_object, 500
+        }
+        return response_object, 201
 
 
     @login_required
     def get(self, user_id):
         def to_json(x):
-            campaign_id = randint(1, 100000)
             return {
-                # 'title': campaign.title,
-                # 'user_id': campaign.user_id,
-                # 'steps': campaign.steps,
-                # # TODO: Kevin needs to add these fields
-                # # 'replies': ,
-                # # 'prospects':
-                'id': campaign_id,
-                'title': f'Campaign {campaign_id}',
-                'user_id': randint(1, 100000),
-                'steps': randint(1, 10),
-                'replies': randint(1, 10),
-                'prospects': randint(1, 10),
-                'created': 'August 5, 2020'
+                'id': x.id,
+                'title': x.title,
+                'user_id': x.user_id,
+                'steps': len(x.steps),
+                'replies': x.reply_count,
+                'prospects': x.prospect_count,
+                'created': x.created.isoformat()
             }
 
-        #campaigns = CampaignModel.find_by_user(user_id) # TODO: is this the correct class method to use?
-        campaigns = ['something'] * 10
+        campaigns = models.campaigns.CampaignModel.find_by_user(user_id)
         return {"campaigns": list(map(lambda x: to_json(x), campaigns))}
 
+
+class CampaignAssign(Resource):
+
+    @login_required
+    def post(self, user_id):
+        # TODO
+        data = request.json
+        campaign_id = data.get('campaignId')
+        for prospect_id in data.get('prospects', []):
+            added = models.prospect_campaign_join.ProspectCampaignModel(prospect_id=prospect_id, campaign_id=campaign_id)
+            try:
+                added.save_to_db()
+            except Exception as e:
+                return {
+                   "status": "fail",
+                   "message": f"{e}"
+                }, 400
+        return {}, 201

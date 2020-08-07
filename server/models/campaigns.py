@@ -17,11 +17,10 @@ class CampaignModel(db.Model):
     prospect_count = db.Column(db.BigInteger, nullable=False, default=0)
     created = db.Column(db.DateTime, nullable=False, default=datetime.datetime.utcnow)
 
-    def __init__(self, title, user_id, steps):
+    def __init__(self, title, user_id):
     # def __init__(self, title, steps):
         self.title = title
         self.user_id = user_id
-        self.steps = steps
 
     def save_to_db(self):
         # Session can get into a weird state where nothing else works?
@@ -40,7 +39,7 @@ class CampaignModel(db.Model):
     # return a campaign’s data if there is match by user_id
     @classmethod
     def find_by_user(cls, user_id):
-        return cls.query.filter_by(user_id=user_id).first()
+        return cls.query.filter_by(user_id=user_id).all()
 
     @classmethod
     def find_by_id(cls, id):
