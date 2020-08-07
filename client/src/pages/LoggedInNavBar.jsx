@@ -32,6 +32,7 @@ export default function LoggedInNavbar(props) {
 
   const handleLogout = () => {
     handleClose()
+    // props.UserContext = null
     setLoggedIn(false)
   }
 

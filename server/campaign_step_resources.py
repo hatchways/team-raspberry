@@ -14,9 +14,6 @@ import io, csv, redis, json
 class StepCreate(Resource):
     def post(self):
         data = step_schema.load(request.json)
-        # Check if step already exists
-        if StepModel.find_by_campaign(data['step']):
-            return {'message': 'step already exists'}, 409
 
         new_step = StepModel(
             step_name = data['step_name'],

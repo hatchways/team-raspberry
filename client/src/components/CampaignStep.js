@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
@@ -10,9 +10,11 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import { theme } from "../themes/theme";
-import axios from "axios";
+import * as Auth from "../services/auth-services";
+import { CampaignContext } from "../contexts/CampaignContext";
 
-export default function CampaignStep() {
+
+export default function CampaignStep(props) {
   const classes = useStyles(theme);
   const [stepName, setStepName] = useState("");
   const [saved, setSaved] = useState(false);
@@ -21,6 +23,8 @@ export default function CampaignStep() {
   const [editorSubject, setEditorSubject] = useState("");
   const [editorContent, setEditorContent] = useState("");
   const [stepId, setStepId] = useState(null);
+  const url = window.location.href.split("/")
+  const campaignId = parseInt(url[url.length - 1])
 
   const handleEditorOpen = () => {
     setOpenEditor(true);
@@ -48,6 +52,12 @@ export default function CampaignStep() {
 
   const handleSave = () => {
     if (stepName.length > 0 && editorSubject.length > 0) {
+      Auth.createStep({
+        'step_name': stepName,
+        'email_subject': editorSubject,
+        'email_body': editorContent,
+        'campaign_id': campaignId
+      })
       setSaved(true);
     } else {
       setOpenAlert(true);
