@@ -13,6 +13,7 @@ import io, csv, redis, json
 class JoinCreate(Resource):
     def post(self):
         data = prospect_campaign_schema.load(request.json)
+        print(data)
 
         new_join = ProspectCampaignModel(
             campaign_id = data['campaign_id'],
@@ -40,8 +41,7 @@ class JoinCreate(Resource):
 
 
 class GetJoinCount(Resource):
-    @login_required
-    def get(self, user_id):
+    def get(self):
         count = ProspectCampaignModel.count_prospects_in_campaign(request['campaign_id'])
         responseObject = {
             'count': count
