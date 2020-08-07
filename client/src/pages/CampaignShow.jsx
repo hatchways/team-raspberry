@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Button from "@material-ui/core/Button";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
@@ -19,34 +19,24 @@ import * as Auth from "../services/auth-services";
 export default function CampaignShow() {
   const url = window.location.href.split("/");
   const campaignId = parseInt(url[url.length - 1]);
-  const [steps, addStep] = useState("");
+  const [steps, addStep] = useState([]);
+  const [stepJson, setStepJson] = useState([])
   const [contacted, setContacted] = useState(0);
+  const [key, setKey] = useState(0)
   const [opened, setOpened] = useState(0);
   const [replied, setReplied] = useState(0);
   const classes = useStyles();
   const location = useLocation();
-  const stepJson = []
-
-  const stepFromJson = (step) => {
-    let newStep = (
-      <ListItem key={steps.length + 1} className={classes.listItem}>
-        <CampaignStep key={steps.length + 1} stepData={step}/>
-      </ListItem>
-    );
-    return newStep
-  }
 
   useEffect(() => {
     Auth.getCampaignSteps(campaignId)
       .then((response) => response.data)
       .then((data) => {
-        for (let i = 0; i < data.steps.length; i++) {
-          console.log(data.steps[i]);
-          stepJson.concat(data.steps[i])
-        }
-        console.log(stepJson)
+        const newSteps = [...data.steps];
+        setStepJson(newSteps);
       });
   }, []);
+
 
   const handleAddStep = () => {
     let newStep = (
@@ -80,7 +70,19 @@ export default function CampaignShow() {
           </TableBody>
         </Table>
       </TableContainer>
-      <List>{steps}</List>
+      <List>
+        {
+          stepJson.map((json, idx) => {
+            return (
+              <ListItem key={idx + 1} className={classes.listItem}>
+                <CampaignStep key={idx + 1} stepData={json} saved={true}/>
+                {json.id}
+              </ListItem>
+            );
+          })
+        }
+        {steps}
+      </List>
       <Button
         className={classes.button}
         onClick={handleAddStep}

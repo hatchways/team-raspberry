@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
@@ -17,7 +17,7 @@ import { CampaignContext } from "../contexts/CampaignContext";
 export default function CampaignStep(props) {
   const classes = useStyles(theme);
   const [stepName, setStepName] = useState("");
-  const [saved, setSaved] = useState(false);
+  const [saved, setSaved] = useState(props.saved);
   const [openEditor, setOpenEditor] = useState(false);
   const [openAlert, setOpenAlert] = useState(false);
   const [editorSubject, setEditorSubject] = useState("");
@@ -28,14 +28,16 @@ export default function CampaignStep(props) {
 
   console.log(props.stepData)
 
-  if (props.stepData) {
-    console.log("props.stepData")
-    const stepData = props.stepData
-    setStepName(stepData.step_name)
-    setEditorSubject(stepData.email_subject)
-    setEditorContent(stepData.email_body)
-    setStepId(stepData.id)
-  }
+  useEffect(() => {
+    if (props.stepData) {
+      console.log("props.stepData")
+      const stepData = props.stepData
+      setStepName(stepData.step_name)
+      setEditorSubject(stepData.email_subject)
+      setEditorContent(stepData.email_body)
+      setStepId(stepData.id)
+    }
+  }, [])
 
   const handleEditorOpen = () => {
     setOpenEditor(true);
