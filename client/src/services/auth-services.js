@@ -1,10 +1,5 @@
 import axios from "axios";
 
-axios.defaults.headers.common["Authorization"] = `Bearer ${localStorage.getItem(
-  "token"
-)}`;
-axios.defaults.headers.common["Content-Type"] = "application/json";
-
 async function getUser() {
   const response = await axios.post("/api/user");
 
@@ -43,10 +38,19 @@ async function getCampaigns() {
 
 async function createCampaign(name) {
   let body = {
-    title: name
+    title: name,
   };
   return await axios.post("/api/campaigns", body);
 }
 
-export { getUser, login, registration, getProspects, authPost, oauthPost, sendEmail, getCampaigns, createCampaign};
-
+export {
+  getUser,
+  login,
+  registration,
+  getProspects,
+  authPost,
+  oauthPost,
+  sendEmail,
+  getCampaigns,
+  createCampaign,
+};

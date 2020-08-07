@@ -15,10 +15,16 @@ import Campaigns from "./pages/Campaigns";
 import AddProspects from "./pages/AddProspects";
 import * as Auth from "./services/auth-services";
 import CampaignShow from "./pages/CampaignShow";
-
+import axios from "axios";
 import "./App.css";
 
 function App() {
+  // Set up headers right away.
+  axios.defaults.headers.common[
+    "Authorization"
+  ] = `Bearer ${localStorage.getItem("token")}`;
+  axios.defaults.headers.common["Content-Type"] = "application/json";
+
   const history = createBrowserHistory();
   const [user, setUser] = useState(null);
 
