@@ -28,6 +28,9 @@ class CampaignModel(db.Model):
         db.session.add(self)
         db.session.commit()
 
+    def count_prospects(self):
+        db.query(core.Author.name, func.count(core.Author.id)).join(core.Author.papers).group_by(core.Author.id).all()
+
     # return a campaign’s data if there is match by title
     @classmethod
     def find_by_title(cls, title):

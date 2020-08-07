@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Button from "@material-ui/core/Button";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
@@ -13,25 +13,38 @@ import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import { useLocation } from "react-router-dom";
+import * as Auth from "../services/auth-services";
+
 
 export default function CampaignShow() {
+  const url = window.location.href.split("/");
+  const campaignId = parseInt(url[url.length - 1]);
   const [steps, addStep] = useState([]);
-  const [contacted, setContacted] = useState(35);
-  const [opened, setOpened] = useState(30);
-  const [replied, setReplied] = useState(3);
+  const [stepJson, setStepJson] = useState([])
+  const [contacted, setContacted] = useState(0);
+  const [key, setKey] = useState(0)
+  const [opened, setOpened] = useState(0);
+  const [replied, setReplied] = useState(0);
   const classes = useStyles();
   const location = useLocation();
-  const [currentCampaign, setCurrentCampaign] = useState(
-    location.state.currentCampaign
-  );
+
+  useEffect(() => {
+    Auth.getCampaignSteps(campaignId)
+      .then((response) => response.data)
+      .then((data) => {
+        const newSteps = [...data.steps];
+        setStepJson(newSteps);
+      });
+  }, []);
+
 
   const handleAddStep = () => {
-    let newItem = (
+    let newStep = (
       <ListItem key={steps.length + 1} className={classes.listItem}>
         <CampaignStep key={steps.length + 1} />
       </ListItem>
     );
-    addStep(steps.concat(newItem));
+    addStep(steps.concat(newStep));
   };
 
   return (
@@ -57,7 +70,19 @@ export default function CampaignShow() {
           </TableBody>
         </Table>
       </TableContainer>
-      <List>{steps}</List>
+      <List>
+        {
+          stepJson.map((json, idx) => {
+            return (
+              <ListItem key={idx + 1} className={classes.listItem}>
+                <CampaignStep key={idx + 1} stepData={json} saved={true}/>
+                {json.id}
+              </ListItem>
+            );
+          })
+        }
+        {steps}
+      </List>
       <Button
         className={classes.button}
         onClick={handleAddStep}

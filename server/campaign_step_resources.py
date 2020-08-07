@@ -1,5 +1,3 @@
-from typing import List, Any
-from functools import wraps
 from models.campaigns import CampaignModel, campaign_schema, campaigns_schema
 from models.campaign_steps import StepModel, step_schema, steps_schema
 from  models.prospect_step_join import ProspectStepModel, prospect_step_schema, prospect_steps_schema
@@ -61,3 +59,16 @@ class StepUpdate(Resource):
                 'message': 'Successfully updated step.',
             }
             return responseObject, 200
+
+class GetCampaignSteps(Resource):
+
+    @login_required
+    def get(self, id):
+        campaign_id = request.full_path.split("?")[-1].split("=")[-1]
+        steps = StepModel.find_by_campaign(campaign_id)
+        responseObject = {
+            'steps': steps
+        }
+
+        return responseObject, 200
+
