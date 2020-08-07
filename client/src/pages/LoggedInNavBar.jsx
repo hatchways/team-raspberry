@@ -35,6 +35,7 @@ export default function LoggedInNavbar(props) {
   const handleLogout = () => {
     handleClose()
     props.setUser(null)
+    localStorage.setItem("token", null);
     Auth.logout()
     setLoggedIn(false)
   }
