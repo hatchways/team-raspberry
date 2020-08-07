@@ -10,6 +10,9 @@ from email.mime.text import MIMEText
 from email_tasks import send_message
 from google.auth.transport.requests import AuthorizedSession
 
+from models.prospects import ProspectModel
+import json
+
 # TODO: Change location of Client secrets for deployment
 CLIENT_SECRET_FILE = 'credentials.json'
 SCOPES = [
@@ -79,7 +82,14 @@ class OAuth2Callback(Resource):
 class EmailProspect(Resource):
     def post(self):
         data = flask.request.json
-        credentialData = data['credentials']
+        credentialData = json.loads(data['credentials'])
+        prospectData = data['prospects']
+        emailSubjectData = data['email_subject']
+        emailBodyData = data['email_body']
+        print(credentialData)
+        print(prospectData)
+        print(emailSubjectData)
+        print(emailBodyData)
 
         #There might have been a nicer way of doing this but python is beyond me
         credentials = google.oauth2.credentials.Credentials(credentialData['token'], credentialData['refresh_token'], None, credentialData['token_uri'], credentialData['client_id'], credentialData['client_secret'], credentialData['scopes'], None)
@@ -99,8 +109,11 @@ class EmailProspect(Resource):
         # prospects in the campaign and put them as the receiver
         # This can be done in a loop. This is just to test. In order to do a bunch just loop through these two lines only changing the 
         # receiver of the email.        Sender,                           Receiver,              Subject,       Body
-        messageToSend = create_message(response.json()['emailAddress'], 'ArchAronie@gmail.com', 'First Email', 'This is the first body')
-        send_message.delay(data, 'me', messageToSend)
+        for prospect in prospectData:
+            current_prospect = ProspectModel.return_id_prospects(prospect['id'])
+            print(current_prospect.email)
+            messageToSend = create_message(response.json()['emailAddress'], current_prospect.email, emailSubjectData, emailBodyData)
+            send_message.delay(credentialData, 'me', messageToSend)
 
         return {
             'status': 'success',

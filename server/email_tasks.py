@@ -8,7 +8,7 @@ r = Redis(host=config('REDIS_HOST'))
 app = Celery('email_tasks', broker=config('CELERY_BROKER'))
 
 @app.task
-def send_message(data, user_id, message):
+def send_message(credentialData, user_id, message):
   """Send an email message.
 
   Args:
@@ -20,7 +20,7 @@ def send_message(data, user_id, message):
   Returns:
     Sent Message.
   """
-  credentialData = data['credentials']
+  print(credentialData)
   credentials = google.oauth2.credentials.Credentials(credentialData['token'], credentialData['refresh_token'], None, credentialData['token_uri'], credentialData['client_id'], credentialData['client_secret'], credentialData['scopes'], None)
   
   service = build('gmail', 'v1', credentials=credentials)

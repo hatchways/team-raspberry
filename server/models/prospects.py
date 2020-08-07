@@ -44,6 +44,10 @@ class ProspectModel(db.Model):
     @classmethod
     def return_email_prospects(cls, email):
         return cls.query.filter_by(email=email).first()
+    
+    @classmethod
+    def return_id_prospects(cls, id):
+        return cls.query.filter_by(id=id).first()
 
 
 # Custom validator

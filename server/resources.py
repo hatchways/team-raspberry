@@ -351,3 +351,7 @@ class CampaignAssign(Resource):
                    "message": f"{e}"
                 }, 400
         return {}, 201
+    def get(self):
+        campaign_prospects = ProspectCampaignModel.return_all()
+        print(campaign_prospects)
+        return {'CampaignProspects': campaign_prospects['CampaignProspects']}
