@@ -92,6 +92,7 @@ export default function CampaignStep(props) {
         email_subject: editorSubject,
         email_body: editorContent,
         campaign_id: campaignId,
+        step_id: stepId,
       });
       setSaved(true);
     } else {
