@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import Button from "@material-ui/core/Button";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
@@ -11,28 +11,34 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
-import Typography from "@material-ui/core/Typography"
+import Typography from "@material-ui/core/Typography";
+import { useLocation } from "react-router-dom";
 
 export default function CampaignShow() {
-  const [steps, addStep] = useState([])
-  const [contacted, setContacted] = useState(35)
-  const [opened, setOpened] = useState(30)
-  const [replied, setReplied] = useState(3)
-  const classes = useStyles()
+  const [steps, addStep] = useState([]);
+  const [contacted, setContacted] = useState(35);
+  const [opened, setOpened] = useState(30);
+  const [replied, setReplied] = useState(3);
+  const classes = useStyles();
+  const location = useLocation();
+  const [currentCampaign, setCurrentCampaign] = useState(
+    location.state.currentCampaign
+  );
 
   const handleAddStep = () => {
     let newItem = (
-    <ListItem key={steps.length + 1} className={classes.listItem}>
-      <CampaignStep key={steps.length + 1}/>
-    </ListItem>
-    )
-    addStep(steps.concat(newItem))
-    console.log(steps)
-  }
+      <ListItem key={steps.length + 1} className={classes.listItem}>
+        <CampaignStep key={steps.length + 1} />
+      </ListItem>
+    );
+    addStep(steps.concat(newItem));
+  };
 
   return (
     <Paper className={classes.root}>
-      <Typography className={classes.title} variant="h4">Campaign 1</Typography>
+      <Typography className={classes.title} variant="h4">
+        Campaign 1
+      </Typography>
       <TableContainer component={Paper} className={classes.tableContainer}>
         <Table className={classes.table}>
           <TableHead>
@@ -52,11 +58,16 @@ export default function CampaignShow() {
         </Table>
       </TableContainer>
       <List>{steps}</List>
-      <Button className={classes.button} onClick={handleAddStep} variant="contained" color="primary">
+      <Button
+        className={classes.button}
+        onClick={handleAddStep}
+        variant="contained"
+        color="primary"
+      >
         Add Step
       </Button>
     </Paper>
-  ); 
+  );
 }
 
 const useStyles = makeStyles((theme) => ({

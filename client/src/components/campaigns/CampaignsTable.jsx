@@ -1,9 +1,7 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useContext } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import * as Auth from "../../services/auth-services";
 import CampaignFormDialog from "./CampaignFormDialog";
 import { CampaignContext } from "../../contexts/CampaignContext";
-
 import {
   TableContainer,
   Paper,
@@ -15,12 +13,7 @@ import {
   Button,
   Grid,
 } from "@material-ui/core";
-
-const useStyles = makeStyles({
-  table: {
-    minWidth: 650,
-  },
-});
+import CampaignViewButton from "./CampaignViewButton";
 
 export default function CampaignsTable(props) {
   const { campaigns } = useContext(CampaignContext);
@@ -36,6 +29,7 @@ export default function CampaignsTable(props) {
             <TableCell>Prospects</TableCell>
             <TableCell>Replies</TableCell>
             <TableCell>Steps</TableCell>
+            <TableCell></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -48,6 +42,12 @@ export default function CampaignsTable(props) {
               <TableCell>{row.prospects}</TableCell>
               <TableCell>{row.replies}</TableCell>
               <TableCell>{row.steps}</TableCell>
+              <TableCell>
+                <CampaignViewButton
+                  currentCampaignId={row.id}
+                  currentCampaignState={row}
+                />
+              </TableCell>
             </TableRow>
           )})}
         </TableBody>
@@ -56,3 +56,9 @@ export default function CampaignsTable(props) {
     </TableContainer>
   );
 }
+
+const useStyles = makeStyles({
+  table: {
+    minWidth: 650,
+  },
+});
