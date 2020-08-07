@@ -39,15 +39,17 @@ export default function CampaignsTable(props) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {campaigns.map((row) => (
+          {campaigns.map((row) => {
+
+            return (
             <TableRow key={row.id}>
               <TableCell>{row.title}</TableCell>
-              <TableCell>{row.created}</TableCell>
+              <TableCell>{new Date(row.created).toDateString()}</TableCell>
               <TableCell>{row.prospects}</TableCell>
               <TableCell>{row.replies}</TableCell>
               <TableCell>{row.steps}</TableCell>
             </TableRow>
-          ))}
+          )})}
         </TableBody>
       </Table>
       <CampaignFormDialog onSubmit={props.onSubmitNew} />
