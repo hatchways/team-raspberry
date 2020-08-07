@@ -8,6 +8,8 @@ import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import Avatar from '@material-ui/core/Avatar';
+import * as Auth from "../services/auth-services";
+
 
 // TODO: Fix Styling.
 
@@ -32,7 +34,8 @@ export default function LoggedInNavbar(props) {
 
   const handleLogout = () => {
     handleClose()
-    // props.UserContext = null
+    props.setUser(null)
+    Auth.logout()
     setLoggedIn(false)
   }
 

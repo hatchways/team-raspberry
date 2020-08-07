@@ -66,9 +66,9 @@ class StepUpdate(Resource):
 class GetCampaignSteps(Resource):
 
     @login_required
-    def get(self):
-        steps = StepModel.find_by_campaign(request.json['campaign_id'])
-
+    def get(self, id):
+        campaign_id = request.full_path.split("?")[-1].split("=")[-1]
+        steps = StepModel.find_by_campaign(campaign_id)
         responseObject = {
             'steps': steps
         }

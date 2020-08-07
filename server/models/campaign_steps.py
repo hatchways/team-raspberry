@@ -27,6 +27,15 @@ class StepModel(db.Model):
         db.session.add(self)
         db.session.commit()
 
+    def to_dict(self):
+        return {
+            'step_name': self.step_name,
+            'email_body': self.email_body,
+            'email_subject': self.email_subject,
+            'campaign_id': self.campaign_id,
+            'id': self.id
+        }
+
     # return a step’s data if there is match by id
     @classmethod
     def find_by_id(cls, id):
@@ -35,7 +44,11 @@ class StepModel(db.Model):
     # return a campaign’s data if there is match by campaign_id
     @classmethod
     def find_by_campaign(cls, campaign_id):
-        return cls.query.filter_by(campaign_id=campaign_id).all()
+        print(campaign_id)
+        steps = cls.query.filter_by(campaign_id=campaign_id).all()
+        step_json = [step.to_dict() for step in steps]
+        print(steps[0].step_name)
+        return step_json
 
     @classmethod
     def update_step(cls, update_step):
@@ -45,7 +58,6 @@ class StepModel(db.Model):
         step.email_subject = update_step.email_subject
         step.email_body = update_step.email_body
         step.save_to_db()
-        # return {'step': to_json(step)}
 
     @classmethod
     def return_all(cls):

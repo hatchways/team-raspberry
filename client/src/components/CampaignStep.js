@@ -26,6 +26,17 @@ export default function CampaignStep(props) {
   const url = window.location.href.split("/")
   const campaignId = parseInt(url[url.length - 1])
 
+  console.log(props.stepData)
+
+  if (props.stepData) {
+    console.log("props.stepData")
+    const stepData = props.stepData
+    setStepName(stepData.step_name)
+    setEditorSubject(stepData.email_subject)
+    setEditorContent(stepData.email_body)
+    setStepId(stepData.id)
+  }
+
   const handleEditorOpen = () => {
     setOpenEditor(true);
   };

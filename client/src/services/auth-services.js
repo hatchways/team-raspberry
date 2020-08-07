@@ -11,6 +11,10 @@ async function login(formValues) {
   return response;
 }
 
+async function logout() {
+  return await axios.post("/api/logout")
+}
+
 async function registration(formValues) {
   const response = await axios.post("/api/registration", formValues);
   return response;
@@ -57,12 +61,13 @@ async function createStep(step) {
 }
 
 async function getCampaignSteps(campaignId) {
-  return await axios.get("/api/get_campaign_steps", {'campaign_id': campaignId})
+  return await axios.get(`/api/get_campaign_steps?campaign_id=${campaignId}`)
 }
 
 export {
   getUser,
   login,
+  logout,
   registration,
   getProspects,
   authPost,
