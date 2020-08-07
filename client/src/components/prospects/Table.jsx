@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, {useState, useEffect} from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import * as Auth from "../../services/auth-services"
 import Checkbox from "./Checkbox";
+import AddProspectsFormDialog from "./AddProspectsFormDialog";
 
 import {
   TableContainer,
@@ -25,6 +26,10 @@ export default function ProspectsTable(props) {
   const [rows, setRows] = useState([]);
   const [filteredRows, setFilteredRows] = useState([]);
   const [buttonDisabled, setButtonDisabled] = React.useState(true);
+
+  function assignProspectsToCampaign(campaignId, prospectIds) {
+    console.log("assign to campaign", campaignId, prospectIds);
+  }
 
   function fetchProspects() {
     Auth.getProspects().then((res) => {
@@ -118,9 +123,7 @@ export default function ProspectsTable(props) {
           ))}
         </TableBody>
       </Table>
-      <Button type="submit" variant="contained" disabled={buttonDisabled}>
-          Add to Campaign
-        </Button>
+      <AddProspectsFormDialog onSubmit = {campaign_id => assignProspectsToCampaign(campaign_id, rows.filter(p => p.checked))} />
     </TableContainer>
   );
 }
