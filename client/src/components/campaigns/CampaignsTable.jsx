@@ -16,7 +16,7 @@ import {
 import CampaignViewButton from "./CampaignViewButton";
 
 export default function CampaignsTable(props) {
-  const { campaigns, setCampaigns } = useContext(CampaignContext);
+  const { campaigns } = useContext(CampaignContext);
   const classes = useStyles();
 
   return (
