@@ -12,7 +12,7 @@ import io, csv, redis, json
 class StepCreate(Resource):
     def post(self):
         data = step_schema.load(request.json)
-
+        
         new_step = StepModel(
             step_name = data['step_name'],
             email_subject = data['email_subject'],
@@ -60,7 +60,6 @@ class StepUpdate(Resource):
             }
             return responseObject, 200
 
-
 class GetCampaignSteps(Resource):
 
     @login_required
@@ -72,3 +71,4 @@ class GetCampaignSteps(Resource):
         }
 
         return responseObject, 200
+
