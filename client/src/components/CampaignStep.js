@@ -9,11 +9,13 @@ import TextEditor from "./TextEditor";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import { Snackbar, IconButton } from "@material-ui/core";
 import { theme } from "../themes/theme";
 import * as Auth from "../services/auth-services";
 import { CampaignContext } from "../contexts/CampaignContext";
 import { UserContext } from "../contexts/UserContext";
 import GmailDialog from "../pages/GmailDialog";
+import CloseIcon from "@material-ui/icons/Close";
 
 export default function CampaignStep(props) {
   const classes = useStyles(theme);
@@ -29,6 +31,11 @@ export default function CampaignStep(props) {
 
   const [showGmail, setShowGmail] = useState(false);
   const { user } = useContext(UserContext);
+
+  const [snackbar, setSnackBar] = useState({
+    snackbarMsg: "",
+    snackbarOpen: false,
+  });
   const handleGmailClose = () => {
     setShowGmail(false);
   };
@@ -82,6 +89,11 @@ export default function CampaignStep(props) {
         email_body: editorContent,
       };
       Auth.sendEmail(body);
+
+      setSnackBar({
+        snackbarMsg: "Emails Sent!",
+        snackbarOpen: true,
+      });
     }
   };
 
@@ -97,6 +109,13 @@ export default function CampaignStep(props) {
     } else {
       setOpenAlert(true);
     }
+  };
+
+  const snackbarClose = () => {
+    setSnackBar({
+      snackbarMsg: "",
+      snackbarOpen: false,
+    });
   };
 
   // NOTE: consider adding a ListItem wrapper to these, so it doesn't need to be added in CampaignShow.
@@ -126,6 +145,25 @@ export default function CampaignStep(props) {
       ) : (
         ""
       )}
+      <Snackbar
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "center",
+        }}
+        open={snackbar.snackbarOpen}
+        autoHideDuration={6000}
+        onClose={snackbarClose}
+        message={snackbar.snackbarMsg}
+        action={
+          <IconButton
+            className={classes.snackBarButton}
+            aria-label="close"
+            onClick={snackbarClose}
+          >
+            <CloseIcon></CloseIcon>
+          </IconButton>
+        }
+      />
     </div>
   ) : (
     <Card className={classes.card}>
@@ -215,4 +253,7 @@ const useStyles = makeStyles((theme) => ({
   },
   cardContent: {},
   cardActions: {},
+  snackBarButton: {
+    color: "white",
+  },
 }));

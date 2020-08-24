@@ -22,7 +22,7 @@ SCOPES = [
   'https://www.googleapis.com/auth/userinfo.profile',
 ]
 # Put this in .env file
-REDIRECT_URI = 'http://localhost:3000/redirect'
+REDIRECT_URI = 'http://localhost:3000/campaigns'
 
 def credentials_to_dict(credentials):
   return {'token': credentials.token,
@@ -86,10 +86,6 @@ class EmailProspect(Resource):
         prospectData = data['prospects']
         emailSubjectData = data['email_subject']
         emailBodyData = data['email_body']
-        print(credentialData)
-        print(prospectData)
-        print(emailSubjectData)
-        print(emailBodyData)
 
         #There might have been a nicer way of doing this but python is beyond me
         credentials = google.oauth2.credentials.Credentials(credentialData['token'], credentialData['refresh_token'], None, credentialData['token_uri'], credentialData['client_id'], credentialData['client_secret'], credentialData['scopes'], None)

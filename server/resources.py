@@ -85,13 +85,14 @@ class UserLogin(Resource):
     def post(self):
         data = request.json
         current_user = UserModel.find_by_email(data['email'])
-
+        print(current_user)
         if current_user is None:
+            print('inside')
             responseObject = {
                 'status': 'fail',
                 'message': 'Wrong credentials.'
             }
-            return responseObject, 401
+            return responseObject, 203
 
         pw_is_valid = current_user.verify_password(data['password'])
 
@@ -154,6 +155,13 @@ class AddProspectCsv(Resource):
         csv_input = csv.reader(stream)        
         headers = next(csv_input)
         
+        # Removes previous prospects out of the session
+        # This is done in case the user changes their mind,
+        # and picks another csv file after clicking upload
+        while (redisServer.llen('prospects') > 0):
+            hold = redisServer.rpop('prospects')
+            print(hold)
+        
         for row in csv_input:
             redisServer.lpush('prospects', json.dumps(row))
 
@@ -179,7 +187,9 @@ class ImportProspects(Resource):
         redisServer = redis.Redis(host='localhost')
             
         # Currently just associating the prospect with user number 1
-        current_user = UserModel.find_by_id(1)
+        print(data)
+        print(data['user_id'])
+        current_user = UserModel.find_by_id(data['user_id'])
 
         if redisServer.llen('prospects') == 0:
             return {
