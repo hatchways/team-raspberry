@@ -51,6 +51,10 @@ class ProspectCampaignModel(db.Model):
             }
         return {'CampaignProspects': list(map(lambda x: to_json(x), ProspectCampaignModel.query.all()))}
 
+    @classmethod
+    def return_all_by_campaign_id(cls, campaign_id):
+        return cls.query.filter_by(campaign_id=campaign_id).all()
+
 # Custom validator
 def must_not_be_blank(data):
     if not data:

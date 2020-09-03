@@ -14,6 +14,7 @@ import * as Auth from "../services/auth-services";
 import { CampaignContext } from "../contexts/CampaignContext";
 import { UserContext } from "../contexts/UserContext";
 import GmailDialog from "../pages/GmailDialog";
+import { CampaignStepsContext } from "../contexts/CampaignStepsContext";
 
 export default function CampaignStep(props) {
   const classes = useStyles(theme);
@@ -29,21 +30,27 @@ export default function CampaignStep(props) {
 
   const [showGmail, setShowGmail] = useState(false);
   const { user } = useContext(UserContext);
+  const { stepsWithProspects, addStepsWithProspects } = useContext(
+    CampaignStepsContext
+  );
+  const [prospectCount, setProspectCount] = useState(0);
+
   const handleGmailClose = () => {
     setShowGmail(false);
   };
-  console.log(props.stepData);
 
   useEffect(() => {
     if (props.stepData) {
-      console.log("props.stepData");
       const stepData = props.stepData;
       setStepName(stepData.step_name);
       setEditorSubject(stepData.email_subject);
       setEditorContent(stepData.email_body);
       setStepId(stepData.id);
+      setProspectCount(
+        stepsWithProspects[props.stepIndex - 1].prospects.length
+      );
     }
-  }, []);
+  }, [stepsWithProspects]);
 
   const handleEditorOpen = () => {
     setOpenEditor(true);
@@ -67,21 +74,66 @@ export default function CampaignStep(props) {
 
   const handleEmail = (e) => {
     // Make sure there are actually prospects to send an email to.
-    console.log(props.campaignProspects);
-    console.log(user.credentials);
     if (user.credentials === null) {
       setShowGmail(true);
       return;
     }
-    console.log("supposed to return");
-    if (props.campaignProspects.length > 0) {
+
+    if (stepsWithProspects[props.stepIndex - 1].prospects.length > 0) {
       const body = {
         credentials: user.credentials,
         prospects: props.campaignProspects,
         email_subject: editorSubject,
         email_body: editorContent,
+        step_prospects: stepsWithProspects[props.stepIndex - 1].prospects,
       };
       Auth.sendEmail(body);
+    }
+  };
+
+  const handleProspectMove = async () => {
+    // Check if there are no prospects associated
+    // with any step
+    let stepCount = 0;
+    stepsWithProspects.forEach((element) => {
+      if (element.prospects.length === 0) stepCount++;
+    });
+
+    if (stepCount === stepsWithProspects.length) {
+      Auth.addProspectsToStep({
+        step_id: stepId,
+        prospects: props.prospects.prospects,
+      }).then((response) => {
+        let tempStepProspects = stepsWithProspects;
+        tempStepProspects[props.stepIndex - 1].prospects =
+          response.data.prospects;
+
+        addStepsWithProspects(tempStepProspects);
+        setProspectCount(response.data.prospects.length);
+      });
+    } else {
+      if (stepsWithProspects[props.stepIndex - 2] === undefined) return;
+      if (stepsWithProspects[props.stepIndex - 2].prospects.length === 0)
+        return;
+      if (
+        stepsWithProspects[props.stepIndex - 2].prospects[0].email_sent ===
+        false
+      )
+        return;
+      // Probably don't need this check
+      if (stepsWithProspects[props.stepIndex - 2].prospects.length > 0) {
+        const body = {
+          prospects: stepsWithProspects[props.stepIndex - 2].prospects,
+          old_step_id: stepsWithProspects[props.stepIndex - 2].stepId,
+          new_step_id: stepId,
+          old_index: props.stepIndex - 2,
+          new_index: props.stepIndex - 1,
+          steps_with_prospects: stepsWithProspects,
+        };
+        console.log("MOVING THE PROSPECTS!");
+        const response = await Auth.moveProspectsToStep(body);
+        addStepsWithProspects(response.data.step_prospects);
+      }
     }
   };
 
@@ -112,12 +164,24 @@ export default function CampaignStep(props) {
         <CardContent className={classes.cardContent}>
           Content: {editorContent}
         </CardContent>
+
+        <CardContent className={classes.cardContent}>
+          Prospect(s) count: {prospectCount}
+        </CardContent>
+
         <CardActions>
           <Button onClick={handleEmail} variant="contained" color="primary">
             Send to Prospects
           </Button>
           <Button onClick={handleEdit} variant="contained" color="primary">
             Edit
+          </Button>
+          <Button
+            onClick={handleProspectMove}
+            variant="contained"
+            color="primary"
+          >
+            Move Prospect To Next Step
           </Button>
         </CardActions>
       </Card>

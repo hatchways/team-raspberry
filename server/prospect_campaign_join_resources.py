@@ -10,6 +10,19 @@ from flask import request, session
 import io, csv, redis, json
 
 
+class CampaignProspects(Resource):
+    def get(self):
+        campaign_id = request.args['campaign_id']
+        
+        prospects = ProspectCampaignModel.return_all_by_campaign_id(campaign_id)
+        allProspects = []
+
+        for prospect in prospects:
+            allProspects.append(prospect.prospect_id)
+
+        return {'prospects': allProspects}
+        
+
 class JoinCreate(Resource):
     def post(self):
         data = prospect_campaign_schema.load(request.json)
@@ -38,7 +51,6 @@ class JoinCreate(Resource):
                 'message': 'Something went wrong. Please try again.'
             }
             return responseObject, 500
-
 
 class GetJoinCount(Resource):
     def get(self):
