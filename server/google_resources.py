@@ -23,6 +23,7 @@ SCOPES = [
 ]
 # Put this in .env file
 REDIRECT_URI = 'http://localhost:3000/redirect'
+# REDIRECT_URI = 'http://localhost:3000/prospects/redirect'
 
 def credentials_to_dict(credentials):
   return {'token': credentials.token,
