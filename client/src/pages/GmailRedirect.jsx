@@ -2,6 +2,7 @@ import React, { useEffect, useContext, useState } from "react";
 import QueryString from "query-string";
 import PropTypes from "prop-types";
 import { Button, DialogTitle, Dialog } from "@material-ui/core";
+import { useHistory } from "react-router-dom";
 import * as Auth from "../services/auth-services";
 import { UserContext } from "../contexts/UserContext";
 
@@ -44,9 +45,9 @@ function GmailRedirect(props) {
   return (
     <Dialog onClose={handleClose} aria-labelledby="gmail-title" open={open}>
       <DialogTitle id="gmail-title">Gmail Connected Successfully</DialogTitle>
-      <Button variant="outlined" color="primary" onClick={handleClose}>
+      {/* <Button variant="outlined" color="primary" onClick={handleClose}>
         Check Query
-      </Button>
+      </Button> */}
       <Button onClick={sendEmail}>SEND AN EMAIL TEST!</Button>
     </Dialog>
   );
@@ -59,9 +60,10 @@ GmailRedirect.propTypes = {
 
 export default function GmailRedirectDemo() {
   const [open, setOpen] = React.useState(true);
+  const history = useHistory()
 
-  const handleClickOpen = () => {
-    setOpen(true);
+  const handleClick = () => {
+    history.push("/prospects");
   };
 
   const handleClose = (value) => {
@@ -70,8 +72,8 @@ export default function GmailRedirectDemo() {
 
   return (
     <div>
-      <Button variant="outlined" color="primary" onClick={handleClickOpen}>
-        Check your Query nao
+      <Button variant="outlined" color="primary" onClick={handleClick}>
+        Return to prospects
       </Button>
       <GmailRedirect open={open} onClose={handleClose} />
     </div>

@@ -19,6 +19,8 @@ import { CampaignStepsContext } from "../contexts/CampaignStepsContext";
 export default function CampaignShow() {
   const url = window.location.href.split("/");
   const campaignId = parseInt(url[url.length - 1]);
+  const classes = useStyles();
+  const location = useLocation();
   const [steps, addStep] = useState([]);
   const [stepsWithProspects, addStepsWithProspects] = useState([]);
   const [stepJson, setStepJson] = useState([]);
@@ -26,13 +28,13 @@ export default function CampaignShow() {
   const [key, setKey] = useState(0);
   const [opened, setOpened] = useState(0);
   const [replied, setReplied] = useState(0);
-  const classes = useStyles();
-  const location = useLocation();
-
   const [campaignProspects, setCampaignProspects] = useState(null);
   const [currentCampaign, setCurrentCampaign] = useState(
     location.state.currentCampaign
   );
+
+  console.log(currentCampaign.title)
+
   useEffect(() => {
     async function setUp() {
       const campaignSteps = await Auth.getCampaignSteps(campaignId);
@@ -75,7 +77,7 @@ export default function CampaignShow() {
   return (
     <Paper className={classes.root}>
       <Typography className={classes.title} variant="h4">
-        Campaign 1
+        {currentCampaign.title}
       </Typography>
       <TableContainer component={Paper} className={classes.tableContainer}>
         <Table className={classes.table}>

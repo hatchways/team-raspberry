@@ -44,19 +44,20 @@ class StepModel(db.Model):
     # return a campaign’s data if there is match by campaign_id
     @classmethod
     def find_by_campaign(cls, campaign_id):
-        print(campaign_id)
         steps = cls.query.filter_by(campaign_id=campaign_id).all()
         step_json = [step.to_dict() for step in steps]
-        print(steps[0].step_name)
         return step_json
 
     @classmethod
     def update_step(cls, update_step):
-        step = cls.query.filter_by(step_id=update_step.id).first()
+        step = cls.query.filter_by(id=update_step['step_id']).first()
+        name = update_step['step_name'] if update_step['step_name'] else step.step_name
+        email_subject = update_step['email_subject'] if update_step['email_subject'] else step.email_subject
+        email_body = update_step['email_body'] if update_step['email_body'] else step.email_body
 
-        step.step_name = update_step.step_name
-        step.email_subject = update_step.email_subject
-        step.email_body = update_step.email_body
+        step.step_name = name
+        step.email_subject = email_subject
+        step.email_body = email_body
         step.save_to_db()
 
     @classmethod

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import {
   Button,
@@ -13,9 +13,11 @@ import {
 } from "@material-ui/core";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import CloseIcon from "@material-ui/icons/Close";
+import { UserContext } from "../contexts/UserContext";
 
 export default function AddProspects() {
   const classes = useStyles();
+  const { user } = useContext(UserContext);
   const [csv, setCsv] = useState([]);
   const [csvHeaders, setCsvHeaders] = useState([]);
   const [headersIndex, setHeadersIndex] = useState({
@@ -83,7 +85,11 @@ export default function AddProspects() {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ ...headersIndex, none: csvHeaders.length - 1 }),
+      body: JSON.stringify({
+        ...headersIndex,
+        none: csvHeaders.length - 1,
+        user_id: user.userId,
+      }),
     }).then((res) => {
       res.json().then((data) => {
         setSnackBar({

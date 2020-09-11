@@ -23,7 +23,7 @@ SCOPES = [
   'https://www.googleapis.com/auth/userinfo.profile',
 ]
 # Put this in .env file
-REDIRECT_URI = 'http://localhost:3000/redirect'
+REDIRECT_URI = 'http://localhost:3000/campaigns'
 
 def credentials_to_dict(credentials):
   return {'token': credentials.token,

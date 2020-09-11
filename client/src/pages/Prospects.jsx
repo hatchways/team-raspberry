@@ -15,8 +15,10 @@ export default function Prospects() {
   const handleClose = () => {
     setOpen(false);
   };
+
   return (
     <div className={classes.root}>
+      <h3> </h3>
       <Grid container spacing={3}>
         <Grid item className={classes.sidebar} sm={2}>
           Sidebar
@@ -34,8 +36,8 @@ export default function Prospects() {
       {user.credentials === null && open !== false ? (
         <GmailDialog open={open} onClose={handleClose} />
       ) : (
-        ""
-      )}
+          ""
+        )}
     </div>
   );
 }

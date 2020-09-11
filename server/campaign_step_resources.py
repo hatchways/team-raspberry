@@ -11,35 +11,50 @@ import io, csv, redis, json
 
 class StepCreate(Resource):
     def post(self):
-        data = step_schema.load(request.json)
-        
-        new_step = StepModel(
-            step_name = data['step_name'],
-            email_subject = data['email_subject'],
-            email_body = data['email_body'],
-            campaign_id = data['campaign_id'],
-        )
+        data = request.json
+        if StepModel.find_by_campaign(data['campaign_id']):
+            step = StepModel.find_by_campaign(data['campaign_id'])
+            StepModel.update_step(data)
 
-        try:
-            new_step.save_to_db()
-            responseObject = {
-                'status': 'success',
-                'message': 'Step was created',
-                'step': {
-                    'id': new_step.id,
-                    'email_subject': new_step.email_subject,
-                    'email_body': new_step.email_body,
-                    'campaign_id': new_step.campaign_id,
+            if step is None:
+                responseObject = {
+                    'status': 'fail',
+                    'message': 'No such step'
                 }
-            }
-            
-            return responseObject, 201
-        except Exception as e:
-            responseObject = {
-                'status': 'fail',
-                'message': 'Something went wrong. Please try again.'
-            }
-            return responseObject, 500
+                return responseObject, 401
+            else:
+                responseObject = {
+                    'status': 'success',
+                    'message': 'Successfully updated step.',
+                }
+                return responseObject, 200
+        else:
+            data = step_schema.load(request.json)
+            new_step = StepModel(
+                step_name = data['step_name'],
+                email_subject = data['email_subject'],
+                email_body = data['email_body'],
+                campaign_id = data['campaign_id'],
+            )
+            try:
+                new_step.save_to_db()
+                responseObject = {
+                    'status': 'success',
+                    'message': 'Step was created',
+                    'step': {
+                        'id': new_step.id,
+                        'email_subject': new_step.email_subject,
+                        'email_body': new_step.email_body,
+                        'campaign_id': new_step.campaign_id,
+                    }
+                }
+                return responseObject, 201
+            except Exception as e:
+                responseObject = {
+                    'status': 'fail',
+                    'message': 'Something went wrong. Please try again.'
+                }
+                return responseObject, 500
 
 class StepUpdate(Resource):
     def post(self):
