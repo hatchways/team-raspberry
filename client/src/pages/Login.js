@@ -43,7 +43,7 @@ export default function Login() {
       if (data.data.status === "success") {
         localStorage.setItem("token", data.data.auth_token);
         setUser(data.data.user);
-        history.push("/prospects");
+        history.push("/campaigns");
       }
     });
   };
