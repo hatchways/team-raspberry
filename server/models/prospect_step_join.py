@@ -26,12 +26,17 @@ class ProspectStepModel(db.Model):
         db.session.commit()
 
     def update_email_status(self):
-      if not self.email_sent:
-        self.email_sent = True
-      elif not self.email_opened:
-        self.email_opened = True
-      else:
-        self.email_replied = True
+        db.session.commit()
+        #if not self.email_sent:
+        # #self.email_sent = True
+        # #elif not self.email_opened:
+        # #self.email_opened = True
+        # #else:
+        # #self.email_replied = True
+    
+    def move_prospect_to_new_step(self, new_step_id):
+        self.step_id = new_step_id
+        db.session.commit()   
 
     # return a step’s data if there is match by id
     @classmethod
@@ -42,6 +47,10 @@ class ProspectStepModel(db.Model):
     @classmethod
     def find_by_step_id(cls, step_id):
         return cls.query.filter_by(step_id=step_id).first()
+    
+    @classmethod
+    def find_by_all_prospects_by_step_id(cls, step_id):
+        return cls.query.filter_by(step_id=step_id)
 
     # return a step’s data if there is match by id
     @classmethod

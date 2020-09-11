@@ -9,6 +9,7 @@ from flask_restful import Resource
 from email.mime.text import MIMEText
 from email_tasks import send_message
 from google.auth.transport.requests import AuthorizedSession
+from models.prospect_step_join import ProspectStepModel
 
 from models.prospects import ProspectModel
 import json
@@ -86,6 +87,9 @@ class EmailProspect(Resource):
         prospectData = data['prospects']
         emailSubjectData = data['email_subject']
         emailBodyData = data['email_body']
+        step_prospects = data['step_prospects']
+        print(prospectData)
+        print(data['step_prospects'])
 
         #There might have been a nicer way of doing this but python is beyond me
         credentials = google.oauth2.credentials.Credentials(credentialData['token'], credentialData['refresh_token'], None, credentialData['token_uri'], credentialData['client_id'], credentialData['client_secret'], credentialData['scopes'], None)
@@ -105,12 +109,16 @@ class EmailProspect(Resource):
         # prospects in the campaign and put them as the receiver
         # This can be done in a loop. This is just to test. In order to do a bunch just loop through these two lines only changing the 
         # receiver of the email.        Sender,                           Receiver,              Subject,       Body
-        for prospect in prospectData:
-            current_prospect = ProspectModel.return_id_prospects(prospect['id'])
-            print(current_prospect.email)
+        for step_prospect in step_prospects:
+            current_prospect = ProspectModel.return_id_prospects(step_prospect['prospect_id'])
+            current_step_prospect = ProspectStepModel.find_by_id(step_prospect['id'])            
             messageToSend = create_message(response.json()['emailAddress'], current_prospect.email, emailSubjectData, emailBodyData)
             send_message.delay(credentialData, 'me', messageToSend)
-
+            # We will have to send back the new step_prospect so that the site can 
+            # update as if the emails are sent even if they aren't
+            current_step_prospect.email_sent = True
+            current_step_prospect.update_email_status()
+            
         return {
             'status': 'success',
             'message': 'Sent the email'

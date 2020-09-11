@@ -14,6 +14,7 @@ import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import { useLocation } from "react-router-dom";
 import * as Auth from "../services/auth-services";
+import { CampaignStepsContext } from "../contexts/CampaignStepsContext";
 
 export default function CampaignShow() {
   const url = window.location.href.split("/");
@@ -21,6 +22,7 @@ export default function CampaignShow() {
   const classes = useStyles();
   const location = useLocation();
   const [steps, addStep] = useState([]);
+  const [stepsWithProspects, addStepsWithProspects] = useState([]);
   const [stepJson, setStepJson] = useState([]);
   const [contacted, setContacted] = useState(0);
   const [key, setKey] = useState(0);
@@ -34,27 +36,34 @@ export default function CampaignShow() {
   console.log(currentCampaign.title)
 
   useEffect(() => {
-    Auth.getCampaignSteps(campaignId)
-      .then((response) => response.data)
-      .then((data) => {
-        const newSteps = [...data.steps];
-        setStepJson(newSteps);
-      });
+    async function setUp() {
+      const campaignSteps = await Auth.getCampaignSteps(campaignId);
+      const newSteps = [...campaignSteps.data.steps];
+      let prospectSteps;
 
-    Auth.getCampaignProspects()
+      for (let i = 0; i < newSteps.length; i++) {
+        prospectSteps = await Auth.getProspectSteps(newSteps[i].id);
+        addStepsWithProspects((prevState) => [
+          ...prevState,
+          { stepId: newSteps[i].id, prospects: prospectSteps.data.prospects },
+        ]);
+      }
+      setStepJson(newSteps);
+    }
+    setUp();
+
+    Auth.getCampaignProspects(campaignId)
       .then((response) => response.data)
       .then((data) => {
-        const responseData = [];
-        console.log("Getting Campaign Prospects");
-        data.CampaignProspects.forEach((element) => {
-          if (currentCampaign.id === element.campaign_id) {
-            responseData.push(element);
-          }
-        });
-        console.log(responseData);
-        setCampaignProspects(responseData);
+        setCampaignProspects(data);
       });
   }, []);
+
+  setTimeout(() => {
+    console.log(stepsWithProspects);
+    console.log("These are prospects");
+    console.log(campaignProspects);
+  }, 5000);
 
   const handleAddStep = () => {
     let newStep = (
@@ -88,22 +97,28 @@ export default function CampaignShow() {
           </TableBody>
         </Table>
       </TableContainer>
-      <List>
-        {stepJson.map((json, idx) => {
-          return (
-            <ListItem key={idx + 1} className={classes.listItem}>
-              <CampaignStep
-                currentCampaign={currentCampaign}
-                campaignProspects={campaignProspects}
-                key={idx + 1}
-                stepData={json}
-                saved={true}
-              />
-            </ListItem>
-          );
-        })}
-        {steps}
-      </List>
+      <CampaignStepsContext.Provider
+        value={{ stepsWithProspects, addStepsWithProspects }}
+      >
+        <List>
+          {stepJson.map((json, idx) => {
+            return (
+              <ListItem key={idx + 1} className={classes.listItem}>
+                <CampaignStep
+                  currentCampaign={currentCampaign}
+                  campaignProspects={campaignProspects}
+                  stepData={json}
+                  stepIndex={idx + 1}
+                  prospects={campaignProspects}
+                  saved={true}
+                />
+                {json.id}
+              </ListItem>
+            );
+          })}
+          {steps}
+        </List>
+      </CampaignStepsContext.Provider>
       <Button
         className={classes.button}
         onClick={handleAddStep}
